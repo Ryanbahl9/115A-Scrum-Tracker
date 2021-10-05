@@ -1,4 +1,3 @@
-
 To get started developing the client, first run
 
 'npm install'
