@@ -1,6 +1,4 @@
-const path = require("path");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
-const webpack = require("webpack");
 
 module.exports = {
   entry: './src/index.js',
@@ -28,9 +26,5 @@ module.exports = {
   ],
   resolve: {
     extensions: [".js"],
-  },
-  output: {
-    filename: '[name].js',
-    path: __dirname + '/dist',
   },
 };
