@@ -1,5 +1,6 @@
 import {firebase, auth} from './fire.js';
-// import {Button} from '@mui/material/Button';
+import * as React from 'react';
+import { Button } from '@mui/material';
 
 
 export function SignIn() {
@@ -12,7 +13,7 @@ export function SignIn() {
     return (
       <>
       
-        <button className="sign-in" onClick={signInWithGoogle}>Sign in with Google</button>
+        <Button variant="contained" className="sign-in" onClick={signInWithGoogle}>Sign in with Google</Button>
       </>
     )
   
