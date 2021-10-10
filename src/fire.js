@@ -22,4 +22,9 @@ const firestore = firebase.firestore();
 const analytics = firebase.analytics();
 
 
+export function testUserID() {
+  return auth.currentUser && (auth.currentUser.uid)
+}
+
+
 export {firebase, useAuthState, useCollectionData, auth, firestore,analytics};
