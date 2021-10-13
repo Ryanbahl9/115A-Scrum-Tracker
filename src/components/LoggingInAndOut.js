@@ -11,13 +11,7 @@ export function SignIn() {
     }
   
     return (
-<<<<<<< HEAD
         <Button variant="contained" onClick={signInWithGoogle}>Sign in with Google</Button>
-=======
-      <>
-        <Button variant="contained" className="sign-in" onClick={signInWithGoogle}>Sign in with Google</Button>
-      </>
->>>>>>> main
     )
   
   }
