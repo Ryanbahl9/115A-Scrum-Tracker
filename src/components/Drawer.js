@@ -22,8 +22,4 @@ const Drawer = () => {
   )
 }
 
-<<<<<<< HEAD
 export default Drawer;
-=======
-export default Drawer
->>>>>>> main
