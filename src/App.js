@@ -5,7 +5,7 @@ import './App.css';
 
 import {firebase, useAuthState, useCollectionData, auth, firestore,analytics} from './fire.js';
 import {SignIn, SignOut} from './LoggingInAndOut.js'
-
+import Drawer from './components/Drawer';
 
 function App() {
 
@@ -15,6 +15,7 @@ function App() {
 
   return (
     <div className="App">
+      <Drawer/>
       <header>
         <h1>Simple beginnings </h1>
         <SignOut />
