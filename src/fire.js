@@ -57,15 +57,15 @@ export function StupidAdd(props) {
 export function ProjectsPage(props) {
   const dummy = useRef();
   const projectsRef = firestore.collection('projects');
-  // const query = projectsRef.orderBy('createdAt', "asc").where("uid", "==", auth.currentUser.uid);
-                           
-  const query = projectsRef.where("uid", "==", auth.currentUser.uid);
+  const query = projectsRef.where("uid", "==", auth.currentUser.uid)
+                          //  .orderBy('createdAt', "asc")
+  // const query = projectsRef.where("uid", "==", auth.currentUser.uid);
   // query.orderBy("createdAt");
   // const query = projectsRef.orderBy("createdAt");
 
-  const [projects, adjustProjects] = useCollectionData(query);
+  const [projects, stillLoading, error] = useCollectionData(query, { idField: 'id' });
   // const sortProjects
-  // console.log(projects)
+  console.log("If Error " + error)
 
   const [formValue, setFormValue] = useState('');
 
@@ -91,7 +91,7 @@ export function ProjectsPage(props) {
     </main>
 
     <form onSubmit={enterProjectName}>
-
+      {/* {stillLoading ? "Still Loading Query" : "error " + {Object.keys(error)}} */}
       <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Entry New Project Name" />
 
       <button type="submit" disabled={!formValue}>🕊️</button>
