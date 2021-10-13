@@ -7,7 +7,6 @@ import {
   ListItemText,
   ListItemIcon
 } from '@mui/material'
-import { withRouter } from 'react-router';
 
 
 const Drawer = () => {
@@ -23,4 +22,4 @@ const Drawer = () => {
   )
 }
 
-export default Drawer
+export default Drawer;
