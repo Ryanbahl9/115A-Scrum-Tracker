@@ -3,8 +3,8 @@
 import React, { useRef, useState } from 'react';
 import './App.css';
 
-import {firebase, useAuthState, useCollectionData, auth, firestore,analytics} from './fire.js';
-import {SignIn, SignOut} from './LoggingInAndOut.js'
+import {firebase, useAuthState, useCollectionData, auth, firestore,analytics} from './components/fire.js';
+import {SignIn, SignOut} from './components/LoggingInAndOut.js'
 import Drawer from './components/Drawer';
 
 function App() {
