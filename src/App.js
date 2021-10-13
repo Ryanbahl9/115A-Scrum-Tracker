@@ -3,10 +3,10 @@
 import React, { useRef, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container } from '@mui/material';
-import Home from './Home';
-import Drawer from './Drawer';
-import ScrumBoard from './ScrumBoard';
-import NotFound from './NotFound';
+import Home from './components/Home';
+import Drawer from './components/Drawer';
+import ScrumBoard from './components/ScrumBoard';
+import NotFound from './components/NotFound';
 
 function App() {
   return (

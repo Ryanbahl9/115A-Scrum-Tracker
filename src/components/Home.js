@@ -1,5 +1,5 @@
 import React from 'react';
-import { firebase, useAuthState, useCollectionData, auth, firestore, analytics } from '../fire.js';
+import { firebase, useAuthState, useCollectionData, auth, firestore, analytics } from './fire.js';
 import { SignIn, SignOut } from './LoggingInAndOut.js'
 
 const Home = () => {
