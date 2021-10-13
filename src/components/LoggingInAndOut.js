@@ -11,14 +11,20 @@ export function SignIn() {
     }
   
     return (
+<<<<<<< HEAD
         <Button variant="contained" onClick={signInWithGoogle}>Sign in with Google</Button>
+=======
+      <>
+        <Button variant="contained" className="sign-in" onClick={signInWithGoogle}>Sign in with Google</Button>
+      </>
+>>>>>>> main
     )
   
   }
 
 export function SignOut() {
     return auth.currentUser && (
-      <button className="sign-out" onClick={() => auth.signOut()}>Sign Out</button>
+      <Button variant="contained" className="sign-out" onClick={() => auth.signOut()}>Sign Out</Button>
     )
 }
   
