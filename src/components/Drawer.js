@@ -23,4 +23,4 @@ const Drawer = () => {
   )
 }
 
-export default withRouter( Drawer )
+export default Drawer
