@@ -7,9 +7,22 @@ import Home from './components/Home';
 import Drawer from './components/Drawer';
 import ScrumBoard from './components/ScrumBoard';
 import NotFound from './components/NotFound';
+import {useAuthState, auth, firestore, useCollectionData} from './components/fire';
+import Context from './components/Context';
 
 function App() {
+  const [user] = useAuthState(auth);
+  const projectsRef = firestore.collection('projects');
+  const query = projectsRef.where("uid", "==", auth.currentUser.uid)
+  const [projects] = useCollectionData(query, { idField: 'id' });
+  Context.user = user;
+
+
   return (
+    <Context.Provider value={
+      {user,
+      projects}
+    }>
     <Container>
         <Router>
             <Switch>
@@ -20,8 +33,9 @@ function App() {
             </Switch>
         </Router>
     </Container>
+    </Context.Provider>
   );
-  
+
 }
 
 

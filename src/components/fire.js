@@ -9,6 +9,8 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 
 import React, { useRef, useState } from 'react';
+import Context from './Context';
+
 
 
 
@@ -40,16 +42,34 @@ export const analytics = firebase.analytics();
 
 
 // ###################################################################################################
-export function StupidAdd(props) {
-  const add =  async () => { 
+export function Testing(props) {
+
+
+  const add =  async () => {
     const messagesRef = firestore.collection('messages');
     await messagesRef.add({
       projectName: "testing Project",
     });
 
+  function goodButton(add) {
+    return (<button onClick={add}>Logged In Add</button>)
+  }
+
   };
   return (
-    <button onClick={add}>Stupid Add UID {props.user ? auth.currentUser.uid : "No User"}</button>
+    <div>
+      <Context.Consumer>
+        {/* {(Context.user) => user ? "Third TEST" : "SECOND TEST"}</Context.Consumer> } */}
+        {({user}) => user ? "Third TEST" : "SECOND TEST"}</Context.Consumer>
+      {/* Basic Test */}
+    {/* <Context.Consumer>
+      <div>
+      {({user}) => {
+        user ? <button onClick={add}>Logged In Add</button> : <button>Not Logged In</button>
+      }}
+      </div>
+    </Context.Consumer> */}
+    </div>
   )
 }
 // ###################################################################################################
@@ -104,7 +124,7 @@ export function ProjectsPage(props) {
 // ###################################################################################################
 function ProjectForm(props) {
     const { projectName } = props.projects;
-  
+
     return (<>
       <div>
         <p>{projectName}</p>
