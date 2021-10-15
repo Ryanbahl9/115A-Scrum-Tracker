@@ -13,6 +13,10 @@ import {
 import { withRouter } from 'react-router';
 
 
+// Note: Right now it is imposable to get back to the home page through the
+// drawer, but we will make that possible later through the top bar, probably
+// by clicking a logo in the top left
+
 const Drawer = (props) => {
   {/*Since the Drawer is inside the router component
   the history object passed down through props. */}
