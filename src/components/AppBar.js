@@ -3,16 +3,21 @@ import React from 'react'
 import { 
   AppBar as MUIAppBar,
   Toolbar as MUIToolbar,
-  IconButton
+  IconButton,
+  Box
 } from '@mui/material';
 
 import { 
-  Menu 
+  Menu,
+  Home 
 } from '@mui/icons-material';
 import logo from '../logo.svg'
 
+import { withRouter } from 'react-router';
 
-const AppBar = () => {
+
+const AppBar = props => {
+  const {history} = props
   // const [open, setOpen] = React.useState(false);
   // const handleDrawerOpen = () => {
   //   setOpen(true);
@@ -27,10 +32,13 @@ const AppBar = () => {
         <IconButton > {/* aria-label="open drawer" onClick={handleDrawerOpen} */}
           <Menu />
         </IconButton>
-        <img src={logo}/>
+        <IconButton button onClick={() => history.push('/')} > 
+          <Home />
+        </IconButton>
+
       </MUIToolbar>
     </MUIAppBar>
   )
 }
 
-export default AppBar
+export default withRouter(AppBar)

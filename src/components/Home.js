@@ -7,7 +7,6 @@ const Home = () => {
 
     return (
     <div>
-
        <header>
          <h1>Simple beginnings </h1>
          <SignOut />
