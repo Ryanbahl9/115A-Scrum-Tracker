@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Home from './components/Home';
 import Drawer from './components/Drawer';
-import Topbar from './components/Topbar';
+import AppBar from './components/AppBar';
 import ScrumBoard from './components/ScrumBoard';
 import Backlog from './components/Backlog';
 import NotFound from './components/NotFound';
