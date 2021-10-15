@@ -12,7 +12,6 @@ import {
 } from '@mui/material'
 import { withRouter } from 'react-router';
 
-
 // Note: Right now it is imposable to get back to the home page through the
 // drawer, but we will make that possible later through the top bar, probably
 // by clicking a logo in the top left
