@@ -10,11 +10,17 @@ import ScrumBoard from "./components/ScrumBoard";
 import NotFound from "./components/NotFound";
 
 function App() {
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const toggleDrawerOpen = () => {
+    drawerOpen === false ? setDrawerOpen(true) : setDrawerOpen(false)
+  }
+  const user = true
+
   return (
     <Container>
       <Router>
-        <AppBar />
-        <Drawer /> 
+        <AppBar toggleDrawerOpen={toggleDrawerOpen} user={user}/>
+        {user && <Drawer drawerOpen={drawerOpen}/>}
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/board" component={ScrumBoard} />

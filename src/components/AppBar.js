@@ -17,7 +17,7 @@ import { withRouter } from 'react-router';
 
 
 const AppBar = props => {
-  const {history} = props
+  const {history, user, toggleDrawerOpen} = props
   // const [open, setOpen] = React.useState(false);
   // const handleDrawerOpen = () => {
   //   setOpen(true);
@@ -29,13 +29,12 @@ const AppBar = props => {
   return (
     <MUIAppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <MUIToolbar>
-        <IconButton > {/* aria-label="open drawer" onClick={handleDrawerOpen} */}
+        {user && <IconButton button onClick={toggleDrawerOpen}> {/* aria-label="open drawer" onClick={handleDrawerOpen} */}
           <Menu />
-        </IconButton>
+        </IconButton>}
         <IconButton button onClick={() => history.push('/')} > 
           <Home />
         </IconButton>
-
       </MUIToolbar>
     </MUIAppBar>
   )

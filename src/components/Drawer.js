@@ -23,9 +23,9 @@ import { withRouter } from 'react-router';
 const Drawer = (props) => {
   {/*Since the Drawer is inside the router component
   the history object passed down through props. */}
-  const { history } = props
+  const { history, drawerOpen } = props
   return (
-    <MUIDrawer variant="permanent">
+    <MUIDrawer variant="persistent" open={drawerOpen}>
       {/* toolbar is just here for spacing so first component isn't covered by actual AppBAr */}
       <Toolbar /> 
       {/*Whe a list item is clicked, react uses the history 

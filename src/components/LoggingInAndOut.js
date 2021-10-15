@@ -12,7 +12,6 @@ export function SignIn() {
   
     return (
       <>
-      
         <Button variant="contained" className="sign-in" onClick={signInWithGoogle}>Sign in with Google</Button>
       </>
     )
