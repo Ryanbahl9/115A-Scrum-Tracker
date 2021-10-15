@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "@mui/material";
 import Home from "./components/Home";
 import Drawer from "./components/Drawer";
+import AppBar from "./components/AppBar"
 import ScrumBoard from "./components/ScrumBoard";
 import NotFound from "./components/NotFound";
 
@@ -12,7 +13,8 @@ function App() {
   return (
     <Container>
       <Router>
-        <Drawer />
+        <AppBar />
+        <Drawer /> 
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/board" component={ScrumBoard} />
