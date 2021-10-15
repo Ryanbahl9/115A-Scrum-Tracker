@@ -5,29 +5,23 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Home from './components/Home';
 import Drawer from './components/Drawer';
+import Topbar from './components/Topbar';
 import ScrumBoard from './components/ScrumBoard';
+import Backlog from './components/Backlog';
 import NotFound from './components/NotFound';
 import {useAuthState, auth, firestore, useCollectionData} from './components/fire';
 import Context from './components/Context';
-
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-
 
 function App() {
   return (
     <Container>
       <Router>
+        <Topbar/>
         <Drawer />
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/board" component={ScrumBoard} />
-          <Route path="*" component={NotFound} />
+          <Route path="*" component={Backlog} />
         </Switch>
       </Router>
     </Container>
