@@ -19,16 +19,14 @@ import { SignIn, SignOut } from './components/LoggingInAndOut';
 
 function App() {
   const [user] = useAuthState(auth);
-  // const user = true
-  const [products, setProducts] = useState(null);
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const toggleDrawerOpen = () => {
     drawerOpen === false ? setDrawerOpen(true) : setDrawerOpen(false)
   }
-  
+
   return (
-    <UserContext.Provider value={{user, products, setProducts}}>
+    <UserContext.Provider value={{user}}>
     <Container>
       {/* <SignIn/> */}
       <Router>
@@ -41,7 +39,7 @@ function App() {
           <Route path="*" component={Backlog} />
         </Switch>
       </Router>
-      {user ? <SignOut/> : <SignIn/>}
+      {user ? <SignOut/> : <SignIn user={user}/>}
     </Container>
     </UserContext.Provider>
   );

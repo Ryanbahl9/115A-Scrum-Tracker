@@ -12,18 +12,14 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 import React, { useRef, useState } from 'react';
 import Context from './ProductContext';
 
+// import Select from '@mui/material/Select';
+// import {FormControl, MenuItem} from '@mui/material';
+import {InputLabel} from '@material-ui/core';
 
+import {Select, FormControl, MenuItem} from '@mui/material';
 
 
 firebase.initializeApp({
-  // prefered database but wont accept data
-  // apiKey: "AIzaSyDRs7_azKlBqlq9SVfO-TfPSYxyqcCi5is",
-  // authDomain: "a-agilescrum.firebaseapp.com",
-  // projectId: "a-agilescrum",
-  // storageBucket: "a-agilescrum.appspot.com",
-  // messagingSenderId: "844567482368",
-  // appId: "1:844567482368:web:cd0dc238b4b0c8dffc08e5",
-  // measurementId: "G-300199LHV2"
 
   // Using superChatDemo // this one works and the other doesnt for unknown reason
   apiKey: "AIzaSyBVtzPN4scCnsRdqc8fG88ZiV-v-ipkwHs",
@@ -42,78 +38,78 @@ export const analytics = firebase.analytics();
 
 
 
-// ###################################################################################################
-export function Testing(props) {
-
-
-  const add =  async () => {
-    const messagesRef = firestore.collection('messages');
-    await messagesRef.add({
-      projectName: "testing Project",
-    });
-
-  function goodButton(add) {
-    return (<button onClick={add}>Logged In Add</button>)
-  }
-
-  };
-  return (
-    <div>
-      <Context.Consumer>
-        {/* {(Context.user) => user ? "Third TEST" : "SECOND TEST"}</Context.Consumer> } */}
-        {({user}) => user ? "Third TEST" : "SECOND TEST"}</Context.Consumer>
-      {/* Basic Test */}
-    {/* <Context.Consumer>
-      <div>
-      {({user}) => {
-        user ? <button onClick={add}>Logged In Add</button> : <button>Not Logged In</button>
-      }}
-      </div>
-    </Context.Consumer> */}
-    </div>
-  )
-}
-// ###################################################################################################
-
-export function ProjectsPage(props) {
+export function ProductsPage(props) {
   const dummy = useRef();
-  const projectsRef = firestore.collection('projects');
-  const query = projectsRef.where("uid", "==", auth.currentUser.uid)
-                          //  .orderBy('createdAt', "asc")
-  // const query = projectsRef.where("uid", "==", auth.currentUser.uid);
-  // query.orderBy("createdAt");
-  // const query = projectsRef.orderBy("createdAt");
+  const productsRef = firestore.collection('products');
+  const query = productsRef.where("uid", "==", auth.currentUser.uid)
+  const [products] = useCollectionData(query, { idField: 'id' });
 
-  const [projects, stillLoading, error] = useCollectionData(query, { idField: 'id' });
-  // const sortProjects
-  console.log("If Error " + error)
+
 
   const [formValue, setFormValue] = useState('');
 
-
-  // const sendMessage = async (e) => {
-  const enterProjectName = async (e) => {
+  //###################Submission Field
+  const enterProductName = async (e) => {
     e.preventDefault();
 
     const { uid } = auth.currentUser;
 
-    await projectsRef.add({
-      projectName: formValue,
+    await productsRef.add({
+      productName: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       uid
     })
 
     setFormValue('');
   }
+  //###################
+  const [age, setAge] = React.useState('');
 
+  const handleChange = (event) => {
+    myInt += 10;
+    console.log(event.target.value)
+    // setAge(event.target.value);
+    setAge(myInt)
+  };
+  var myInt = 10;
+  //###################
+  //###################
+  const ProductItem = (props) => { //prints name
+    const { productName } = props.product;
+    return (<MenuItem value={productName}>{productName}</MenuItem>)
+
+  }
+  //###################
+  //###################product
+  const [product, setProduct] = useState("temp");
+  const productSet = (event) => {
+    console.log("productSet: " + event.target.value)
+    setProduct(event.target.value);
+  };
+  //###################
   return (<>
-    <main>
-      {projects && projects.map(at => <ProjectForm key={at.id} projects={at} />)} {/*// at == atributes*/}
-    </main>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Product</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={product}
+            // value={age}
+            label="Product Select"
+            onChange={productSet}
+            // onChange={handleChange}
+            >
+          {products && products.map(at => <ProductItem product={at} />)}
+            {/* <MenuItem value={"4"}>Stupid Test</MenuItem> */}
+            {/* <MenuItem value={10}>Ten</MenuItem> */}
+            {/* <MenuItem value={20}>Twenty</MenuItem> */}
+            {/* <MenuItem value={30}>Thirty</MenuItem> */}
+          </Select>
+      </FormControl>
 
-    <form onSubmit={enterProjectName}>
-      {/* {stillLoading ? "Still Loading Query" : "error " + {Object.keys(error)}} */}
-      <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Entry New Project Name" />
+
+    <form onSubmit={enterProductName}>
+        <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Entry New Product Name" />
 
       <button type="submit" disabled={!formValue}>🕊️</button>
 
@@ -122,15 +118,15 @@ export function ProjectsPage(props) {
 
 }
 
-// ###################################################################################################
-function ProjectForm(props) {
-    const { projectName } = props.projects;
-
-    return (<>
-      <div>
-        <p>{projectName}</p>
-      </div>
-    </>)
-}
+//#############################################################################
+// function ProductItem(props) { //prints name
+//     const { productName } = props.products;
+//     return (<>
+//       <div>
+//         <p>{productName}</p>
+//       </div>
+//     </>)
+// }
+//#############################################################################
 
 export {firebase, useAuthState, useCollectionData};

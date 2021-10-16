@@ -1,5 +1,5 @@
 import React from 'react';
-import { firebase, useAuthState, useCollectionData, auth, firestore, analytics, Testing } from './fire.js';
+import { firebase, useAuthState, useCollectionData, auth, firestore, analytics, Testing, ProductsPage } from './fire.js';
 import { SignIn, SignOut } from './LoggingInAndOut.js';
 import { ProductSelector } from './Product.js';
 import UserContext from './UserContext.js';
@@ -15,7 +15,7 @@ const Home = () => {
        </header>
        <section>
         <UserContext.Consumer>
-          {({user}) => user ? "User Is logged in" : "User Not logged in"  }
+          {({user}) => user ? <ProductsPage/> : "User Not logged in"  }
         </UserContext.Consumer>
        </section>
      </div>
