@@ -4,12 +4,13 @@ import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
 import 'firebase/compat/analytics';
 
+
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 
 import React, { useRef, useState } from 'react';
-import Context from './Context';
+import Context from './ProductContext';
 
 
 

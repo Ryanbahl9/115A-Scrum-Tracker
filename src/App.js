@@ -7,29 +7,20 @@ import Home from './components/Home';
 import Drawer from './components/Drawer';
 import ScrumBoard from './components/ScrumBoard';
 import NotFound from './components/NotFound';
-import {useAuthState, auth, firestore, useCollectionData} from './components/fire';
-import Context from './components/Context';
-import React, { useRef, useState } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Container } from "@mui/material";
-import Home from "./components/Home";
-import Drawer from "./components/Drawer";
-import ScrumBoard from "./components/ScrumBoard";
-import NotFound from "./components/NotFound";
+import {useAuthState, auth, firestore, useCollectionData } from './components/fire';
+import ProductContext from './components/ProductContext';
+import UserContext from './components/UserContext';
+
+
+
 
 function App() {
   const [user] = useAuthState(auth);
-  const projectsRef = firestore.collection('projects');
-  const query = projectsRef.where("uid", "==", auth.currentUser.uid)
-  const [projects] = useCollectionData(query, { idField: 'id' });
-  Context.user = user;
+  const [products, setProducts] = useState(null);
 
 
   return (
-    <Context.Provider value={
-      {user,
-      projects}
-    }>
+    <UserContext.Provider value={{user, products, setProducts}}>
     <Container>
       <Router>
         <Drawer />
@@ -40,7 +31,7 @@ function App() {
         </Switch>
       </Router>
     </Container>
-    </Context.Provider>
+    </UserContext.Provider>
   );
 
 }
