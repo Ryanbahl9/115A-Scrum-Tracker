@@ -12,18 +12,11 @@ const Home = () => {
 
        <header>
          <h1>Simple beginnings </h1>
-        
-         {/* <SignOut /> */}
        </header>
        <section>
-         {/* <ProductSelector></ProductSelector> */}
         <UserContext.Consumer>
-          {({user}) => 
-
-        user ? "User Is logged in"
-          : "User Not logged in"
-      }
-      </UserContext.Consumer>
+          {({user}) => user ? "User Is logged in" : "User Not logged in"  }
+        </UserContext.Consumer>
        </section>
      </div>
     )
