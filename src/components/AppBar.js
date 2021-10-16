@@ -14,6 +14,7 @@ import {
 import logo from '../logo.svg'
 
 import { withRouter } from 'react-router';
+import { SignOut } from './LoggingInAndOut';
 
 
 const AppBar = props => {

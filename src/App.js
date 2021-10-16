@@ -12,12 +12,14 @@ import NotFound from './components/NotFound';
 import {useAuthState, auth, firestore, useCollectionData } from './components/fire';
 import ProductContext from './components/ProductContext';
 import UserContext from './components/UserContext';
+import { SignIn, SignOut } from './components/LoggingInAndOut';
 
 
 
 
 function App() {
   const [user] = useAuthState(auth);
+  // const user = true
   const [products, setProducts] = useState(null);
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -28,15 +30,18 @@ function App() {
   return (
     <UserContext.Provider value={{user, products, setProducts}}>
     <Container>
+      {/* <SignIn/> */}
       <Router>
         <AppBar toggleDrawerOpen={toggleDrawerOpen} user={user}/>
         {user && <Drawer drawerOpen={drawerOpen}/>}
-        <Switch>
+
+          <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/board" component={ScrumBoard} />
           <Route path="*" component={Backlog} />
         </Switch>
       </Router>
+      {user ? <SignOut/> : <SignIn/>}
     </Container>
     </UserContext.Provider>
   );

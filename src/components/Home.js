@@ -13,15 +13,15 @@ const Home = () => {
        <header>
          <h1>Simple beginnings </h1>
         
-         <SignOut />
+         {/* <SignOut /> */}
        </header>
        <section>
          {/* <ProductSelector></ProductSelector> */}
         <UserContext.Consumer>
           {({user}) => 
 
-        !user ? "User Is logged In. I am consuming State"
-          : <div>Returned a div, from consumed state</div>
+        user ? "User Is logged in"
+          : "User Not logged in"
       }
       </UserContext.Consumer>
        </section>
