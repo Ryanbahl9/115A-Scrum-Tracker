@@ -16,12 +16,12 @@ const Home = () => {
          <SignOut />
        </header>
        <section>
-         <ProductSelector></ProductSelector>
+         {/* <ProductSelector></ProductSelector> */}
         <UserContext.Consumer>
           {({user}) => 
 
-        !user ? "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"
-          : <div>Hello Worldoooooooooooooooooooo</div>
+        !user ? "User Is logged In. I am consuming State"
+          : <div>Returned a div, from consumed state</div>
       }
       </UserContext.Consumer>
        </section>
