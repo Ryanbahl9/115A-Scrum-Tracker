@@ -25,10 +25,14 @@ function App() {
     drawerOpen === false ? setDrawerOpen(true) : setDrawerOpen(false)
   }
 
+  const [product, setProduct] = useState();
+  const productSet = (event) => {
+    setProduct(event.target.value);
+  };
+
   return (
-    <UserContext.Provider value={{user}}>
+    <UserContext.Provider value={{user, product, productSet}}>
     <Container>
-      {/* <SignIn/> */}
       <Router>
         <AppBar toggleDrawerOpen={toggleDrawerOpen} user={user}/>
         {user && <Drawer drawerOpen={drawerOpen}/>}

@@ -17,6 +17,7 @@ import Context from './ProductContext';
 import {InputLabel} from '@material-ui/core';
 
 import {Select, FormControl, MenuItem} from '@mui/material';
+import UserContext from './UserContext';
 
 
 firebase.initializeApp({
@@ -37,86 +38,62 @@ export const firestore = firebase.firestore();
 export const analytics = firebase.analytics();
 
 
-
+//########## Main Function
 export function ProductsPage(props) {
-  const dummy = useRef();
+
   const productsRef = firestore.collection('products');
   const query = productsRef.where("uid", "==", auth.currentUser.uid)
+  // access: products[#]["xxx"]
   const [products] = useCollectionData(query, { idField: 'id' });
 
 
-
+  //##submission Field, state and function
   const [formValue, setFormValue] = useState('');
-
-  //###################Submission Field
   const enterProductName = async (e) => {
-    e.preventDefault();
-
+    // e.preventDefault();
     const { uid } = auth.currentUser;
-
     await productsRef.add({
       productName: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       uid
     })
-
     setFormValue('');
   }
-  //###################
-  const [age, setAge] = React.useState('');
-
-  const handleChange = (event) => {
-    myInt += 10;
-    console.log(event.target.value)
-    // setAge(event.target.value);
-    setAge(myInt)
-  };
-  var myInt = 10;
-  //###################
-  //###################
-  const ProductItem = (props) => { //prints name
-    const { productName } = props.product;
-    return (<MenuItem value={productName}>{productName}</MenuItem>)
-
-  }
-  //###################
-  //###################product
-  const [product, setProduct] = useState("temp");
-  const productSet = (event) => {
-    console.log("productSet: " + event.target.value)
-    setProduct(event.target.value);
-  };
-  //###################
+  //##product state and setter // keep for now, put in App.js
+  // const [product, setProduct] = useState();
+  // const productSet = (event) => {
+  //   // console.log("productSet: " + event.target.value)
+  //   setProduct(event.target.value);
+  // };
+  //#### return
   return (<>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Product</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={product}
-            // value={age}
-            label="Product Select"
-            onChange={productSet}
-            // onChange={handleChange}
-            >
-          {products && products.map(at => <ProductItem product={at} />)}
-            {/* <MenuItem value={"4"}>Stupid Test</MenuItem> */}
-            {/* <MenuItem value={10}>Ten</MenuItem> */}
-            {/* <MenuItem value={20}>Twenty</MenuItem> */}
-            {/* <MenuItem value={30}>Thirty</MenuItem> */}
-          </Select>
-      </FormControl>
-
-
+  <UserContext.Consumer>
+    {({product, productSet}) =>
+    <div>
+    <FormControl fullWidth>
+      <InputLabel id="basic-select-label">Product</InputLabel>
+        <Select
+          id="basic-select"
+          value={product}
+          onChange={productSet}
+          >
+            {products && products.map(doc =>
+              <MenuItem value={doc} key={doc.id}> {doc.productName}</MenuItem>
+            )}
+        </Select>
+    </FormControl>
+    {/* <div>{product && product.productName}</div> */}
     <form onSubmit={enterProductName}>
         <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Entry New Product Name" />
 
       <button type="submit" disabled={!formValue}>🕊️</button>
-
     </form>
+    </div>}
+    </UserContext.Consumer>
   </>)
 
 }
+
 
 //#############################################################################
 // function ProductItem(props) { //prints name
