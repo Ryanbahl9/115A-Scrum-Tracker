@@ -3,25 +3,21 @@ import * as React from 'react';
 import { Button } from '@mui/material';
 
 
-export function SignIn() {
+export function SignIn(props) {
 
     const signInWithGoogle = () => {
       const provider = new firebase.auth.GoogleAuthProvider();
       auth.signInWithPopup(provider);
     }
-  
     return (
-      <>
-      
         <Button variant="contained" className="sign-in" onClick={signInWithGoogle}>Sign in with Google</Button>
-      </>
     )
-  
+
   }
 
 export  function SignOut() {
     return auth.currentUser && (
-      <button className="sign-out" onClick={() => auth.signOut()}>Sign Out</button>
+      <Button variant="contained" className="sign-out" onClick={() => auth.signOut()}>Sign Out</Button>
     )
   }
-  
+

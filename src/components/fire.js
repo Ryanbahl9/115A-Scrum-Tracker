@@ -4,25 +4,23 @@ import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
 import 'firebase/compat/analytics';
 
+
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 
 import React, { useRef, useState } from 'react';
-import Context from './Context';
+import Context from './ProductContext';
 
+// import Select from '@mui/material/Select';
+// import {FormControl, MenuItem} from '@mui/material';
+import {InputLabel} from '@material-ui/core';
 
+import {Select, FormControl, MenuItem} from '@mui/material';
+import UserContext from './UserContext';
 
 
 firebase.initializeApp({
-  // prefered database but wont accept data
-  // apiKey: "AIzaSyDRs7_azKlBqlq9SVfO-TfPSYxyqcCi5is",
-  // authDomain: "a-agilescrum.firebaseapp.com",
-  // projectId: "a-agilescrum",
-  // storageBucket: "a-agilescrum.appspot.com",
-  // messagingSenderId: "844567482368",
-  // appId: "1:844567482368:web:cd0dc238b4b0c8dffc08e5",
-  // measurementId: "G-300199LHV2"
 
   // Using superChatDemo // this one works and the other doesnt for unknown reason
   apiKey: "AIzaSyBVtzPN4scCnsRdqc8fG88ZiV-v-ipkwHs",
@@ -40,96 +38,72 @@ export const firestore = firebase.firestore();
 export const analytics = firebase.analytics();
 
 
+//########## Main Function
+export function ProductsPage(props) {
 
-// ###################################################################################################
-export function Testing(props) {
+  const productsRef = firestore.collection('products');
+  const query = productsRef.where("uid", "==", auth.currentUser.uid)
+  // access: products[#]["xxx"]
+  const [products] = useCollectionData(query, { idField: 'id' });
 
 
-  const add =  async () => {
-    const messagesRef = firestore.collection('messages');
-    await messagesRef.add({
-      projectName: "testing Project",
-    });
-
-  function goodButton(add) {
-    return (<button onClick={add}>Logged In Add</button>)
-  }
-
-  };
-  return (
-    <div>
-      <Context.Consumer>
-        {/* {(Context.user) => user ? "Third TEST" : "SECOND TEST"}</Context.Consumer> } */}
-        {({user}) => user ? "Third TEST" : "SECOND TEST"}</Context.Consumer>
-      {/* Basic Test */}
-    {/* <Context.Consumer>
-      <div>
-      {({user}) => {
-        user ? <button onClick={add}>Logged In Add</button> : <button>Not Logged In</button>
-      }}
-      </div>
-    </Context.Consumer> */}
-    </div>
-  )
-}
-// ###################################################################################################
-
-export function ProjectsPage(props) {
-  const dummy = useRef();
-  const projectsRef = firestore.collection('projects');
-  const query = projectsRef.where("uid", "==", auth.currentUser.uid)
-                          //  .orderBy('createdAt', "asc")
-  // const query = projectsRef.where("uid", "==", auth.currentUser.uid);
-  // query.orderBy("createdAt");
-  // const query = projectsRef.orderBy("createdAt");
-
-  const [projects, stillLoading, error] = useCollectionData(query, { idField: 'id' });
-  // const sortProjects
-  console.log("If Error " + error)
-
+  //##submission Field, state and function
   const [formValue, setFormValue] = useState('');
-
-
-  // const sendMessage = async (e) => {
-  const enterProjectName = async (e) => {
-    e.preventDefault();
-
+  const enterProductName = async (e) => {
+    // e.preventDefault();
     const { uid } = auth.currentUser;
-
-    await projectsRef.add({
-      projectName: formValue,
+    await productsRef.add({
+      productName: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       uid
     })
-
     setFormValue('');
   }
-
+  //##product state and setter // keep for now, put in App.js
+  // const [product, setProduct] = useState();
+  // const productSet = (event) => {
+  //   // console.log("productSet: " + event.target.value)
+  //   setProduct(event.target.value);
+  // };
+  //#### return
   return (<>
-    <main>
-      {projects && projects.map(at => <ProjectForm key={at.id} projects={at} />)} {/*// at == atributes*/}
-    </main>
-
-    <form onSubmit={enterProjectName}>
-      {/* {stillLoading ? "Still Loading Query" : "error " + {Object.keys(error)}} */}
-      <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Entry New Project Name" />
+  <UserContext.Consumer>
+    {({product, productSet}) =>
+    <div>
+    <FormControl fullWidth>
+      <InputLabel id="basic-select-label">Product</InputLabel>
+        <Select
+          id="basic-select"
+          value={product}
+          onChange={productSet}
+          >
+            {products && products.map(doc =>
+              <MenuItem value={doc} key={doc.id}> {doc.productName}</MenuItem>
+            )}
+        </Select>
+    </FormControl>
+    {/* <div>{product && product.productName}</div> */}
+    <form onSubmit={enterProductName}>
+        <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Entry New Product Name" />
 
       <button type="submit" disabled={!formValue}>🕊️</button>
-
     </form>
+    </div>}
+    </UserContext.Consumer>
   </>)
 
 }
 
-// ###################################################################################################
-function ProjectForm(props) {
-    const { projectName } = props.projects;
 
-    return (<>
-      <div>
-        <p>{projectName}</p>
-      </div>
-    </>)
-}
+//#############################################################################
+// function ProductItem(props) { //prints name
+//     const { productName } = props.products;
+//     return (<>
+//       <div>
+//         <p>{productName}</p>
+//       </div>
+//     </>)
+// }
+//#############################################################################
 
 export {firebase, useAuthState, useCollectionData};

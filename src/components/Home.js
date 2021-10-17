@@ -1,20 +1,22 @@
 import React from 'react';
-import { firebase, useAuthState, useCollectionData, auth, firestore, analytics, Testing } from './fire.js';
-import { SignIn, SignOut } from './LoggingInAndOut.js'
+import { firebase, useAuthState, useCollectionData, auth, firestore, analytics, Testing, ProductsPage } from './fire.js';
+import { SignIn, SignOut } from './LoggingInAndOut.js';
+import { ProductSelector } from './Product.js';
+import UserContext from './UserContext.js';
 
 const Home = () => {
-    const [user] = useAuthState(auth);
+    // const [user] = useAuthState(auth);
 
     return (
     <div>
 
        <header>
          <h1>Simple beginnings </h1>
-         <SignOut />
        </header>
        <section>
-         {user ? <div>Yay! Logged in!</div> : <SignIn />}
-         {/* {user ? <div>VALID USER??</div> : <div>Invalid USER</div>} */}
+        <UserContext.Consumer>
+          {({user}) => user ? <ProductsPage/> : "User Not logged in"  }
+        </UserContext.Consumer>
        </section>
      </div>
     )

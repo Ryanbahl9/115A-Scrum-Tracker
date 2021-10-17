@@ -5,26 +5,47 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Home from './components/Home';
 import Drawer from './components/Drawer';
-import Topbar from './components/Topbar';
+import AppBar from './components/AppBar';
 import ScrumBoard from './components/ScrumBoard';
 import Backlog from './components/Backlog';
 import NotFound from './components/NotFound';
-import {useAuthState, auth, firestore, useCollectionData} from './components/fire';
-import Context from './components/Context';
+import {useAuthState, auth, firestore, useCollectionData } from './components/fire';
+import ProductContext from './components/ProductContext';
+import UserContext from './components/UserContext';
+import { SignIn, SignOut } from './components/LoggingInAndOut';
+
+
+
 
 function App() {
+  const [user] = useAuthState(auth);
+
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const toggleDrawerOpen = () => {
+    drawerOpen === false ? setDrawerOpen(true) : setDrawerOpen(false)
+  }
+
+  const [product, setProduct] = useState();
+  const productSet = (event) => {
+    setProduct(event.target.value);
+  };
+
   return (
+    <UserContext.Provider value={{user, product, productSet}}>
     <Container>
       <Router>
-        <Topbar/>
-        <Drawer />
-        <Switch>
+        <AppBar toggleDrawerOpen={toggleDrawerOpen} user={user}/>
+        {user && <Drawer drawerOpen={drawerOpen}/>}
+
+          <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/board" component={ScrumBoard} />
           <Route path="*" component={Backlog} />
         </Switch>
       </Router>
+      {user ? <SignOut/> : <SignIn user={user}/>}
     </Container>
+    </UserContext.Provider>
   );
 
 }
