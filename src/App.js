@@ -13,6 +13,7 @@ import {useAuthState, auth, firestore, useCollectionData } from './components/fi
 import ProductContext from './components/ProductContext';
 import UserContext from './components/UserContext';
 import { SignIn, SignOut } from './components/LoggingInAndOut';
+import { Box } from '@mui/system';
 
 
 
@@ -32,7 +33,7 @@ function App() {
 
   return (
     <UserContext.Provider value={{user, product, productSet}}>
-    <Container>
+    <Box sx={{flexGrow: 1}}>
       <Router>
         <AppBar toggleDrawerOpen={toggleDrawerOpen} user={user}/>
         {user && <Drawer drawerOpen={drawerOpen}/>}
@@ -44,7 +45,7 @@ function App() {
         </Switch>
       </Router>
       {/* {user ? <SignOut/> : <SignIn user={user}/>} */}
-    </Container>
+    </Box>
     </UserContext.Provider>
   );
 
