@@ -14,7 +14,7 @@ import {
 import logo from '../logo.svg'
 
 import { withRouter } from 'react-router';
-import { SignOut } from './LoggingInAndOut';
+import { SignIn, SignOut } from './LoggingInAndOut';
 import {ProductsPage} from './fire';
 
 
@@ -40,6 +40,7 @@ const AppBar = props => {
         </IconButton>
       </MUIToolbar>
       {user && <ProductsPage/>}
+      {user ? <SignOut/> : <SignIn user={user}/>}
       </div>
     </MUIAppBar>
   )
