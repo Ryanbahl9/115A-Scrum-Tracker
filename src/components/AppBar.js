@@ -39,7 +39,7 @@ const AppBar = props => {
           <Home />
         </IconButton>
       </MUIToolbar>
-      <ProductsPage/>
+      {user && <ProductsPage/>}
       </div>
     </MUIAppBar>
   )
