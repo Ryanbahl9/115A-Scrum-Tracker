@@ -28,9 +28,8 @@ firebase.initializeApp({
   projectId: "superchatdemo-53429",
   storageBucket: "superchatdemo-53429.appspot.com",
   messagingSenderId: "786660954800",
-  appId: "1:786660954800:web:7d8e6bc0eea6374d8aa175",
-  measurementId: "G-R51Z09WJ2L"
-
+  appId: "1:786660954800:web:b2b7e0b8ea60546b8aa175",
+  measurementId: "G-5483NEP5VJ"
 })
 
 export const auth = firebase.auth();
@@ -50,7 +49,7 @@ export function ProductsPage(props) {
   //##submission Field, state and function
   const [formValue, setFormValue] = useState('');
   const enterProductName = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     const { uid } = auth.currentUser;
     await productsRef.add({
       productName: formValue,
@@ -59,51 +58,40 @@ export function ProductsPage(props) {
     })
     setFormValue('');
   }
-  //##product state and setter // keep for now, put in App.js
-  // const [product, setProduct] = useState();
-  // const productSet = (event) => {
-  //   // console.log("productSet: " + event.target.value)
-  //   setProduct(event.target.value);
-  // };
-  //#### return
-  return (<>
-  <UserContext.Consumer>
-    {({product, productSet}) =>
-    <div>
-    <FormControl fullWidth>
-      <InputLabel id="basic-select-label">Product</InputLabel>
-        <Select
-          id="basic-select"
-          value={product}
-          onChange={productSet}
-          >
-            {products && products.map(doc =>
-              <MenuItem value={doc} key={doc.id}> {doc.productName}</MenuItem>
-            )}
-        </Select>
-    </FormControl>
-    {/* <div>{product && product.productName}</div> */}
-    <form onSubmit={enterProductName}>
-        <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Entry New Product Name" />
+  //##
+  return (
+    <>
+      <UserContext.Consumer>{({product, productSet}) =>
+        <div>
+          <FormControl fullWidth>
+            <InputLabel id="select-label">Product</InputLabel>
+              <Select
+                labelId="select-label"
+                id="select"
+                value={product}
+                onChange={productSet}
+                defaultValue={product && product.productName}
+                label={product && product.productName}
+              >
+                  {products && products.map(doc =>
+                    <MenuItem value={doc} key={doc.id}> {doc.productName}</MenuItem>
+                  )}
+              </Select>
+          </FormControl>
+          <div>Current Product</div>
+          <div>{product && product.productName}</div>
+          <div>Current Product</div>
+          <form onSubmit={enterProductName}>
+              <input value={formValue} onChange={(e) =>
+                setFormValue(e.target.value)} placeholder="Entry New Product Name" />
 
-      <button type="submit" disabled={!formValue}>🕊️</button>
-    </form>
-    </div>}
-    </UserContext.Consumer>
-  </>)
+            <button type="submit" disabled={!formValue}>🕊️</button>
+          </form>
+        </div>
+      }</UserContext.Consumer>
+    </>)
 
 }
 
-
-//#############################################################################
-// function ProductItem(props) { //prints name
-//     const { productName } = props.products;
-//     return (<>
-//       <div>
-//         <p>{productName}</p>
-//       </div>
-//     </>)
-// }
-//#############################################################################
 
 export {firebase, useAuthState, useCollectionData};
