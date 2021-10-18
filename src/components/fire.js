@@ -41,7 +41,8 @@ export const analytics = firebase.analytics();
 export function ProductsPage(props) {
 
   const productsRef = firestore.collection('products');
-  const query = productsRef.where("uid", "==", auth.currentUser.uid)
+  var query = productsRef.where("uid", "==", auth.currentUser.uid).orderBy('createdAt', 'desc')
+  query = productsRef.orderBy('createdAt');
   // access: products[#]["xxx"]
   const [products] = useCollectionData(query, { idField: 'id' });
 
