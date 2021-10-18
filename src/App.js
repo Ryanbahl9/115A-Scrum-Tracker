@@ -40,7 +40,7 @@ function App() {
           <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/board" component={ScrumBoard} />
-          <Route path="*" component={Backlog} />
+          <Route path="/backlog" component={Backlog} />
         </Switch>
       </Router>
       {/* {user ? <SignOut/> : <SignIn user={user}/>} */}
