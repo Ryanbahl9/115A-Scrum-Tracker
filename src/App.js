@@ -43,7 +43,7 @@ function App() {
           <Route path="*" component={Backlog} />
         </Switch>
       </Router>
-      {user ? <SignOut/> : <SignIn user={user}/>}
+      {/* {user ? <SignOut/> : <SignIn user={user}/>} */}
     </Container>
     </UserContext.Provider>
   );

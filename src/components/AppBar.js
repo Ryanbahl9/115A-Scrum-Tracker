@@ -1,20 +1,21 @@
 import React from 'react'
 
-import { 
+import {
   AppBar as MUIAppBar,
   Toolbar as MUIToolbar,
   IconButton,
   Box
 } from '@mui/material';
 
-import { 
+import {
   Menu,
-  Home 
+  Home
 } from '@mui/icons-material';
 import logo from '../logo.svg'
 
 import { withRouter } from 'react-router';
-import { SignOut } from './LoggingInAndOut';
+import { SignIn, SignOut } from './LoggingInAndOut';
+import {ProductsPage} from './fire';
 
 
 const AppBar = props => {
@@ -28,15 +29,19 @@ const AppBar = props => {
   //   setOpen(false);
   // };
   return (
-    <MUIAppBar position="sticky" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <MUIAppBar position='sticky' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <div style={{display: "flex"}}>
       <MUIToolbar>
         {user && <IconButton button onClick={toggleDrawerOpen}> {/* aria-label="open drawer" onClick={handleDrawerOpen} */}
           <Menu />
         </IconButton>}
-        <IconButton button onClick={() => history.push('/')} > 
+        <IconButton button onClick={() => history.push('/')} >
           <Home />
         </IconButton>
       </MUIToolbar>
+      {user && <ProductsPage/>}
+      {user ? <SignOut/> : <SignIn user={user}/>}
+      </div>
     </MUIAppBar>
   )
 }

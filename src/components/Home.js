@@ -14,9 +14,10 @@ const Home = () => {
          <h1>Simple beginnings </h1>
        </header>
        <section>
-        <UserContext.Consumer>
-          {({user}) => user ? <ProductsPage/> : "User Not logged in"  }
-        </UserContext.Consumer>
+         <div>Adjust so header is visable I thinking adjust Router stying... or Maybe Container</div>
+        {/* <UserContext.Consumer> */}
+          {/* {({user}) => user ? <ProductsPage/> : "User Not logged in"  } */}
+        {/* </UserContext.Consumer> */}
        </section>
      </div>
     )

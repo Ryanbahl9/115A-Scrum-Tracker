@@ -62,25 +62,26 @@ export function ProductsPage(props) {
   return (
     <>
       <UserContext.Consumer>{({product, productSet}) =>
-        <div>
-          <FormControl fullWidth>
-            <InputLabel id="select-label">Product</InputLabel>
+        <div style={{display: "flex"}}>
+          <FormControl >
+            <InputLabel id="select-label" style={{}}>Product</InputLabel>
               <Select
                 labelId="select-label"
                 id="select"
                 value={product}
                 onChange={productSet}
-                defaultValue={product && product.productName}
-                label={product && product.productName}
+                // defaultValue={product && product.productName}
+                // label={product && product.productName}
               >
                   {products && products.map(doc =>
                     <MenuItem value={doc} key={doc.id}> {doc.productName}</MenuItem>
                   )}
               </Select>
           </FormControl>
-          <div>Current Product</div>
-          <div>{product && product.productName}</div>
-          <div>Current Product</div>
+          <div style={{}}>
+            <div>-CurrProduct-Debuggin-</div>
+            <div>{product && product.productName}</div>
+          </div>
           <form onSubmit={enterProductName}>
               <input value={formValue} onChange={(e) =>
                 setFormValue(e.target.value)} placeholder="Entry New Product Name" />
