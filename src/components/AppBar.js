@@ -28,7 +28,7 @@ const AppBar = props => {
   //   setOpen(false);
   // };
   return (
-    <MUIAppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <MUIAppBar position="sticky" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <MUIToolbar>
         {user && <IconButton button onClick={toggleDrawerOpen}> {/* aria-label="open drawer" onClick={handleDrawerOpen} */}
           <Menu />
