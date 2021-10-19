@@ -15,19 +15,12 @@ import logo from '../logo.svg'
 
 import { withRouter } from 'react-router';
 import { SignIn, SignOut } from './LoggingInAndOut';
-import {ProductsPage} from './fire';
+import ProductSelection from './ProductSelection';
 
 
 const AppBar = props => {
   const {history, user, toggleDrawerOpen} = props
-  // const [open, setOpen] = React.useState(false);
-  // const handleDrawerOpen = () => {
-  //   setOpen(true);
-  // };
 
-  // const handleDrawerClose = () => {
-  //   setOpen(false);
-  // };
   return (
     <MUIAppBar position='sticky' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <div style={{display: "flex"}}>
@@ -39,7 +32,7 @@ const AppBar = props => {
           <Home />
         </IconButton>
       </MUIToolbar>
-      {user && <ProductsPage/>}
+      {user && <ProductSelection/>}
       {user ? <SignOut/> : <SignIn user={user}/>}
       </div>
     </MUIAppBar>

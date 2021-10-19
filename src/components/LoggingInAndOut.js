@@ -1,7 +1,7 @@
-import {firebase, auth} from './fire.js';
+import firebase from 'firebase/compat/app';
 import * as React from 'react';
 import { Button } from '@mui/material';
-
+import { auth } from './fire';
 
 export function SignIn(props) {
 
