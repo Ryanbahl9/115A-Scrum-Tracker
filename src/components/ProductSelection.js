@@ -77,10 +77,10 @@ function ProductSelection(props) {
                     {doc.productName}
                   </MenuItem>
                 ))}
-              <MenuItem>{myForm()}</MenuItem>
+              {/* <MenuItem>{myForm()}</MenuItem> */}
             </Select>
           </FormControl>
-          {/* {myForm()} */}
+          {myForm()}
           {/* <myForm></myForm> */}
           {/* <form onSubmit={enterProductName}>
             <Input
