@@ -32,8 +32,9 @@ const AppBar = props => {
           <Home />
         </IconButton>
       </MUIToolbar>
-      {user && <ProductSelection/>}
-      {user ? <SignOut/> : <SignIn user={user}/>}
+      <Box sx={{flexGrow: 1}}>{user && <ProductSelection/>}</Box>
+
+      <Box>{user ? <SignOut/>: <SignIn user={user}/>}</Box>
       </div>
     </MUIAppBar>
   )

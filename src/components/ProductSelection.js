@@ -21,8 +21,9 @@ import {Box} from '@mui/system';
 function ProductSelection(props) {
   const productsRef = firestore.collection('products');
   var query = productsRef
-    .where('uid', '==', auth.currentUser.uid)
-    .orderBy('createdAt', 'desc');
+    .where('users', 'array-contains', auth.currentUser.uid)
+    // .where('uid', '==', auth.currentUser.uid)
+    // .orderBy('createdAt', 'desc');
   query = productsRef.orderBy('createdAt');
   // access: products[#]["xxx"]
   const [products] = useCollectionData(query, {idField: 'id'});
@@ -36,6 +37,7 @@ function ProductSelection(props) {
       productName: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       uid,
+      users: [uid]
     });
     setFormValue('');
   };
@@ -81,30 +83,6 @@ function ProductSelection(props) {
             </Select>
           </FormControl>
           {myForm()}
-          {/* <myForm></myForm> */}
-          {/* <form onSubmit={enterProductName}>
-            <Input
-              value={formValue}
-              onChange={(e) => setFormValue(e.target.value)}
-              placeholder="Entry New Product Name"
-              sx={style}
-            />
-
-            <Button type="submit" disabled={!formValue}>
-              🕊️
-            </Button>
-          </form> */}
-          {/* <form onSubmit={enterProductName}>
-            <input
-              value={formValue}
-              onChange={(e) => setFormValue(e.target.value)}
-              placeholder="Entry New Product Name"
-            />
-
-            <button type="submit" disabled={!formValue}>
-              🕊️
-            </button>
-          </form> */}
         </Box>
       )}
     </UserContext.Consumer>
