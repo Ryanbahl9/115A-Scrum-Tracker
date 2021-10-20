@@ -37,12 +37,15 @@ function App() {
       <Router>
         <AppBar toggleDrawerOpen={toggleDrawerOpen} user={user}/>
         {user && <Drawer drawerOpen={drawerOpen}/>}
-
+        {user ?
           <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/board" component={ScrumBoard} />
           <Route path="/backlog" component={Backlog} />
         </Switch>
+        :
+        <div>Nothing here</div>
+        }
       </Router>
       {/* {user ? <SignOut/> : <SignIn user={user}/>} */}
     </Box>

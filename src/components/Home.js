@@ -4,23 +4,18 @@ import {useCollectionData} from 'react-firebase-hooks/firestore';
 import {Box} from '@mui/system';
 import UserContext from './UserContext';
 const Home = () => {
-  // const productsRef = firestore.collection('products');
-  // var query = productsRef.where(
-  //   'users',
-  //   'array-contains',
-  //   auth.currentUser.uid
-  // );
-  // // .where('uid', '==', auth.currentUser.uid)
-  // // .orderBy('createdAt', 'desc');
-  // query = productsRef.orderBy('createdAt');
-  // // access: products[#]["xxx"]
-  // const [products] = useCollectionData(query, {idField: 'id'});
+  const productsRef = firestore.collection('products');
+  var query = productsRef.where(
+    'users',
+    'array-contains',
+    auth.currentUser.uid
+  );
+  // .where('uid', '==', auth.currentUser.uid)
+  // .orderBy('createdAt', 'desc');
+  query = productsRef.orderBy('createdAt');
+  // access: products[#]["xxx"]
+  const [products] = useCollectionData(query, {idField: 'id'});
 
-  // const listProducts = () => {
-  //   {
-  //     products && products.map((doc) => <Box>{doc.productName}</Box>);
-  //   }
-  // };
 
   return (
     <UserContext.Consumer>
@@ -31,7 +26,7 @@ const Home = () => {
           </header>
           <section>
             <div>MOVE OVER FOR SIDEBAR</div>
-            {/* {user && listProducts()} */}
+            {products && products.map((doc) => <p>{doc.productName}</p>)}
           </section>
         </div>
       )}
