@@ -26,7 +26,10 @@ function App() {
     drawerOpen === false ? setDrawerOpen(true) : setDrawerOpen(false)
   }
 
-  const [product, setProduct] = useState();
+  //having the default product not be null will be helpful to avoid errors imo,
+  //b/c a firestore query would throw an where("productId", "==", product.id) when product = null
+  //with this it won't throw an error and will instead just give you no results
+  const [product, setProduct] = useState({id: -1});
   const productSet = (event) => {
     setProduct(event.target.value);
   };
