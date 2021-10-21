@@ -8,8 +8,12 @@ import UserStoryRow from "./UserStoryRow"
 const Board = () => {
     let { product } = useContext(UserContext);
     const userStoryRef = firestore.collection('userStory');
-    const query = userStoryRef
-        .where('productID', '==', product.id);
+    let query;
+    if(product){
+        query = userStoryRef.where('productID', '==', product.id);
+    } else {
+        query = userStoryRef.where('productID', '==', '0');
+    }
     let [UserStories, loading, error] = useCollectionData(query);
 
     const addColumn = () => {
