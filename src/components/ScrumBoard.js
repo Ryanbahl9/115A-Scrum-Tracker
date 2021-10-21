@@ -4,7 +4,8 @@ import UserContext from './UserContext';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import UserStoryRow from "./UserStoryRow"
 import { doc, updateDoc } from "firebase/firestore";
-import { Container, Button, Box, TextField } from '@mui/material';
+import { Container, Button, Box, TextField, FormControl, MenuItem, Select, InputLabel } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 
 
 
@@ -67,9 +68,9 @@ const Board = () => {
                     borderBottom: "1px solid black",
                     borderRight: "1px solid black",
                     maxHeight: "30px"  }}
-                key={i+2}>{stageTitle}</Box>));
+                    key={i + 2}>{stageTitle}<MenuIcon sx={{marginLeft:"10px",maxHeight:'15px', maxWidth:'15px'}}/></Box>));
         }
-        tempStageTitles.push(<Box sx={{scrollSnapAlign: "start",
+        tempStageTitles.push(<Box sx={{scrollSnapAlign: "start", 
                                     paddingTop: "10px",
                                     textAlign: "center",
                                     minWidth: "200px",
@@ -78,7 +79,7 @@ const Board = () => {
             key={tempStageTitles.length}>Completed</Box>);
         setNumStages(tempStageTitles.length);
         setStageTitles(tempStageTitles);
-    }, []);
+    }, [product]);
 
     return (<>{
         product ?
@@ -86,12 +87,24 @@ const Board = () => {
                               scrollSnapType:"x mandatory",
                               scrollPadding:"5px",
                               background: "aliceBlue",
-                              height: "91vh", }}>
-                <Box sx={{position:"fixed"}}>
-                    sprint selector
-                </Box>
+                              height: "91vh" }}>
+                <FormControl size="sm" sx={{ position: "fixed", maxWidth:"300px", marginTop:"15px"}}>
+                    <InputLabel id="demo-simple-select-label">Sprint</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={0}
+                        label="Age"
+                        sx={{maxHeight:"30px"}}
+                        // onChange={handleChange}
+                    >
+                        <MenuItem value={0}>sprint 1</MenuItem>
+                        <MenuItem value={0}>sprint 2</MenuItem>
+                        <MenuItem value={0}>sprint 3</MenuItem>
+                    </Select>
+                </FormControl>
                 <Box sx={{display: 'inline-flex',
-                          marginTop: "40px",
+                          marginTop: "60px",
                           maxHeight:"40px" }}>
                     {stageTitles}
                     <Box sx={{paddingLeft: "50px",
