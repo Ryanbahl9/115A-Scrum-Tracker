@@ -11,8 +11,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 const Board = () => {
     const newColumnRef = useRef(null);
-    const [numStages, setNumStages] = useState(0);
-    const [stageTitles, setStageTitles] = useState(0);
+    const [stageTitles, setStageTitles] = useState([]);
+    const [stageTitleComponents, setStageTitleComponents] = useState([]);
     let { product } = useContext(UserContext);
 
     const userStoryRef = firestore.collection('userStory');
@@ -41,7 +41,8 @@ const Board = () => {
             return;
         }
         console.log("PRODUCT NOT NULL! :)");
-        let tempStageTitles = [<Box sx={{
+        let tempStageTitles = ["To Do"];
+        let tempStageTitleComponents = [<Box sx={{
                 scrollSnapAlign: "start", 
                 paddingTop: "10px",
                 textAlign: "center",
@@ -60,7 +61,7 @@ const Board = () => {
                 maxHeight: "30px" }}
             key={1}>To Do</Box>];
         if(product.stages){
-            tempStageTitles = tempStageTitles.concat(product.stages
+            tempStageTitleComponents = tempStageTitleComponents.concat(product.stages
                 .map((stageTitle, i) => <Box sx={{ paddingTop: "10px",
                     scrollSnapAlign: "start",
                     textAlign: "center",
@@ -69,21 +70,24 @@ const Board = () => {
                     borderRight: "1px solid black",
                     maxHeight: "30px"  }}
                     key={i + 2}>{stageTitle}<MenuIcon sx={{marginLeft:"10px",maxHeight:'15px', maxWidth:'15px'}}/></Box>));
+            tempStageTitles = tempStageTitles.concat(product.stages);
         }
-        tempStageTitles.push(<Box sx={{scrollSnapAlign: "start", 
+        tempStageTitleComponents.push(<Box sx={{scrollSnapAlign: "start",
                                     paddingTop: "10px",
                                     textAlign: "center",
                                     minWidth: "200px",
                                     borderBottom: "1px solid black",
                                     maxHeight: "30px" }}
             key={tempStageTitles.length}>Completed</Box>);
-        setNumStages(tempStageTitles.length);
+        tempStageTitles.push("Completed")
+        setStageTitleComponents(tempStageTitleComponents);
         setStageTitles(tempStageTitles);
     }, [product]);
 
     return (<>{
         product ?
             (<Container sx={{ overflowX: "scroll",
+                              overflowY: "hidden",
                               scrollSnapType:"x mandatory",
                               scrollPadding:"5px",
                               background: "aliceBlue",
@@ -105,8 +109,8 @@ const Board = () => {
                 </FormControl>
                 <Box sx={{display: 'inline-flex',
                           marginTop: "60px",
-                          maxHeight:"40px" }}>
-                    {stageTitles}
+                          maxHeight:"40px",}}>
+                    {stageTitleComponents}
                     <Box sx={{paddingLeft: "50px",
                               minWidth: "200px",
                               paddingRight:"100px"}}>
@@ -116,11 +120,11 @@ const Board = () => {
                         </Button>
                     </Box>
                 </Box>
-                <Box sx={{width: "100%"}}>
+                <Box sx={{width:`${(stageTitles.length*200)+100}px`, height:"100%", overflowY:"scroll", overflowX:"hidden"}}>
                     {loading && <div>user stories are loading</div> }
                     {!loading && UserStories
                                     ?.map((story, i) => { 
-                                        return (<UserStoryRow key={i} doc={story} numStages={numStages}/>)})}
+                                        return (<UserStoryRow key={i} doc={story} stageTitles={stageTitles}/>)})}
                 </Box>
             </Container >)
         :
