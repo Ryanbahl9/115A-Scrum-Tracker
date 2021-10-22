@@ -1,0 +1,70 @@
+
+.stageTitlesContainer {
+    display: inline-flex;
+    margin-top: 6%;
+    max-height: 40px;
+}
+
+.firstStageTitle {
+    scroll-snap-align: start;
+    padding-top: 10px;
+    text-align: center;
+    min-width: 100px;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    max-height:30px;
+}
+
+.stageTitle {
+    scroll-snap-align: start;
+    padding-top: 10px;
+    text-align: center;
+    min-width: 200px;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    max-height:30px;
+}
+
+.lastStageTitle {
+    scroll-snap-align: start;
+    padding-top: 10px;
+    text-align: center;
+    min-width: 200px;
+    border-bottom: 1px solid black;
+    max-height:30px;
+}
+
+.titleIcon {
+    margin-left:10px;
+    max-height:15px;
+    max-width:15px;
+    cursor:pointer;
+}
+
+.sprintSelector {
+    position: fixed;
+    max-width:300px;
+    margin-top:2%;
+}
+
+.addStage {
+    padding-left: 50px;
+    min-width: 200px;
+    padding-right: 100px;
+}
+
+.userStoriesContainer {
+    height: 85%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+}
+
+.boardContainer {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding:5px;
+    background: aliceBlue;
+    height: 90vh;
+}
