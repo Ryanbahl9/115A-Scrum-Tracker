@@ -1,8 +1,9 @@
 import React from 'react';
-import {firestore, auth} from './fire';
-import {useCollectionData} from 'react-firebase-hooks/firestore';
-import {Box} from '@mui/system';
+import { firestore, auth } from './fire';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { Box } from '@mui/system';
 import UserContext from './UserContext';
+import { Button } from '@mui/material';
 const Home = () => {
   const productsRef = firestore.collection('products');
   var query = productsRef.where(
@@ -10,23 +11,30 @@ const Home = () => {
     'array-contains',
     auth.currentUser.uid
   );
-  // .where('uid', '==', auth.currentUser.uid)
-  // .orderBy('createdAt', 'desc');
   query = productsRef.orderBy('createdAt');
   // access: products[#]["xxx"]
-  const [products] = useCollectionData(query, {idField: 'id'});
+  const [products] = useCollectionData(query, { idField: 'id' });
 
 
   return (
     <UserContext.Consumer>
-      {({user}) => (
+      {({ user, productSetWithEvent, setProduct }) => (
         <div>
           <header>
             <h1>Simple beginnings </h1>
           </header>
           <section>
             <div>MOVE OVER FOR SIDEBAR</div>
-            {products && products.map((doc) => <p>{doc.productName}</p>)}
+            <div>Temp, click product to change product state</div>
+            {products && products.map((doc) =>
+              <p 
+                value={doc} 
+                // onClick={productSetWithEvent} didn't work...
+                onClick={() => setProduct(doc)}
+              >
+                {doc.productName}
+              </p>
+            )}
           </section>
         </div>
       )}

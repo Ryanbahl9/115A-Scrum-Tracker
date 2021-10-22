@@ -19,7 +19,7 @@ import ProductSelection from './ProductSelection';
 
 
 const AppBar = props => {
-  const {history, user, toggleDrawerOpen} = props
+  const {history, user, toggleDrawerOpen, product} = props
 
   return (
     <MUIAppBar position='sticky' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
@@ -31,8 +31,9 @@ const AppBar = props => {
         <IconButton button onClick={() => history.push('/')} >
           <Home />
         </IconButton>
+        {/* {user && <ProductSelection/>} */}
       </MUIToolbar>
-      <Box sx={{flexGrow: 1}}>{user && <ProductSelection/>}</Box>
+      <Box sx={{flexGrow: 1}}>{product && "Current Project: " + product.productName}</Box>
 
       <Box>{user ? <SignOut/>: <SignIn user={user}/>}</Box>
       </div>

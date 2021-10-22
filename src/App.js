@@ -10,16 +10,19 @@ import ScrumBoard from './components/ScrumBoard';
 import Backlog from './components/Backlog';
 import NotFound from './components/NotFound';
 import { auth, firestore, useCollectionData } from './components/fire';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { useAuthState} from 'react-firebase-hooks/auth';
 import UserContext from './components/UserContext';
 import { SignIn, SignOut } from './components/LoggingInAndOut';
 import { Box } from '@mui/system';
+import firebase from 'firebase/compat/app';
+import Settings from './components/Settings';
+
 
 
 
 
 function App() {
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const toggleDrawerOpen = () => {
@@ -27,24 +30,25 @@ function App() {
   }
 
   const [product, setProduct] = useState();
-  const productSet = (event) => {
+  const productSetWithEvent = (event) => {
     setProduct(event.target.value);
   };
 
   return (
-    <UserContext.Provider value={{user, product, productSet}}>
+    <UserContext.Provider value={{user, product, setProduct, productSetWithEvent}}>
     <Box sx={{flexGrow: 1}}>
       <Router>
-        <AppBar toggleDrawerOpen={toggleDrawerOpen} user={user}/>
+        <AppBar toggleDrawerOpen={toggleDrawerOpen} user={user} product={product}/>
         {user && <Drawer drawerOpen={drawerOpen}/>}
         {user ?
           <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/board" component={ScrumBoard} />
           <Route path="/backlog" component={Backlog} />
+          <Route path="/Settings" component={Settings} />
         </Switch>
         :
-        <div>Nothing here</div>
+        <div>404:ADD ROUTE FOR /*</div>
         }
       </Router>
       {/* {user ? <SignOut/> : <SignIn user={user}/>} */}
