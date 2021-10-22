@@ -10,6 +10,18 @@ const Backlog = () => {
         inputOpen === false ? setinputOpen(true) : setinputOpen(false)
     }
 
+    const CreateButton = () => {
+        if (inputOpen) {
+            return (
+                <Button>
+                    Create
+                </Button>
+            )
+        } else {
+            return <div/>
+        }
+    }
+    
     return (
         <section>
             <h1/>
@@ -21,6 +33,7 @@ const Backlog = () => {
             <h1/>
             <Stack direction="row" container justifyContent="center">
                 <UserStoryInput inputOpen={inputOpen}/>
+                <CreateButton/>
             </Stack>
         </section>
     )

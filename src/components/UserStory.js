@@ -3,7 +3,9 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-import {useState} from 'react';
+import firebase from 'firebase/compat/app';
+import {auth, firestore} from './fire';
+import {useCollectionData} from 'react-firebase-hooks/firestore';
 
 const UserStoryInput = (props) => {
     const {inputOpen} = props;
@@ -13,6 +15,7 @@ const UserStoryInput = (props) => {
     const handleChange = (event) => {
       setValue(event.target.value);
     };
+
     if (inputOpen) {
         return (
             <Box
@@ -30,9 +33,6 @@ const UserStoryInput = (props) => {
                     rows={4}
                     onChange = {handleChange}
                 />
-                <Button variant="contained">
-                    Create
-                </Button>
             </Box>
         )
     } else {
