@@ -31,6 +31,7 @@ function App() {
 
   const [product, setProduct] = useState();
   const productSetWithEvent = (event) => {
+    console.log("event?: ")
     setProduct(event.target.value);
   };
 
