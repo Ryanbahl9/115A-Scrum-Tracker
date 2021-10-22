@@ -23,8 +23,6 @@ const Board = () => {
     }
     let [UserStories, loading] = useCollection(query);
 
-    
-
     const addColumn = async (e) => {
         if (newColumnRef.current.value.length === 0) return;
         e.preventDefault();
@@ -33,7 +31,6 @@ const Board = () => {
             stages: [...product.stages, newColumnRef.current.value]
         });
     }
-
 
     useEffect(() => {
         if(!product || loading) return;
@@ -96,6 +93,7 @@ const Board = () => {
                     {!loading && UserStories.docs.map(doc => { 
                         return (<UserStoryRow key={doc.id} id={doc.id} data={doc.data()} stageTitles={stageTitles}/>)
                     })}
+                    {!loading && (UserStories.docs.length===0) && <h3>There are no user stories for this board</h3>}
                 </Box>
             </Container >)
         :
