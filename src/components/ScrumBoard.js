@@ -1,13 +1,11 @@
 import React, { useState, useContext, useRef, useEffect  } from 'react'
 import { firestore } from './fire';
 import UserContext from './UserContext';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { useCollection } from 'react-firebase-hooks/firestore';
 import UserStoryRow from "./UserStoryRow"
 import { doc, updateDoc } from "firebase/firestore";
 import { Container, Button, Box, TextField, FormControl, MenuItem, Select, InputLabel } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-
-
 
 const Board = () => {
     const newColumnRef = useRef(null);
@@ -22,8 +20,7 @@ const Board = () => {
     } else {
         query = userStoryRef.where('productID', '==', '0');
     }
-    let [UserStories, loading] = useCollectionData(query);
-
+    let [UserStories, loading] = useCollection(query);
 
     const addColumn = async (e) => {
         if (newColumnRef.current.value.length === 0) return;
@@ -35,12 +32,7 @@ const Board = () => {
     }
 
     useEffect(() => {
-        console.log("in use effect");
-        if(!product) {
-            console.log("product is null");
-            return;
-        }
-        console.log("PRODUCT NOT NULL! :)");
+        if(!product || loading) return;
         let tempStageTitles = ["To Do"];
         let tempStageTitleComponents = [<Box sx={{
                 scrollSnapAlign: "start", 
@@ -60,29 +52,32 @@ const Board = () => {
                 borderRight: "1px solid black",
                 maxHeight: "30px" }}
             key={1}>To Do</Box>];
+
         if(product.stages){
             tempStageTitleComponents = tempStageTitleComponents.concat(product.stages
                 .map((stageTitle, i) => <Box sx={{ paddingTop: "10px",
-                    scrollSnapAlign: "start",
-                    textAlign: "center",
-                    minWidth: "200px",
-                    borderBottom: "1px solid black",
-                    borderRight: "1px solid black",
-                    maxHeight: "30px"  }}
-                    key={i + 2}>{stageTitle}<MenuIcon sx={{marginLeft:"10px",maxHeight:'15px', maxWidth:'15px'}}/></Box>));
+                        scrollSnapAlign: "start",
+                        textAlign: "center",
+                        minWidth: "200px",
+                        borderBottom: "1px solid black",
+                        borderRight: "1px solid black",
+                        maxHeight: "30px"  }}
+                    key={i+2}>{stageTitle}<MenuIcon sx={{ marginLeft: "10px", maxHeight: '15px', maxWidth: '15px', cursor: "pointer"}}/></Box>));
             tempStageTitles = tempStageTitles.concat(product.stages);
         }
+
         tempStageTitleComponents.push(<Box sx={{scrollSnapAlign: "start",
-                                    paddingTop: "10px",
-                                    textAlign: "center",
-                                    minWidth: "200px",
-                                    borderBottom: "1px solid black",
-                                    maxHeight: "30px" }}
-            key={tempStageTitles.length}>Completed</Box>);
+                                                paddingTop: "10px",
+                                                textAlign: "center",
+                                                minWidth: "200px",
+                                                borderBottom: "1px solid black",
+                                                maxHeight: "30px" }}
+                                        key={tempStageTitles.length+1}>Completed</Box>);
+
         tempStageTitles.push("Completed")
         setStageTitleComponents(tempStageTitleComponents);
         setStageTitles(tempStageTitles);
-    }, [product]);
+    }, [product, loading]);
 
     return (<>{
         product ?
@@ -91,9 +86,13 @@ const Board = () => {
                               scrollSnapType:"x mandatory",
                               scrollPadding:"5px",
                               background: "aliceBlue",
-                              height: "91vh" }}>
-                <FormControl size="sm" sx={{ position: "fixed", maxWidth:"300px", marginTop:"15px"}}>
-                    <InputLabel id="demo-simple-select-label">Sprint</InputLabel>
+                              height: "90vh" }}>
+                <FormControl size="sm" sx={{ position: "fixed",
+                                             maxWidth:"300px",
+                                             marginTop:"2%"}}>
+                    <InputLabel id="demo-simple-select-label">
+                        Sprint
+                    </InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
@@ -107,8 +106,9 @@ const Board = () => {
                         <MenuItem value={0}>sprint 3</MenuItem>
                     </Select>
                 </FormControl>
+
                 <Box sx={{display: 'inline-flex',
-                          marginTop: "60px",
+                          marginTop: "6%",
                           maxHeight:"40px",}}>
                     {stageTitleComponents}
                     <Box sx={{paddingLeft: "50px",
@@ -120,11 +120,15 @@ const Board = () => {
                         </Button>
                     </Box>
                 </Box>
-                <Box sx={{width:`${(stageTitles.length*200)+100}px`, height:"100%", overflowY:"scroll", overflowX:"hidden"}}>
+                <Box sx={{ width: `${(stageTitles.length * 200) + 100}px`,
+                           height: "85%",
+                           overflowY: "scroll",
+                           overflowX: "hidden",
+                           scrollSnapType: "y mandatory"}}>
                     {loading && <div>user stories are loading</div> }
-                    {!loading && UserStories
-                                    ?.map((story, i) => { 
-                                        return (<UserStoryRow key={i} doc={story} stageTitles={stageTitles}/>)})}
+                    {!loading && UserStories.docs.map(doc => { 
+                                        return (<UserStoryRow key={doc.id} id={doc.id} data={doc.data()} stageTitles={stageTitles}/>)
+                    })}
                 </Box>
             </Container >)
         :
