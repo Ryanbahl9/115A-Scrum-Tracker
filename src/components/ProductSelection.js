@@ -61,7 +61,7 @@ function ProductSelection(props) {
   //##
   return (
     <UserContext.Consumer>
-      {({product, productSet}) => (
+      {({product, productSetWithEvent}) => (
         <Box id="selection container" style={{display: 'flex'}}>
           <FormControl>
             <InputLabel id="select-label">Product</InputLabel>
@@ -69,7 +69,7 @@ function ProductSelection(props) {
               labelId="select-label"
               id="select"
               value={product}
-              onChange={productSet}
+              onChange={productSetWithEvent}
               sx={style}
             >
               {products &&

@@ -9,7 +9,8 @@ users:      {
                 email: @,
                 uid,
                 curProduct: id,
-                color: 'color'
+                color: 'color',
+                invites: []
             }
 userStory:  {
                 id: Auto Set Up by FireBase
