@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Input from '@mui/material/Input';
+import Button from '@mui/material/Button';
 
 import {useState} from 'react';
 
@@ -30,6 +30,9 @@ const UserStoryInput = (props) => {
                     rows={4}
                     onChange = {handleChange}
                 />
+                <Button variant="contained">
+                    Create
+                </Button>
             </Box>
         )
     } else {
