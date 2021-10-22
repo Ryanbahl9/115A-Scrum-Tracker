@@ -1,47 +1,135 @@
-import React from 'react'
-import { Grid } from '@mui/material';
+import React, { useState, useContext, useRef, useEffect  } from 'react'
+import { firestore } from './fire';
+import UserContext from './UserContext';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
+import UserStoryRow from "./UserStoryRow"
+import { doc, updateDoc } from "firebase/firestore";
+import { Container, Button, Box, TextField, FormControl, MenuItem, Select, InputLabel } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+
+
 
 const Board = () => {
-    return (
-        <>
-            <Grid container spacing={1}>
-                <Grid item xs={3}>
-                    <h3>Backlog</h3>
-                </Grid>
-                <Grid item xs={2}>
-                    <h3>User Stories</h3>
-                </Grid>
-                <Grid item xs={2}>
-                    <h3>To Do</h3>
-                </Grid>
-                <Grid item xs={2}>
-                    <h3>In Progress</h3>
-                </Grid>
-                <Grid item xs={3}>
-                    <h3>Completed</h3>
-                </Grid>
+    const newColumnRef = useRef(null);
+    const [stageTitles, setStageTitles] = useState([]);
+    const [stageTitleComponents, setStageTitleComponents] = useState([]);
+    let { product } = useContext(UserContext);
+
+    const userStoryRef = firestore.collection('userStory');
+    let query;
+    if(product){
+        query = userStoryRef.where('productID', '==', product.id);
+    } else {
+        query = userStoryRef.where('productID', '==', '0');
+    }
+    let [UserStories, loading] = useCollectionData(query);
 
 
-                <Grid item xs={3}>
-                    <div>backlogged tasks</div>
-                </Grid>
-                <Grid item xs={2}>
-                    <div>Example User Story</div>
-                </Grid>
-                <Grid item xs={2}>
-                    <div>to do tasks</div>
-                </Grid>
-                <Grid item xs={2}>
-                    <div>in porgress tasks</div>
-                </Grid>
-                <Grid item xs={3}>
-                    <div>completed tasks</div>
-                </Grid>
+    const addColumn = async (e) => {
+        if (newColumnRef.current.value.length === 0) return;
+        e.preventDefault();
+        const productRef = doc(firestore, "products", product.id);
+        await updateDoc(productRef, {
+            stages: [...product.stages, newColumnRef.current.value]
+        });
+    }
 
-            </Grid>
-        </>
-    )
+    useEffect(() => {
+        console.log("in use effect");
+        if(!product) {
+            console.log("product is null");
+            return;
+        }
+        console.log("PRODUCT NOT NULL! :)");
+        let tempStageTitles = ["To Do"];
+        let tempStageTitleComponents = [<Box sx={{
+                scrollSnapAlign: "start", 
+                paddingTop: "10px",
+                textAlign: "center",
+                minWidth: "100px",
+                borderBottom: "1px solid black",
+                borderRight: "1px solid black",
+                maxHeight:"30px" }}
+            key={0}>User Stories</Box>, 
+            <Box sx={{ 
+                scrollSnapAlign: "start",
+                paddingTop: "10px",
+                textAlign: "center",
+                minWidth: "200px",
+                borderBottom: "1px solid black",
+                borderRight: "1px solid black",
+                maxHeight: "30px" }}
+            key={1}>To Do</Box>];
+        if(product.stages){
+            tempStageTitleComponents = tempStageTitleComponents.concat(product.stages
+                .map((stageTitle, i) => <Box sx={{ paddingTop: "10px",
+                    scrollSnapAlign: "start",
+                    textAlign: "center",
+                    minWidth: "200px",
+                    borderBottom: "1px solid black",
+                    borderRight: "1px solid black",
+                    maxHeight: "30px"  }}
+                    key={i + 2}>{stageTitle}<MenuIcon sx={{marginLeft:"10px",maxHeight:'15px', maxWidth:'15px'}}/></Box>));
+            tempStageTitles = tempStageTitles.concat(product.stages);
+        }
+        tempStageTitleComponents.push(<Box sx={{scrollSnapAlign: "start",
+                                    paddingTop: "10px",
+                                    textAlign: "center",
+                                    minWidth: "200px",
+                                    borderBottom: "1px solid black",
+                                    maxHeight: "30px" }}
+            key={tempStageTitles.length}>Completed</Box>);
+        tempStageTitles.push("Completed")
+        setStageTitleComponents(tempStageTitleComponents);
+        setStageTitles(tempStageTitles);
+    }, [product]);
+
+    return (<>{
+        product ?
+            (<Container sx={{ overflowX: "scroll",
+                              overflowY: "hidden",
+                              scrollSnapType:"x mandatory",
+                              scrollPadding:"5px",
+                              background: "aliceBlue",
+                              height: "91vh" }}>
+                <FormControl size="sm" sx={{ position: "fixed", maxWidth:"300px", marginTop:"15px"}}>
+                    <InputLabel id="demo-simple-select-label">Sprint</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={0}
+                        label="Age"
+                        sx={{maxHeight:"30px"}}
+                        // onChange={handleChange}
+                    >
+                        <MenuItem value={0}>sprint 1</MenuItem>
+                        <MenuItem value={0}>sprint 2</MenuItem>
+                        <MenuItem value={0}>sprint 3</MenuItem>
+                    </Select>
+                </FormControl>
+                <Box sx={{display: 'inline-flex',
+                          marginTop: "60px",
+                          maxHeight:"40px",}}>
+                    {stageTitleComponents}
+                    <Box sx={{paddingLeft: "50px",
+                              minWidth: "200px",
+                              paddingRight:"100px"}}>
+                        <TextField inputRef={newColumnRef} id="outlined-basic" label="Add Stage" variant="outlined" />
+                        <Button variant="outlined" onClick={addColumn}>
+                            + add stage
+                        </Button>
+                    </Box>
+                </Box>
+                <Box sx={{width:`${(stageTitles.length*200)+100}px`, height:"100%", overflowY:"scroll", overflowX:"hidden"}}>
+                    {loading && <div>user stories are loading</div> }
+                    {!loading && UserStories
+                                    ?.map((story, i) => { 
+                                        return (<UserStoryRow key={i} doc={story} stageTitles={stageTitles}/>)})}
+                </Box>
+            </Container >)
+        :
+            <div>You must select a project to view the board</div>
+        }</>)
 }
 
 export default Board
-
