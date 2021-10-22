@@ -13,7 +13,7 @@ const Backlog = () => {
     const CreateButton = () => {
         if (inputOpen) {
             return (
-                <Button>
+                <Button variant="text" onClick = {toggleUserInput}>
                     Create
                 </Button>
             )
@@ -21,7 +21,7 @@ const Backlog = () => {
             return <div/>
         }
     }
-    
+
     return (
         <section>
             <h1/>
