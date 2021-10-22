@@ -23,6 +23,9 @@
     border-bottom: 1px solid black;
     border-right: 1px solid black;
     max-height:30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .lastStageTitle {
@@ -48,8 +51,12 @@
 }
 
 .addStage {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    max-height: 50px;
     padding-left: 50px;
-    min-width: 200px;
+    min-width: 250px;
     padding-right: 100px;
 }
 

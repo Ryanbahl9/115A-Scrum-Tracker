@@ -7,6 +7,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { Container, Button, Box, TextField, FormControl, MenuItem, Select, InputLabel } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import styles from './ScrumBoard.module.css'
+import BasicMenu from './StageMenu';
 
 const Board = () => {
     const newColumnRef = useRef(null);
@@ -22,8 +23,6 @@ const Board = () => {
     }
     let [UserStories, loading] = useCollection(query);
 
-    
-
     const addColumn = async (e) => {
         if (newColumnRef.current.value.length === 0) return;
         e.preventDefault();
@@ -33,18 +32,17 @@ const Board = () => {
         });
     }
 
-
     useEffect(() => {
         if(!product || loading) return;
         let tempStageTitles = ["To Do"];
         let tempStageTitleComponents = [<Box className={styles.firstStageTitle} key={0}>User Stories</Box>,
-                                        <Box className={styles.stageTitle} key={1}>To Do       </Box>];
+                                        <Box className={styles.stageTitle} key={1}>To Do</Box>];
         if(product.stages){
             tempStageTitleComponents = tempStageTitleComponents
                 .concat(product.stages
                 .map((stageTitle, i) => <Box className={styles.stageTitle} key={i+2}>
                                             {stageTitle}
-                                            <MenuIcon className={styles.titleIcon}/>
+                    <BasicMenu className={styles.titleIcon}/>
                                         </Box>));
             tempStageTitles = tempStageTitles.concat(product.stages);
         }
@@ -83,9 +81,9 @@ const Board = () => {
                 <Box className={styles.stageTitlesContainer}>
                     {stageTitleComponents}
                     <Box className={styles.addStage}>
-                        <TextField inputRef={newColumnRef} id="outlined-basic" label="Add Stage" variant="outlined" />
-                        <Button variant="outlined" onClick={addColumn}>
-                            + add stage
+                        <TextField sx={{ maxHeight: "50px" }}inputRef={newColumnRef} id="standard-basic" label="Add Stage" variant="standard" />
+                        <Button sx={{ maxHeight: "50px" }} variant="outlined" onClick={addColumn}>
+                            + add
                         </Button>
                     </Box>
                 </Box>
@@ -95,6 +93,7 @@ const Board = () => {
                     {!loading && UserStories.docs.map(doc => { 
                         return (<UserStoryRow key={doc.id} id={doc.id} data={doc.data()} stageTitles={stageTitles}/>)
                     })}
+                    {!loading && (UserStories.docs.length===0) && <h3>There are no user stories for this board</h3>}
                 </Box>
             </Container >)
         :
