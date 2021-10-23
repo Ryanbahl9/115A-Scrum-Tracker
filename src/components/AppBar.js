@@ -31,7 +31,7 @@ const AppBar = props => {
         <IconButton button onClick={() => history.push('/')} >
           <Home />
         </IconButton>
-        {user && <ProductSelection/>}
+        {/* {user && <ProductSelection/>} */}
       </MUIToolbar>
       <Box sx={{flexGrow: 1}}>{product && "Current Project: " + product.productName}</Box>
 

@@ -18,9 +18,10 @@ export function SignIn(props) {
 
     usersRef.where('uid', '==', auth.currentUser.uid).get().then((snapShot) => {
       if (snapShot.empty) {
-        const { uid, email } = auth.currentUser;
+        const { displayName, uid, email } = auth.currentUser;
         usersRef.add({
           uid,
+          displayName,
           email,
           color: "NOT ASSIGNED"
         });
