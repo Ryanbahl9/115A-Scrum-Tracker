@@ -33,7 +33,7 @@ const AppBar = props => {
         </IconButton>
         {/* {user && <ProductSelection/>} */}
       </MUIToolbar>
-      <Box sx={{flexGrow: 1}}>{product && "Current Project: " + product.productName}</Box>
+      <Box sx={{flexGrow: 1, textAlign: 'center'}}>{product && "Current Project: " + product.productName}</Box>
 
       <Box>{user ? <SignOut/>: <SignIn user={user}/>}</Box>
       </div>

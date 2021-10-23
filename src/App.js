@@ -22,16 +22,21 @@ import Settings from './components/Settings';
 
 
 function App() {
-  const [user, loading] = useAuthState(auth);
 
+  const [user, loading] = useAuthState(auth);
+  const [marginWidth, setmarginWidth] = useState(0);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const toggleDrawerOpen = () => {
     drawerOpen === false ? setDrawerOpen(true) : setDrawerOpen(false)
+    if (!drawerOpen) {
+      setmarginWidth(26);
+    }else {
+      setmarginWidth(0);
+    }
   }
 
   const [product, setProduct] = useState();
   const productSetWithEvent = (event) => {
-    console.log("event?: ")
     setProduct(event.target.value);
   };
 
@@ -41,6 +46,7 @@ function App() {
       <Router>
         <AppBar toggleDrawerOpen={toggleDrawerOpen} user={user} product={product}/>
         {user && <Drawer drawerOpen={drawerOpen}/>}
+        <Box sx={{marginLeft: marginWidth}}>
         {user ?
           <Switch>
           <Route exact path="/" component={Home} />
@@ -51,6 +57,7 @@ function App() {
         :
         <div>404:ADD ROUTE FOR /*</div>
         }
+        </Box>
       </Router>
       {/* {user ? <SignOut/> : <SignIn user={user}/>} */}
     </Box>
