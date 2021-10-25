@@ -8,6 +8,7 @@ import Drawer from './components/Drawer';
 import AppBar from './components/AppBar';
 import ScrumBoard from './components/ScrumBoard';
 import Backlog from './components/Backlog';
+import SprintBacklog from './components/SprintBacklog';
 import NotFound from './components/NotFound';
 import { auth, firestore, useCollectionData } from './components/fire';
 import { useAuthState} from 'react-firebase-hooks/auth';
@@ -52,6 +53,7 @@ function App() {
           <Route exact path="/" component={Home} />
           <Route path="/board" component={ScrumBoard} />
           <Route path="/backlog" component={Backlog} />
+          <Route path="/sprintBacklog" component={SprintBacklog} />
           <Route path="/Settings" component={Settings} />
         </Switch>
         :
