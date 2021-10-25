@@ -29,7 +29,7 @@ function App() {
   const toggleDrawerOpen = () => {
     drawerOpen === false ? setDrawerOpen(true) : setDrawerOpen(false)
     if (!drawerOpen) {
-      setmarginWidth(26);
+      setmarginWidth(23);
     }else {
       setmarginWidth(0);
     }

@@ -23,7 +23,8 @@ export function SignIn(props) {
           uid,
           displayName,
           email,
-          color: "NOT ASSIGNED"
+          color: "NOT ASSIGNED",
+          invites: []
         });
       }
     }
