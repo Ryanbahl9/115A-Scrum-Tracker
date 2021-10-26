@@ -2,7 +2,9 @@ import React from 'react';
 
 import { 
   CalendarViewMonth,
-  ListAlt, Settings as SettingsIcon
+  Home,
+  ListAlt,
+  Settings as SettingsIcon
 } from '@mui/icons-material';
 
 import { 
@@ -32,9 +34,9 @@ const Drawer = (props) => {
       object to change the change the url, which in turn changes which
       components are visible in App.js*/}
       <List>
-        <ListItem button onClick={() => history.push('/Settings')}>
-          <ListItemIcon><SettingsIcon/></ListItemIcon>
-          <ListItemText primary="Settings" />
+        <ListItem button onClick={() => history.push('/')}>
+          <ListItemIcon><Home/></ListItemIcon>
+          <ListItemText primary="Home" />
         </ListItem>
         <ListItem button onClick={() => history.push('/board')}>
           <ListItemIcon><CalendarViewMonth/></ListItemIcon>
@@ -43,6 +45,14 @@ const Drawer = (props) => {
         <ListItem button onClick={() => history.push('/backlog')}>
           <ListItemIcon><ListAlt/></ListItemIcon>
           <ListItemText primary="Backlog" />
+        </ListItem>
+        <ListItem button onClick={() => history.push('/sprintBacklog')}>
+          <ListItemIcon><ListAlt/></ListItemIcon>
+          <ListItemText primary="Sprint Backlog" />
+        </ListItem>
+        <ListItem button onClick={() => history.push('/Settings')}>
+          <ListItemIcon><SettingsIcon/></ListItemIcon>
+          <ListItemText primary="Settings" />
         </ListItem>
       </List>
     </MUIDrawer>

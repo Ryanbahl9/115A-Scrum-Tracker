@@ -22,13 +22,15 @@ const Home = () => {
     'array-contains',
     auth.currentUser.uid
   );
-  query = productsRef.orderBy('createdAt');
+  // query = productsRef.orderBy('createdAt'); // messes up query
+
   // access: products[#]["xxx"]
   const [products] = useCollectionData(query, { idField: 'id' });
   //##submission Field, state and function
   const [formValue, setFormValue] = useState('');
   const enterProductName = async (e) => {
     e.preventDefault();
+
     const {uid} = auth.currentUser;
     await productsRef.add({
       productName: formValue,
@@ -38,6 +40,7 @@ const Home = () => {
     });
     setFormValue('');
   };
+
   const style = {background: 'white'};
   const myForm = () => {
     return (
