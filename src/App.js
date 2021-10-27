@@ -30,7 +30,7 @@ function App() {
   const toggleDrawerOpen = () => {
     drawerOpen === false ? setDrawerOpen(true) : setDrawerOpen(false)
     if (!drawerOpen) {
-      setmarginWidth(23);
+      setmarginWidth(26);
     }else {
       setmarginWidth(0);
     }
@@ -42,7 +42,7 @@ function App() {
   };
 
   return (
-    <UserContext.Provider value={{user, product, setProduct, productSetWithEvent}}>
+    <UserContext.Provider value={{user, product, setProduct}}>
     <Box sx={{flexGrow: 1}}>
       <Router>
         <AppBar toggleDrawerOpen={toggleDrawerOpen} user={user} product={product}/>
@@ -55,7 +55,7 @@ function App() {
           <Route path="/backlog" component={Backlog} />
           <Route path="/sprintBacklog" component={SprintBacklog} />
           <Route path="/Settings" component={Settings} />
-        </Switch>
+          </Switch>
         :
         <div>404:ADD ROUTE FOR /*</div>
         }
