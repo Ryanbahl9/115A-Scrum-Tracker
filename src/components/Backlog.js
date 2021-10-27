@@ -1,19 +1,28 @@
-import * as React from 'react';
+import React, { useState, useContext, useRef, useEffect  } from 'react'
 import Button from '@mui/material/Button';
 import AddBoxSharpIcon from '@mui/icons-material/AddBoxSharp';
 import Stack from '@mui/material/Stack';
+import { useCollection } from 'react-firebase-hooks/firestore';
 import UserStoryInput from './UserStory';
 
 import ProductContext from './ProductContext';
+import UserContext from './UserContext';
 
 import firebase from 'firebase/compat/app';
 import {auth, firestore} from './fire';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
+import { ConnectedTvOutlined } from '@mui/icons-material';
 
 const Backlog = () => {
+    let {product} = useContext(UserContext)
     const userStoryRef = firestore.collection('userStory');
-    var query = userStoryRef.where('productID', '==', '2dxqW2D6PEWzlENymKTO')
-    const [userStoryData] = useCollectionData(query, {idField: 'id'});
+    let query;
+    if(product){
+        query = userStoryRef.where('productID', '==', product.id);
+    } else {
+        query = userStoryRef.where('productID', '==', '0');
+    }
+    let [UserStories, loading] = useCollection(query);
 
     const [inputOpen, setinputOpen] = React.useState(false);
     const toggleUserInput = () => {
@@ -22,7 +31,7 @@ const Backlog = () => {
 
     const createUserStory = () => {
         toggleUserInput();
-        console.log(userStoryData)
+        //TODO
     }
 
     const CreateButton = () => {
