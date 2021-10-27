@@ -17,7 +17,8 @@ userStory:  {
                 productId: id,
                 description: "str"
                 tasks: [id,..],
-                priority: #
+                priority: #,
+                state: "productBacklog", "sprintBacklog", or "completed"
             }
 sprints:    {
                 id: Auto Set Up by FireBase
