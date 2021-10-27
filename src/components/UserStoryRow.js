@@ -23,7 +23,7 @@ const UserStoryRow = (props) => {
                                 {loading && <div>loading</div>}
                                 {!loading && tasks && tasks.docs.map(doc => {
                                     if (doc.data().stage === title) {
-                                        return <Task key={doc.id} id={doc.id} data={doc} moveNext={} movePrev={}/>
+                                        return <Task key={doc.id} id={doc.id} data={doc}/>
                                     } else {
                                         return null;
                                     }
