@@ -19,7 +19,8 @@ export function SignIn(props) {
     usersRef.where('uid', '==', auth.currentUser.uid).get().then((snapShot) => {
       if (snapShot.empty) {
         const { displayName, uid, email } = auth.currentUser;
-        usersRef.add({
+        // usersRef.add({
+          usersRef.doc(auth.currentUser.uid).set({
           uid,
           displayName,
           email,
@@ -30,7 +31,7 @@ export function SignIn(props) {
     }
     )
   }
-  
+
   function wrapper() {
     signInWithGoogle().then(AddToDataBase);
   }
