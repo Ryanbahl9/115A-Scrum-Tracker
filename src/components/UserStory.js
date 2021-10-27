@@ -1,11 +1,17 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+//import Button from '@mui/material/Button';
 
-import firebase from 'firebase/compat/app';
-import {auth, firestore} from './fire';
-import {useCollectionData} from 'react-firebase-hooks/firestore';
+//import firebase from 'firebase/compat/app';
+//import {auth, firestore} from './fire';
+//import {useCollectionData} from 'react-firebase-hooks/firestore';
+
+var currentInputString;
+
+export const getUserStoryDes = () => {
+    return currentInputString
+}
 
 const UserStoryInput = (props) => {
     const {inputOpen} = props;
@@ -14,6 +20,7 @@ const UserStoryInput = (props) => {
   
     const handleChange = (event) => {
       setValue(event.target.value);
+      currentInputString = value;
     };
 
     if (inputOpen) {
@@ -40,4 +47,4 @@ const UserStoryInput = (props) => {
     }
 }
 
-  export default UserStoryInput
+export default UserStoryInput
