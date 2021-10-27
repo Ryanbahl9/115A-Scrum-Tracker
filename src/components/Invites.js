@@ -1,32 +1,21 @@
 import React, {useState, useContext, useEffect} from 'react';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import {styled} from '@mui/material/styles';
-import {Box} from '@mui/material';
-import {useCollectionData} from 'react-firebase-hooks/firestore';
+import {Box, Button} from '@mui/material';
+import {
+  useCollectionData,
+  useDocumentData,
+} from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/compat/app';
 import {firestore, auth} from './fire';
-
-// import {admin} from 'firebase-admin';
-import {
-  Select,
-  FormControl,
-  MenuItem,
-  Button,
-  Input,
-  From,
-} from '@mui/material';
-import {AdminPanelSettings} from '@mui/icons-material';
 import {doc, updateDoc} from '@firebase/firestore';
-import UserContext from './UserContext';
+// import UserContext from './UserContext';
 
 function Invites({children}) {
-  const thisUserRef = firestore
-    .collection('users')
-    .where('uid', '==', auth.currentUser.uid);
+  const thisUserRef = firestore.collection('users').doc(auth.currentUser.uid);
 
   const [invites, setInvites] = useState(null);
-  const [userDocData] = useCollectionData(thisUserRef, {idField: 'id'});
+  const [userDocData] = useDocumentData(thisUserRef, {idField: 'id'});
 
   const getProductPromises = (thisList) => {
     const PromiseList = [];
@@ -48,11 +37,11 @@ function Invites({children}) {
   useEffect(
     () => {
       if (userDocData) {
-        if (userDocData[0].invites.length > 0) {
+        if (userDocData.invites.length > 0) {
           var productList = [];
           var objectList = [];
 
-          getProductPromises(userDocData[0].invites)
+          getProductPromises(userDocData.invites)
             .then((promiseList) => {
               const idList = [];
               promiseList.map((item) => {
@@ -75,7 +64,7 @@ function Invites({children}) {
               setInvites(objectList);
             });
         } else {
-            setInvites(null);
+          setInvites(null);
         }
       }
     },

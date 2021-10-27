@@ -3,45 +3,24 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import {styled} from '@mui/material/styles';
 import {Box} from '@mui/material';
-import {useCollectionData, useDocument} from 'react-firebase-hooks/firestore';
+import {
+  useCollectionData,
+  useDocument,
+  useDocumentDataOnce,
+} from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/compat/app';
 import {firestore, auth} from './fire';
+import {Button, Input} from '@mui/material';
 
-// import {admin} from 'firebase-admin';
-import {
-  Select,
-  FormControl,
-  MenuItem,
-  Button,
-  Input,
-  From,
-} from '@mui/material';
-import {
-  AdminPanelSettings,
-  CountertopsOutlined,
-  Repeat,
-} from '@mui/icons-material';
 import {doc, updateDoc} from '@firebase/firestore';
 import UserContext from './UserContext';
 import Invites from './Invites';
-
-// const admin = require('firebase-admin');
-
-const Item = styled(Paper)(({theme}) => ({
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
-const Thing = ({children}) => {
-  return <div>{children}</div>;
-};
 
 function UserTiles(props) {
   let {product} = useContext(UserContext);
   const productHookedRef = firestore.collection('products').doc(product.id);
   const [productHooked] = useDocument(productHookedRef, {idField: 'id'});
+
   const [userBoxes, setUserBoxes] = useState(<Box />);
 
   function getUsersPromises(idList) {
@@ -85,6 +64,11 @@ function UserTiles(props) {
 
 function Settings() {
   let {product} = useContext(UserContext);
+  var productOwnerRef = firestore.collection('users');
+  if (product) {
+    productOwnerRef = firestore.collection('users').doc(product.uid);
+  }
+  const [productOwner] = useDocumentDataOnce(productOwnerRef);
 
   //##submission Field, state and function
   const [formValue, setFormValue] = useState('');
@@ -133,16 +117,30 @@ function Settings() {
   return (
     <div>
       <Stack spacing={2}>
-        <Paper>
-          <h style={{textAlign: 'left'}}>Product Users</h>
-          {product ?
-            <div>
-              <Box sx={{textAlign: 'center'}}>Add Users {myForm()}</Box>
-              <UserTiles />
-            </div>
-            :
-            <div>Select Product for User Detail</div>
-          }
+        <Paper sx={{minHeight: 40, margin: 2}}>
+          <h style={{textAlign: 'left'}}>Product</h>
+          <h1 style={{textAlign: 'center'}}>
+            {product && product.productName}
+          </h1>
+          <Box sx={{textAlign: 'center', marginBottom: 2}}>
+            <Box>Owner</Box>
+            {productOwner && productOwner.displayName}
+          </Box>
+
+          {product ? (
+            productOwner && productOwner.uid === auth.currentUser.uid ? (
+              <div>
+                <Box sx={{textAlign: 'center'}}>Add Users {myForm()}</Box>
+                <UserTiles />
+              </div>
+            ) : (
+              <div>
+                <UserTiles />
+              </div>
+            )
+          ) : (
+            <Box sx={{margin: 2}} No Product Selected></Box>
+          )}
         </Paper>
         <Paper>
           <h style={{textAlign: 'left'}}>Invites</h>
