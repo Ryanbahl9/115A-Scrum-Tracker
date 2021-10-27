@@ -1,6 +1,7 @@
 
 .stageTitlesContainer {
     display: inline-flex;
+    justify-content: start;
     margin-top: 6%;
     max-height: 40px;
 }
@@ -9,7 +10,7 @@
     scroll-snap-align: start;
     padding-top: 10px;
     text-align: center;
-    min-width: 100px;
+    width: 100px;
     border-bottom: 1px solid black;
     border-right: 1px solid black;
     max-height:30px;
@@ -58,6 +59,7 @@
     padding-left: 50px;
     min-width: 250px;
     padding-right: 100px;
+    padding-bottom: 5px;
 }
 
 .userStoriesContainer {

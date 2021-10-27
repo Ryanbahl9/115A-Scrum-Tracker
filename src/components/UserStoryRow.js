@@ -11,18 +11,22 @@ const UserStoryRow = (props) => {
     const taskRef = firestore.collection('tasks');
     const query = taskRef.where('userStoryId', '==', props.id);
     let [tasks, loading] = useCollectionData(query, { idField: 'id' });
+    console.log(props.stageTitles);
 
-    return (<Box className={styles.outerDiv} sx={{width: `${(props.stageTitles.length * 200) - 100}px`}}>
+    return (<Box className={styles.outerDiv} sx={{width: `${(props.stageTitles.length * 200) + 300}px`}}>
                 <Box className={styles.handleContainer}>
                     <DragHandleIcon sx={{cursor:"grab"}}/>
                 </Box>
-                <Box className={styles.stagesDiv} sx={{width:`${props.stageTitles.length * 200}px`}}>
+        <Box sx={{ height: "200px", width: "200px", borderBottom: "1px solid black", borderRight: "1px solid black", display:"flex", alignItems:"center", justifyContent:"center"}}>
+                    {props.data.name}
+                </Box>
+                <Box className={styles.stagesDiv} sx={{width:`${props.stageTitles.length * 200 }px`}}>
                     {props.stageTitles.map((title, i)=>
                         (<Box key={i} className={styles.stage}>
-                            <List sx={{paddingTop:"0px", paddingBottom:"0px"}}className={styles.taskList}>
+                            <List sx={{paddingTop:"0px", paddingBottom:"0px"}} className={styles.taskList}>
                                 {loading && <div>loading</div>}
-                                {!loading && tasks && tasks.docs.map(doc => {
-                                    if (doc.data().stage === title) {
+                                {!loading && tasks && tasks.map(doc => {
+                                    if (doc.stage === title) {
                                         return <Task key={doc.id} id={doc.id} data={doc}/>
                                     } else {
                                         return null;

@@ -23,7 +23,7 @@ const Board = () => {
         userStoriesQuery = userStoryRef.where('productID', '==', '0');
     }
     const [UserStories, loadingStories] = useCollectionData(userStoriesQuery, { idField: 'id' });
-
+    
     let pid;
     if (product) {
         pid = product.id;
@@ -37,33 +37,37 @@ const Board = () => {
         if (newColumnRef.current.value.length === 0) return;
         e.preventDefault();
         const productRef = doc(firestore, "products", product.id);
-        await updateDoc(productRef, {
-            stages: [...product.stages, newColumnRef.current.value]
-        });
+        if(product.stages){
+            await updateDoc(productRef, {
+                stages: [...product.stages, newColumnRef.current.value]
+            });
+        }else{
+            await updateDoc(productRef, {
+                stages: [newColumnRef.current.value]
+            });
+        }
     }
 
     useEffect(() => {
         if (!product || loadingProduct || !productData) return;
         let tempStageTitles = ["To Do"];
-        let tempStageTitleComponents = [<Box className={styles.firstStageTitle} key={0}>User Stories</Box>,
-                                        <Box className={styles.stageTitle} key={1}>To Do</Box>];
+        let tempStageTitleComponents = [<Box className={styles.firstStageTitle} key={0}></Box>,
+                                        <Box className={styles.stageTitle} key={1}>User Stories</Box>,
+                                        <Box className={styles.stageTitle} key={2}>To Do</Box>];
         if (productData.stages){
             tempStageTitleComponents = tempStageTitleComponents
                 .concat(productData.stages
-                .map((stageTitle, i) => <Box className={styles.stageTitle} key={i+2}>
+                .map((stageTitle, i) => <Box className={styles.stageTitle} key={i+3}>
                                             {stageTitle}
                     <BasicMenu className={styles.titleIcon}/>
                                         </Box>));
             tempStageTitles = tempStageTitles.concat(productData.stages);
         }
-
-        tempStageTitleComponents.push(<Box className={styles.lastStageTitle} key={tempStageTitleComponents.length+1}>Completed</Box>);
+        tempStageTitleComponents.push(<Box className={styles.lastStageTitle} key={tempStageTitleComponents.length+2}>Completed</Box>);
         tempStageTitles.push("Completed")
         setStageTitleComponents(tempStageTitleComponents);
         setStageTitles(tempStageTitles);
     }, [product, loadingProduct, productData]);
-
-
 
     return (<>{
         product ?
@@ -89,16 +93,18 @@ const Board = () => {
                 </FormControl> */}
 
                 <Box className={styles.stageTitlesContainer}>
+                    <Box sx={{ display:"inline-flex", width: `${(stageTitles.length * 200) + 300}px` }}>
                     {stageTitleComponents}
+                    </Box>
                     <Box className={styles.addStage}>
-                        <TextField sx={{ maxHeight: "50px" }}inputRef={newColumnRef} id="standard-basic" label="Add Stage" variant="standard" />
-                        <Button sx={{ maxHeight: "50px" }} variant="outlined" onClick={addColumn} disabled={loadingProduct}>
+                        <TextField sx={{ maxHeight: "40px", paddingTop:"0px", marginBottom: "30px" }}inputRef={newColumnRef}  id="standard-basic" label="Add Stage" variant="standard" />
+                        <Button sx={{ maxHeight: "45px" }} variant="outlined" onClick={addColumn} disabled={loadingProduct}>
                             + add
                         </Button>
                     </Box>
                 </Box>
 
-                <Box sx={{width: `${(stageTitles.length * 200) + 100}px`}} className={styles.userStoriesContainer}>
+                <Box sx={{width: `${(stageTitles.length * 200) + 300}px`}} className={styles.userStoriesContainer}>
                     {(loadingStories || loadingProduct) && <Box sx={{ width: "100%", display: "flex"}}><CircularProgress/></Box> }
                     {(!loadingStories && !loadingProduct) && UserStories.map(doc => {
                         return (<UserStoryRow key={doc.id} id={doc.id} data={doc} stageTitles={stageTitles}/>)

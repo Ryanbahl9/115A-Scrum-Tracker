@@ -38,8 +38,7 @@ export default function BasicMenu() {
             >
                 <MenuItem onClick={handleClose}>Move All tasks to next column</MenuItem>
                 <MenuItem onClick={handleClose}>Move All tasks to prev column</MenuItem>
-                <MenuItem onClick={handleClose}>Move Stage left</MenuItem>
-                <MenuItem onClick={handleClose}>Move Stage right</MenuItem>
+
                 <Divider />
                 <MenuItem onClick={handleClose}>Delete Stage</MenuItem>
             </Menu>
