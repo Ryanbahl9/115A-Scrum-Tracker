@@ -19,6 +19,13 @@ userStory:  {
                 tasks: [id,..],
                 priority: #
             }
+sprints:    {
+                id: Auto Set Up by FireBase
+                productID: id,
+                userStories: [id,..],
+                startDate: date
+                length: dateDuration
+            }
 tasks:      {
                 id: Auto Set Up by Firebase
                 userId: uid,
