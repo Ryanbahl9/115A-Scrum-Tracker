@@ -22,7 +22,7 @@ import { doc, updateDoc } from '@firebase/firestore';
 import UserContext from './UserContext';
 // import { updateDoc } from 'firebase/firestore';
 
-const admin = require('firebase-admin');
+// const admin = require('firebase-admin');
 
 const Item = styled(Paper)(({ theme }) => (
     {
