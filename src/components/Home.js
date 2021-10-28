@@ -1,19 +1,25 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import firebase from 'firebase/compat/app';
-import { firestore, auth } from './fire';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { Box } from '@mui/system';
+import {firestore, auth} from './fire';
+import {useCollectionData, useDocument} from 'react-firebase-hooks/firestore';
+import {Box} from '@mui/system';
 import UserContext from './UserContext';
+import {makeStyles} from '@mui/material';
 import {
   Select,
   FormControl,
   MenuItem,
   Button,
   Input,
+  Paper,
   From,
+  Grid,
 } from '@mui/material';
-
-
+import Invites from './Invites';
+import {itemSelectSytle, itemsStyle, itemsStyles, itemStyle} from './CSS';
+import {Styles} from './Styles';
+import Add from './AddProduct';
+import AddProduct from './AddProduct';
 
 const Home = () => {
   const productsRef = firestore.collection('products');
@@ -22,69 +28,73 @@ const Home = () => {
     'array-contains',
     auth.currentUser.uid
   );
-  // query = productsRef.orderBy('createdAt'); // messes up query
 
-  // access: products[#]["xxx"]
-  const [products] = useCollectionData(query, { idField: 'id' });
-  //##submission Field, state and function
-  const [formValue, setFormValue] = useState('');
-  const enterProductName = async (e) => {
-    e.preventDefault();
+  const [products] = useCollectionData(query, {idField: 'id'});
 
-    const {uid} = auth.currentUser;
-    await productsRef.add({
-      productName: formValue,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      uid,
-      users: [uid]
+  const [productData, setProductData] = useState(null);
+
+  function getUsersPromises(idList) {
+    const promiseList = [];
+    //build list of queries
+    idList.map((uid) => {
+      promiseList.push(firestore.collection('users').doc(uid).get());
     });
-    setFormValue('');
-  };
+    return Promise.all(promiseList);
+  }
 
-  const style = {background: 'white'};
-  const myForm = () => {
-    return (
-      <form onSubmit={enterProductName}>
-        <Input
-          value={formValue}
-          onChange={(e) => setFormValue(e.target.value)}
-          placeholder="Entry New Product Name"
-          sx={style}
-        />
-
-        <Button type="submit" disabled={!formValue}>
-          🕊️
-        </Button>
-      </form>
-    );
-  };
+  useEffect(() => {
+    if (products) {
+      var ownerId = [];
+      var docs = [];
+      products.map((doc) => {
+        docs.push(doc);
+        ownerId.push(doc.uid);
+      });
+      getUsersPromises(ownerId).then((userArr) => {
+        setProductData({docs: [...docs], userArr: [...userArr]});
+      });
+    }
+  }, [products]);
 
   return (
     <UserContext.Consumer>
-      {({ user, productSetWithEvent, setProduct }) => (
-        <div>
-          <header>
-            <h1>Simple beginnings </h1>
-          </header>
-          <section>
-            <div>MOVE OVER FOR SIDEBAR</div>
-            <div>Temp, click product to change product state</div>
-              <p>{myForm()}</p>
-              {products && products.map((doc) =>
-                <p 
-                  value={doc} 
-                  // onClick={productSetWithEvent} didn't work...
-                  onClick={() => setProduct(doc)}
-                >
-                  {doc.productName}
-                </p>
-              )}
-                
-          </section>
-        </div>
+      {({setProduct, product}) => (
+        <Box>
+          <Paper className={'productSelection'} sx={itemsStyle}>
+            <header>
+              <h1>Select Product</h1>
+            </header>
+            <Grid>
+              {productData &&
+                productData.docs.map((doc, index) => {
+                  return (
+                    <Paper
+                      elevation={4}
+                      id={doc.id}
+                      sx={itemStyle}
+                      value={doc}
+                      onClick={() => setProduct(doc)}
+                    >
+                      <h1>{doc.productName}</h1>
+                      {'Owner: '}
+                      {productData.userArr &&
+                        productData.userArr[index].data().displayName}
+                    </Paper>
+                  );
+                })}
+            </Grid>
+          </Paper>
+          <Paper sx={itemsStyle}>
+            <h1>Add Product</h1>
+            <AddProduct />
+          </Paper>
+          <Paper sx={itemsStyle}>
+            <h1>Invites</h1>
+            <Invites />
+          </Paper>
+        </Box>
       )}
     </UserContext.Consumer>
   );
 };
-
 export default Home;

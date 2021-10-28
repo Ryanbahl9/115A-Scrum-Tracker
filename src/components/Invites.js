@@ -9,6 +9,7 @@ import {
 import firebase from 'firebase/compat/app';
 import {firestore, auth} from './fire';
 import {doc, updateDoc} from '@firebase/firestore';
+import {itemStyle} from './CSS';
 // import UserContext from './UserContext';
 
 function Invites({children}) {
@@ -96,7 +97,7 @@ function Invites({children}) {
         invites &&
         invites.map((index) => (
           <p key={index.user.id} style={{paddingLeft: '10%'}}>
-            <Paper>
+            <Paper sx={itemStyle}>
               <Box>
                 Product
                 <h style={{paddingLeft: '10%'}}>{index.product.productName}</h>

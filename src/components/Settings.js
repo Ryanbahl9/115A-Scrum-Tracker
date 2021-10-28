@@ -14,7 +14,7 @@ import {Button, Input} from '@mui/material';
 
 import {doc, updateDoc} from '@firebase/firestore';
 import UserContext from './UserContext';
-import Invites from './Invites';
+import {itemsStyle, itemStyle} from './CSS.js';
 
 function UserTiles(props) {
   let {product} = useContext(UserContext);
@@ -34,7 +34,7 @@ function UserTiles(props) {
   useEffect(() => {
     if (productHooked) {
       getUsersPromises(productHooked.data().users).then((userArr) => {
-        console.log('re-render product');
+        // console.log('re-render product');
         setUserBoxes(
           <Box>
             <h style={{textAlign: 'center'}}>Current Users</h>
@@ -47,7 +47,7 @@ function UserTiles(props) {
             >
               {userArr.map((doc) => {
                 return (
-                  <Paper sx={{padding: 2, margin: 2}}>
+                  <Paper sx={itemStyle}>
                     <Box>{doc.data().displayName}</Box>
                     <Box>{doc.data().email}</Box>
                   </Paper>
@@ -71,33 +71,34 @@ function Settings() {
   const [productOwner] = useDocumentDataOnce(productOwnerRef);
 
   //##submission Field, state and function
+
   const [formValue, setFormValue] = useState('');
+  const MyForm = () => {
+    const style = {background: 'white'};
 
-  const EnterProductName = async (e) => {
-    e.preventDefault();
-    const {uid} = auth.currentUser;
-    //find user with this email
-    const userRef = firestore
-      .collection('users')
-      .where('email', '==', formValue);
-    //get user with this Reference
-    const invitee = await userRef.get();
+    const EnterProductName = async (e) => {
+      e.preventDefault();
+      const {uid} = auth.currentUser;
+      //find user with this email
+      const userRef = firestore
+        .collection('users')
+        .where('email', '==', formValue);
+      //get user with this Reference
+      const invitee = await userRef.get();
 
-    //if user exists
-    if (!invitee.empty) {
-      const snapShot = invitee.docs[0];
-      const temp = doc(firestore, 'users', snapShot.id);
-      const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
-      updateDoc(temp, {
-        invites: arrayUnion(product.id),
-      });
-    }
+      //if user exists
+      if (!invitee.empty) {
+        const snapShot = invitee.docs[0];
+        const temp = doc(firestore, 'users', snapShot.id);
+        const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
+        updateDoc(temp, {
+          invites: arrayUnion(product.id),
+        });
+      }
 
-    setFormValue('');
-  };
+      setFormValue('');
+    };
 
-  const style = {background: 'white'};
-  const myForm = () => {
     return (
       <form onSubmit={EnterProductName}>
         <Input
@@ -114,39 +115,40 @@ function Settings() {
   };
   //##Submission Field End
 
-  return (
-    <div>
-      <Stack spacing={2}>
-        <Paper sx={{minHeight: 40, margin: 2}}>
-          <h style={{textAlign: 'left'}}>Product</h>
-          <h1 style={{textAlign: 'center'}}>
-            {product && product.productName}
-          </h1>
+  const productTitleAndAdd = (product, productOwner) => {
+    if (product && productOwner) {
+      return (
+        <Box>
+          <h>Product</h>
+          <h1 style={{textAlign: 'center'}}>{product.productName}</h1>
           <Box sx={{textAlign: 'center', marginBottom: 2}}>
             <Box>Owner</Box>
-            {productOwner && productOwner.displayName}
+            {productOwner.displayName}
           </Box>
-
-          {product ? (
-            productOwner && productOwner.uid === auth.currentUser.uid ? (
-              <div>
-                <Box sx={{textAlign: 'center'}}>Add Users {myForm()}</Box>
-                <UserTiles />
-              </div>
-            ) : (
-              <div>
-                <UserTiles />
-              </div>
-            )
-          ) : (
-            <Box sx={{margin: 2}} No Product Selected></Box>
+          {productOwner.uid === auth.currentUser.uid && (
+            <Box sx={{textAlign: 'center'}}>Add Users {MyForm()}</Box>
           )}
+        </Box>
+      );
+    } else {
+      return <Box sx={{margin: 2}} No Product Selected></Box>;
+    }
+  };
+
+  return (
+    <div>{product &&
+      <Stack spacing={2}>
+        <Paper sx={itemsStyle}>
+          {productTitleAndAdd(product, productOwner)}
+          {<UserTiles />}
         </Paper>
-        <Paper>
-          <h style={{textAlign: 'left'}}>Invites</h>
-          <Invites />
+        <Paper sx={itemsStyle}>
+            <Box>
+            <h>Sprint</h>
+            </Box>
         </Paper>
       </Stack>
+      }
     </div>
   );
 }

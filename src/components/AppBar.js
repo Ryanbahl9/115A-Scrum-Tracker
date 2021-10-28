@@ -1,44 +1,44 @@
-import React from 'react'
+import React from 'react';
 
 import {
   AppBar as MUIAppBar,
   Toolbar as MUIToolbar,
   IconButton,
-  Box
+  Box,
 } from '@mui/material';
 
-import {
-  Menu,
-  Home
-} from '@mui/icons-material';
-import logo from '../logo.svg'
+import {Menu, Home} from '@mui/icons-material';
 
-import { withRouter } from 'react-router';
-import { SignIn, SignOut } from './LoggingInAndOut';
-import ProductSelection from './ProductSelection';
+import {withRouter} from 'react-router';
+import {SignIn, SignOut} from './LoggingInAndOut';
 
-
-const AppBar = props => {
-  const {history, user, toggleDrawerOpen, product} = props
+const AppBar = (props) => {
+  const {history, user, toggleDrawerOpen, product} = props;
 
   return (
-    <MUIAppBar position='sticky' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-      <div style={{display: "flex"}}>
-      <MUIToolbar>
-        {user && <IconButton button onClick={toggleDrawerOpen}> {/* aria-label="open drawer" onClick={handleDrawerOpen} */}
-          <Menu />
-        </IconButton>}
-        <IconButton button onClick={() => history.push('/')} >
-          <Home />
-        </IconButton>
-        {/* {user && <ProductSelection/>} */}
-      </MUIToolbar>
-      <Box sx={{flexGrow: 1, textAlign: 'center'}}>{product && "Current Project: " + product.productName}</Box>
+    <MUIAppBar
+      position="sticky"
+      sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}
+    >
+      <div style={{display: 'flex'}}>
+        <MUIToolbar>
+          {user && (
+            <IconButton button onClick={toggleDrawerOpen}>
+              <Menu />
+            </IconButton>
+          )}
+          <IconButton button onClick={() => history.push('/')}>
+            <Home />
+          </IconButton>
+        </MUIToolbar>
+        <Box sx={{flexGrow: 1, textAlign: 'center', fontSize: 50}}>
+          {user && product && (product.productName)}
+        </Box>
 
-      <Box>{user ? <SignOut/>: <SignIn user={user}/>}</Box>
+        <Box>{user ? <SignOut /> : <SignIn user={user} />}</Box>
       </div>
     </MUIAppBar>
-  )
-}
+  );
+};
 
-export default withRouter(AppBar)
+export default withRouter(AppBar);
