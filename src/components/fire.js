@@ -7,13 +7,13 @@ import 'firebase/compat/analytics';
 firebase.initializeApp({
 
   // Using superChatDemo // this one works and the other doesnt for unknown reason
-  apiKey: "AIzaSyBVtzPN4scCnsRdqc8fG88ZiV-v-ipkwHs",
-  authDomain: "superchatdemo-53429.firebaseapp.com",
-  projectId: "superchatdemo-53429",
-  storageBucket: "superchatdemo-53429.appspot.com",
-  messagingSenderId: "786660954800",
-  appId: "1:786660954800:web:b2b7e0b8ea60546b8aa175",
-  measurementId: "G-5483NEP5VJ"
+  apiKey: "AIzaSyDclao4L0sn-6hSUU5FYAdFSCzDy5TNM2k",
+  authDomain: "a-scrumtracker.firebaseapp.com",
+  projectId: "a-scrumtracker",
+  storageBucket: "a-scrumtracker.appspot.com",
+  messagingSenderId: "1050741778439",
+  appId: "1:1050741778439:web:5f5d1c71faee2118b522a2",
+  measurementId: "G-QL1D4RGPN6"
 })
 
 export const auth = firebase.auth();
