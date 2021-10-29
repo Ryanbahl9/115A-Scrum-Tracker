@@ -32,7 +32,7 @@ function UserTiles(props) {
     return Promise.all(promiseList);
   }
   useEffect(() => {
-    if (productHooked) {
+    if (productHooked && productHooked.data() && productHooked.data().users) {
       getUsersPromises(productHooked.data().users).then((userArr) => {
         // console.log('re-render product');
         setUserBoxes(

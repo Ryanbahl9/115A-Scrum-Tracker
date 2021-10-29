@@ -4,7 +4,6 @@ import {firestore, auth} from './fire';
 import {useCollectionData, useDocument} from 'react-firebase-hooks/firestore';
 import {Box} from '@mui/system';
 import UserContext from './UserContext';
-import {makeStyles} from '@mui/material';
 import {
   Select,
   FormControl,
@@ -16,10 +15,14 @@ import {
   Grid,
 } from '@mui/material';
 import Invites from './Invites';
-import {itemSelectSytle, itemsStyle, itemsStyles, itemStyle} from './CSS';
+import {
+  itemsStyle,
+  itemStyle,
+} from './CSS';
 import {Styles} from './Styles';
 import Add from './AddProduct';
 import AddProduct from './AddProduct';
+import DeleteProduct from './DeleteProduct';
 
 const Home = () => {
   const productsRef = firestore.collection('products');
@@ -64,6 +67,7 @@ const Home = () => {
             <header>
               <h1>Select Product</h1>
             </header>
+
             <Grid>
               {productData &&
                 productData.docs.map((doc, index) => {
@@ -72,13 +76,17 @@ const Home = () => {
                       elevation={4}
                       id={doc.id}
                       sx={itemStyle}
+                      // sx={{position: 'absolute'}}
                       value={doc}
-                      onClick={() => setProduct(doc)}
+                      onClick={() => {
+                        setProduct(doc);
+                      }}
                     >
                       <h1>{doc.productName}</h1>
                       {'Owner: '}
                       {productData.userArr &&
                         productData.userArr[index].data().displayName}
+                      <DeleteProduct value={doc}/>
                     </Paper>
                   );
                 })}
