@@ -136,8 +136,8 @@ function Settings() {
   };
 
   return (
-    <div>{product &&
-      <Stack spacing={2}>
+    <div>{product ?
+    <Box>
         <Paper sx={itemsStyle}>
           {productTitleAndAdd(product, productOwner)}
           {<UserTiles />}
@@ -147,8 +147,10 @@ function Settings() {
             <h>Sprint</h>
             </Box>
         </Paper>
-      </Stack>
-      }
+        </Box>
+    //   </Stack>
+      :
+      <Box><Paper sx={itemsStyle}>Select Product for Settings</Paper></Box>}
     </div>
   );
 }
