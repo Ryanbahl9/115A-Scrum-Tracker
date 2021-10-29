@@ -18,9 +18,9 @@ const Backlog = () => {
     const userStoryRef = firestore.collection('userStory');
     let query;
     if (product) {
-        query = userStoryRef.where('productID', '==', product.id);
+        query = userStoryRef.where('productId', '==', product.id);
     } else {
-        query = userStoryRef.where('productID', '==', '0');
+        query = userStoryRef.where('productId', '==', '0');
     }
     let [UserStories, loading] = useCollection(query);
 
