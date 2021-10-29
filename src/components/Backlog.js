@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import AddBoxSharpIcon from '@mui/icons-material/AddBoxSharp';
 import Stack from '@mui/material/Stack';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import UserStoryInput, {getUserStoryDes} from './UserStory';
+import UserStoryInput, {getUserStoryDes, getPriority} from './UserStory';
 
 //import ProductContext from './ProductContext';
 import UserContext from './UserContext';
@@ -33,7 +33,7 @@ const Backlog = () => {
                 productId: product.id,
                 description: getUserStoryDes(),
                 tasks: [],
-                priorty: 0 //TODO: dropdown select for priority 1-10
+                priorty: getPriority()
             });
         }
     }
