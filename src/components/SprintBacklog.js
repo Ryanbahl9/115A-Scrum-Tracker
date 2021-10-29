@@ -18,9 +18,9 @@ const SprintBacklog = (props) => {
   const allStoriesRef = firestore.collection('userStory');
   let allStoriesQuery;
   if (product) {
-    allStoriesQuery = allStoriesRef.where('productID', '==', product.id);
+    allStoriesQuery = allStoriesRef.where('productId', '==', product.id);
   } else {
-    allStoriesQuery = allStoriesRef.where('productID', '==', '0');
+    allStoriesQuery = allStoriesRef.where('productId', '==', '0');
   }
   let [AllStories, allLoading] = useCollection(allStoriesQuery);
 
