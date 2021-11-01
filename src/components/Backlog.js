@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import Button from '@mui/material/Button';
 import AddBoxSharpIcon from '@mui/icons-material/AddBoxSharp';
 import Stack from '@mui/material/Stack';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import UserStoryInput, {getUserStoryDes, getPriority} from './UserStory';
 
 //import ProductContext from './ProductContext';
@@ -22,8 +22,8 @@ const Backlog = () => {
     } else {
         query = userStoryRef.where('productId', '==', '0');
     }
-    let [UserStories, loading] = useCollection(query);
-
+    let [UserStories] = useCollectionData(query);
+    console.log(UserStories)
     const [formValue, setFormValue] = useState('');
     const createUserStory = async (e) => {
         toggleUserInput();
@@ -67,6 +67,15 @@ const Backlog = () => {
             <Stack direction="row" container justifyContent="center">
                 <UserStoryInput inputOpen={inputOpen}/>
                 <CreateButton/>
+            </Stack>
+            <h1/>
+            <Stack>
+                <div>
+                    Test
+                </div>
+                <div>
+                    Test2
+                </div>
             </Stack>
         </section>
     )

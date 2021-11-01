@@ -21,7 +21,6 @@ export const getUserStoryDes = () => {
 
 export const getPriority = () => {
     return currentPriority
-    //console.log(currentPriority)
 }
 
 const UserStoryInput = (props) => {
