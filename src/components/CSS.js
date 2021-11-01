@@ -1,5 +1,3 @@
-import {yellow} from '@mui/material/colors';
-
 export const itemsStyle = {
   padding: 1,
   minHeight: 40,

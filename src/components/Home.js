@@ -1,26 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
-import firebase from 'firebase/compat/app';
+import React, {useEffect, useState} from 'react';
 import {firestore, auth} from './fire';
-import {useCollectionData, useDocument} from 'react-firebase-hooks/firestore';
+import {useCollectionData} from 'react-firebase-hooks/firestore';
 import {Box} from '@mui/system';
 import UserContext from './UserContext';
-import {
-  Select,
-  FormControl,
-  MenuItem,
-  Button,
-  Input,
-  Paper,
-  From,
-  Grid,
-} from '@mui/material';
+import {Paper, Grid} from '@mui/material';
 import Invites from './Invites';
-import {
-  itemsStyle,
-  itemStyle,
-} from './CSS';
-import {Styles} from './Styles';
-import Add from './AddProduct';
+import {itemsStyle, itemStyle} from './CSS';
 import AddProduct from './AddProduct';
 import DeleteProduct from './DeleteProduct';
 
@@ -76,7 +61,6 @@ const Home = () => {
                       elevation={4}
                       id={doc.id}
                       sx={itemStyle}
-                      // sx={{position: 'absolute'}}
                       value={doc}
                       onClick={() => {
                         setProduct(doc);
@@ -86,7 +70,7 @@ const Home = () => {
                       {'Owner: '}
                       {productData.userArr &&
                         productData.userArr[index].data().displayName}
-                      <DeleteProduct value={doc}/>
+                      <DeleteProduct value={doc} />
                     </Paper>
                   );
                 })}
