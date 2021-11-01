@@ -7,15 +7,17 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
+import {Box} from '@mui/system';
 import Button from 'mui-button';
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {deleteButtonStyle} from './CSS';
-import {firestore} from './fire';
+import {auth, firestore} from './fire';
 import UserContext from './UserContext';
 
 export default function DeleteProduct(props) {
   const {value} = props;
-    const {product, setProduct} = useContext(UserContext);
+  const {product, setProduct} = useContext(UserContext);
+
   const deleteFromDataBase = (e) => {
     e.stopPropagation();
     if (product && product.id === value.id) {
@@ -24,7 +26,57 @@ export default function DeleteProduct(props) {
     firestore.collection('products').doc(value.id).delete();
   };
 
-  return <button style={deleteButtonStyle} onClick={deleteFromDataBase}>Delete</button>;
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+
+  const Delete = () => {
+    return (
+      <Box>
+        <button
+          style={deleteButtonStyle}
+          onClick={() => {
+            setDeleteConfirmation(!deleteConfirmation);
+          }}
+        >
+          Delete
+        </button>
+      </Box>
+    );
+  };
+
+  const clickKeep = (e) => {
+    setDeleteConfirmation(false);
+  };
+  const clickDelete = (e) => {
+    setDeleteConfirmation(false);
+    deleteFromDataBase(e);
+  };
+
+  function canUserDelete(val) {
+    if (auth.currentUser.uid === value.uid) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  const confirmDelete = () => {
+    return (
+      <Box style={deleteButtonStyle}>
+        <h3>Confirm Delete</h3>
+        <button style={{width: '50%', color: 'red'}} onClick={clickKeep}>
+          Keep
+        </button>
+        <button style={{width: '50%', color: 'red'}} onClick={clickDelete}>
+          Delete
+        </button>
+      </Box>
+    );
+  };
+
+  return (
+    <Box key={value.id}>
+      {canUserDelete(value) ? (!deleteConfirmation ? Delete() : confirmDelete()) : null}
+    </Box>
+  );
 }
 
 // export default function DeleteProduct(props) {
