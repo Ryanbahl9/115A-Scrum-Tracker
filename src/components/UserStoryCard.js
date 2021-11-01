@@ -8,7 +8,7 @@ import {
 } from '@mui/material'
 
 const UserStoryCard = props => {
-  const {storyID, storyName, storyDescription, onClick, btnText} = props
+  const {storyID, storyDescription, onClick, btnText} = props
   return (
     <Card variant="outlined" sx={{ width: 275 }} >
       <CardContent>
