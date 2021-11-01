@@ -1,71 +1,150 @@
-import { Box } from '@mui/system'
-import React, {useContext, useRef, useState} from 'react'
+import {
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  FormControl
+} from '@mui/material'
+import React, {Fragment, useContext, useEffect, useRef, useState} from 'react'
 import { useDocument, useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
 import {firestore} from './fire';
 import UserContext from './UserContext';
 import UserStoryCard from './UserStoryCard';
-import { doc } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
 
 const SprintBacklog = (props) => {
+
+  const fixDatabase = () => {
+    firestore.collection('userStory').get().then((result) => result.docs.map((doc) => firestore.collection('userStory').doc(doc.id).update({state: 'productBacklog'})))
+    // firestore.collection('userStory')
+    //   .where('productId', '==', 'DYcnuAejVq7k3e5CVYVR')
+    //   .get().then(doc => firestore.collection('userStory').doc(doc.id).delete())
+    // firestore.collection('userStory').get().map((doc) => doc.update({state: 'productBacklog'}))
+  }
+
   //const newColumnRef = useRef(null);
   //const [stageTitles, setStageTitles] = useState([]);
   //const [stageTitleComponents, setStageTitleComponents] = useState([]);
-
-
   let { product } = useContext(UserContext);
 
-  const allStoriesRef = firestore.collection('userStory');
-  let allStoriesQuery;
+  const [sprintID, setSprintID] = useState('qoQPtehTrvrvLXjF4v9w')
+  const [sprintStories, setSprintStories] = useState([])
+
+
+  const sprintRef = firestore.collection('sprints').doc(sprintID)
+  let [sprint, sprintLoading, error] = useDocument(sprintRef);
+
+  const backlogStoriesRef = firestore.collection('userStory');
   if (product) {
-    allStoriesQuery = allStoriesRef.where('productId', '==', product.id);
+    var backlogStoriesQuery = backlogStoriesRef
+    backlogStoriesQuery = backlogStoriesQuery.where('productId', '==', product.id)
+    backlogStoriesQuery = backlogStoriesQuery.where('state', '==', 'productBacklog')
   } else {
-    allStoriesQuery = allStoriesRef.where('productId', '==', '0');
+    var backlogStoriesQuery = backlogStoriesRef.where('productId', '==', 0)
   }
-  let [AllStories, allLoading] = useCollection(allStoriesQuery);
+  const [backlogStories, backlogStoriesLoading] = useCollection(backlogStoriesQuery);
 
 
-  const sprintDocRef = firestore.collection('sprints').doc('qoQPtehTrvrvLXjF4v9w')
-  let [sprintDoc, sprintDocLoading, error] = useDocument(sprintDocRef);
+  const readSprintIds = async (sprintStoryIds) => {
+    let sprintStroyReads = sprintStoryIds.map(id => firestore.collection('userStories').doc(id).get())
+    let result = await Promise.all(sprintStroyReads)
+    return result
+  }
 
-  // const sprintStoriesRef = firestore.collection('userStory');
-  // let sprintStoriesQuery;
-  // if (sprint.data().userStories) {
-  //   sprintStoriesQuery = sprintStoriesRef.where('id', 'in', sprint.data().userStories);
-  // } else {
-  //   sprintStoriesQuery = sprintStoriesRef.where('productID', '==', '0');
-  // }
-  // let [sprintStories, sprintLoading] = useCollection(sprintStoriesQuery);
+  useEffect(() => {
+    if (sprint) {
+      readSprintIds(sprint.data().userStories)
+        .then(response => setSprintStories(response))
+    } else {
+      setSprintStories([])
+    }
+  }, [sprint])
 
-  
+  const moveStoryToSprint = (storyID) => {
+    firestore.collection('sprints').doc(sprintID).update({
+      userStories: arrayUnion(storyID)
+    })
+    firestore.collection('userStory').doc(storyID).update({
+      state: 'sprintBacklog'
+    })
+  }
+
+  const removeStoryFromSprint = (storyID) => {
+    firestore.collection('sprints').doc(sprintID).update({
+      userStories: arrayRemove(storyID)
+    })
+    firestore.collection('userStory').doc(storyID).update({
+      state: 'productBacklog'
+    })
+  }
+
   return (
+    <Fragment>
+    {product &&
     <Box>
       {error && <p>=================Error==================</p>}
-      {!sprintDoc && <p>=================Data Is Nil==================</p>}
-      {!sprintDocLoading && 
+      {!sprint && <p>=================Data Is Nil==================</p>}
+      {!sprintLoading && 
       <box>
-        <p>Sprint ID: {sprintDoc.id}</p>
-        <p>Sprint Start Date: {sprintDoc.data().startDate}</p>
-        <p>Sprint Length: {sprintDoc.data().length}</p>
-        <p>Sprint ProductID: {sprintDoc.data().ProductID}</p>
-        <p>Sprint User Stories: {sprintDoc.data().userStories}</p>
+        <p>Product ID: {product.id}</p>
+        <p>Sprint ID: {sprint.id}</p>
+        <p>Sprint Start Date: {sprint.data().startDate}</p>
+        <p>Sprint Length: {sprint.data().length}</p>
+        <p>Sprint ProductID: {sprint.data().ProductID}</p>
+        <p>Sprint User Stories: {sprint.data().userStories}</p>
       </box>
       }
-
+      {/* <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+        <InputLabel id="demo-simple-select-filled-label">Sprint</InputLabel>
+        <Select
+          value={sprintID}
+          onChange={}
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
+      </FormControl> */}
       <Box sx={{display: "flex"}}>
         <Box>
-          {!allLoading && AllStories.docs.map(doc => { 
-            return (<p key={doc.id}>{<UserStoryCard storyID={doc.id} storyName={doc.data().name} storyDescription={doc.data().description}/>}</p>)
+          {!(backlogStoriesLoading) && backlogStories.docs.map(story => { 
+            return (
+              <p key={story.id}>
+                <UserStoryCard 
+                  storyID={story.id} 
+                  storyDescription={story.data().description}
+                  btnText='Move To Sprint'
+                  onClick={moveStoryToSprint}/>
+              </p>
+            )
           })}
         </Box>
         <Box>|     |      |</Box>
         <Box>
-          {!allLoading && AllStories.docs.map(doc => { 
-            return (<p key={doc.id}>{<UserStoryCard storyID={doc.id} storyName={doc.data().name} storyDescription={doc.data().description}/>}</p>)
+          {!(sprintStories.length === 0) && sprintStories.map(story => { 
+            return (
+              <p key={story.id}>
+                <UserStoryCard 
+                  storyID={story.id} 
+                  storyDescription={'story.data().description'}
+                  btnText='Remove From Sprint'
+                  onClick={removeStoryFromSprint}
+                />
+              </p>
+              )
           })}
         </Box>
       </Box>
+      <Button variant="contained" onClick={fixDatabase}>Update Database</Button>
     </Box>
+    }
+    </Fragment>
   )
 }
 

@@ -8,19 +8,19 @@ import {
 } from '@mui/material'
 
 const UserStoryCard = props => {
-  const {storyID, storyName, storyDescription} = props
+  const {storyID, storyName, storyDescription, onClick, btnText} = props
   return (
     <Card variant="outlined" sx={{ width: 275 }} >
       <CardContent>
         <Typography variant="h5" component="div">
-          {storyName}
-        </Typography>
-        <Typography variant="body1">
           {storyDescription}
+        </Typography>
+        <Typography variant="body" component="div">
+          {storyID}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Move To Sprint</Button>
+        <Button onClick={() => onClick(storyID)} size="small">{btnText}</Button>
       </CardActions>
     </Card>
   )
