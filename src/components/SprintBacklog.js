@@ -132,7 +132,7 @@ const SprintBacklog = (props) => {
               <p key={story.id}>
                 <UserStoryCard 
                   storyID={story.id} 
-                  storyDescription={story.id}
+                  storyDescription={'story.data().description'}
                   btnText='Remove From Sprint'
                   onClick={removeStoryFromSprint}
                 />

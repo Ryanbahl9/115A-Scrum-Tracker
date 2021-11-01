@@ -33,7 +33,8 @@ const Backlog = () => {
                 productId: product.id,
                 description: getUserStoryDes(),
                 tasks: [],
-                priorty: getPriority()
+                priorty: getPriority(),
+                state: 'productBacklog'
             });
         }
     }
