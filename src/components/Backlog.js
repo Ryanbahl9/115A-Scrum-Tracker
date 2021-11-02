@@ -6,8 +6,9 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 //import Typography from '@mui/material/Typography';
 import {itemsStyle} from './CSS';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { useCollectionData, useCollection } from 'react-firebase-hooks/firestore';
 import UserStoryInput, {getUserStoryDes, getPriority} from './UserStory';
+import TaskInput from './TaskInput';
 
 //import ProductContext from './ProductContext';
 import UserContext from './UserContext';
@@ -26,7 +27,8 @@ const Backlog = () => {
     } else {
         query = userStoryRef.where('productId', '==', '0');
     }
-    let [UserStories, loading] = useCollectionData(query);
+    //let [UserStories, loading] = useCollectionData(query);
+    let [UserStories, loading] = useCollection(query);
     
     const [formValue, setFormValue] = useState('');
     const createUserStory = async (e) => {
@@ -62,10 +64,10 @@ const Backlog = () => {
 
     const UserStoryTiles = () => {
         if (loading) return <div/>;
-        if (UserStories.length > 0) {
+        if (UserStories.docs.length > 0) {
             return (
                 <Stack direction="column" spacing={2}>
-                    {UserStories.map(userStory => (
+                    {UserStories.docs.map(userStory => (
                         <Box
                             sx={{
                                 display: 'flex',
@@ -78,13 +80,14 @@ const Backlog = () => {
                             }}
                             justifyContent="center"
                         >
-                            <Paper key={userStory.description} sx={itemsStyle}>
+                            <Paper key={userStory.data().description} sx={itemsStyle}>
                                 <h1>
-                                    {userStory.description}
+                                    {userStory.data().description}
                                 </h1>
-                                <div>
-                                    Task input will go here. It will be bottom aligned.
-                                </div>
+                                <h3>
+                                    Priority: {userStory.data().priorty}
+                                </h3>
+                                <TaskInput userStoryId={userStory.id}/>
                             </Paper>
                         </Box>
                     ))}
