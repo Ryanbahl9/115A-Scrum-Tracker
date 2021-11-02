@@ -2,8 +2,13 @@ import React, { useState, useContext } from 'react'
 import Button from '@mui/material/Button';
 import AddBoxSharpIcon from '@mui/icons-material/AddBoxSharp';
 import Stack from '@mui/material/Stack';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+//import Typography from '@mui/material/Typography';
+import {itemsStyle} from './CSS';
+import { useCollectionData, useCollection } from 'react-firebase-hooks/firestore';
 import UserStoryInput, {getUserStoryDes, getPriority} from './UserStory';
+import TaskInput from './TaskInput';
 
 //import ProductContext from './ProductContext';
 import UserContext from './UserContext';
@@ -12,7 +17,7 @@ import UserContext from './UserContext';
 import {firestore} from './fire';
 //import {useCollectionData} from 'react-firebase-hooks/firestore';
 //import { ConnectedTvOutlined } from '@mui/icons-material';
-//TODO: getUserStoryDes() to fetch string for firestore
+
 const Backlog = () => {
     let {product} = useContext(UserContext)
     const userStoryRef = firestore.collection('userStory');
@@ -22,8 +27,9 @@ const Backlog = () => {
     } else {
         query = userStoryRef.where('productId', '==', '0');
     }
-    let [UserStories] = useCollectionData(query);
-    console.log(UserStories)
+    //let [UserStories, loading] = useCollectionData(query);
+    let [UserStories, loading] = useCollection(query);
+    
     const [formValue, setFormValue] = useState('');
     const createUserStory = async (e) => {
         toggleUserInput();
@@ -56,6 +62,42 @@ const Backlog = () => {
         }
     }
 
+    const UserStoryTiles = () => {
+        if (loading) return <div/>;
+        if (UserStories.docs.length > 0) {
+            return (
+                <Stack direction="column" spacing={2}>
+                    {UserStories.docs.map(userStory => (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                '& > :not(style)': {
+                                m: 1,
+                                width: 1024,
+                                minHeight: 128,
+                                },
+                            }}
+                            justifyContent="center"
+                        >
+                            <Paper key={userStory.data().description} sx={itemsStyle}>
+                                <h1>
+                                    {userStory.data().description}
+                                </h1>
+                                <h3>
+                                    Priority: {userStory.data().priorty}
+                                </h3>
+                                <TaskInput userStoryId={userStory.id}/>
+                            </Paper>
+                        </Box>
+                    ))}
+                </Stack>
+            );
+        } else {
+            return <div/>
+        }
+    }
+
     return (
         <section>
             <h1/>
@@ -70,14 +112,7 @@ const Backlog = () => {
                 <CreateButton/>
             </Stack>
             <h1/>
-            <Stack>
-                <div>
-                    Test
-                </div>
-                <div>
-                    Test2
-                </div>
-            </Stack>
+            <UserStoryTiles/>
         </section>
     )
 }

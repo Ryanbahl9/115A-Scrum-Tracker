@@ -12,17 +12,21 @@ import { useDocument, useCollection, useDocumentData } from 'react-firebase-hook
 import {firestore} from './fire';
 import UserContext from './UserContext';
 import UserStoryCard from './UserStoryCard';
-import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+//import SprintSelector from './SprintSelector';
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
 
 const SprintBacklog = (props) => {
 
+  const [btnClk, setBtnClk] = useState(0)
   const fixDatabase = () => {
-    firestore.collection('userStory').get().then((result) => result.docs.map((doc) => firestore.collection('userStory').doc(doc.id).update({state: 'productBacklog'})))
+    // console.log(firestore.collection('userStory').get())
+    // firestore.collection('userStory').get().then((result) => result.docs.map((doc) => firestore.collection('userStory').doc(doc.id).update({state: 'productBacklog'})))
     // firestore.collection('userStory')
     //   .where('productId', '==', 'DYcnuAejVq7k3e5CVYVR')
     //   .get().then(doc => firestore.collection('userStory').doc(doc.id).delete())
     // firestore.collection('userStory').get().map((doc) => doc.update({state: 'productBacklog'}))
+    setBtnClk(btnClk+1)
   }
 
   //const newColumnRef = useRef(null);
@@ -48,20 +52,24 @@ const SprintBacklog = (props) => {
   const [backlogStories, backlogStoriesLoading] = useCollection(backlogStoriesQuery);
 
 
-  const readSprintIds = async (sprintStoryIds) => {
-    let sprintStroyReads = sprintStoryIds.map(id => firestore.collection('userStories').doc(id).get())
-    let result = await Promise.all(sprintStroyReads)
-    return result
-  }
+  useEffect(async () => {
+    if (sprintLoading) return;
 
-  useEffect(() => {
-    if (sprint) {
-      readSprintIds(sprint.data().userStories)
-        .then(response => setSprintStories(response))
-    } else {
-      setSprintStories([])
+    let tempSprintStories = []
+    for (const storyId of sprint.data().userStories) {
+      await firestore.collection('userStory').doc(storyId)
+      .get()
+      .then((doc) => {
+        tempSprintStories.push(doc)
+      })
+      .catch(e => {
+        console.log('There was an error!!!')
+        console.log(e)
+      })
     }
-  }, [sprint])
+    setSprintStories(tempSprintStories)
+  }, [sprintLoading, btnClk, sprint])
+  
 
   const moveStoryToSprint = (storyID) => {
     firestore.collection('sprints').doc(sprintID).update({
@@ -97,20 +105,7 @@ const SprintBacklog = (props) => {
         <p>Sprint User Stories: {sprint.data().userStories}</p>
       </box>
       }
-      {/* <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id="demo-simple-select-filled-label">Sprint</InputLabel>
-        <Select
-          value={sprintID}
-          onChange={}
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl> */}
+      {/* {product && <SprintSelector productId={product.id} sprintCallback={backlogStoriesLoading}/>} */}
       <Box sx={{display: "flex"}}>
         <Box>
           {!(backlogStoriesLoading) && backlogStories.docs.map(story => { 
@@ -127,12 +122,12 @@ const SprintBacklog = (props) => {
         </Box>
         <Box>|     |      |</Box>
         <Box>
-          {!(sprintStories.length === 0) && sprintStories.map(story => { 
+          {!(sprintLoading || sprintStories.length === 0) && sprintStories.map(story => { 
             return (
               <p key={story.id}>
                 <UserStoryCard 
                   storyID={story.id} 
-                  storyDescription={'story.data().description'}
+                  storyDescription={story.data().description}
                   btnText='Remove From Sprint'
                   onClick={removeStoryFromSprint}
                 />
@@ -141,7 +136,7 @@ const SprintBacklog = (props) => {
           })}
         </Box>
       </Box>
-      <Button variant="contained" onClick={fixDatabase}>Update Database</Button>
+      <Button variant="contained" onClick={fixDatabase}>for testing {btnClk}</Button>
     </Box>
     }
     </Fragment>
