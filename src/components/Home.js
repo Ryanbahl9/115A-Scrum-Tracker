@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {firestore, auth} from './fire';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import {Box} from '@mui/system';
@@ -16,8 +16,8 @@ const Home = () => {
     'array-contains',
     auth.currentUser.uid
   );
-
-  const [products] = useCollectionData(query, {idField: 'id'});
+// const {product} = useContext(UserContext);
+  const [products, productsLoading] = useCollectionData(query, {idField: 'id'});
 
   const [productData, setProductData] = useState(null);
 
@@ -31,7 +31,7 @@ const Home = () => {
   }
 
   useEffect(() => {
-    if (products) {
+    if (!productsLoading) {
       var ownerId = [];
       var docs = [];
       products.map((doc) => {
