@@ -1,11 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import firebase from 'firebase/compat/app';
 import { firestore, auth } from './fire';
-import UserContext from './UserContext';
 import { Button, Input } from '@mui/material';
 
 const AddProduct = () => {
-  const { setProduct } = useContext(UserContext);
   const productsRef = firestore.collection('products');
 
   const [formValue, setFormValue] = useState('');
@@ -19,9 +17,6 @@ const AddProduct = () => {
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         uid,
         users: [uid],
-      }).then(ref => ref.get())
-      .then(doc => {
-        setProduct(doc.data())
       })
 
     setFormValue('');

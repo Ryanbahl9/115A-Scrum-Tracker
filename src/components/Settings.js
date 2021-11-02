@@ -1,13 +1,7 @@
 import React, {useState, useContext, useEffect} from 'react';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import {styled} from '@mui/material/styles';
 import {Box} from '@mui/material';
-import {
-  useCollectionData,
-  useDocument,
-  useDocumentDataOnce,
-} from 'react-firebase-hooks/firestore';
+import {useDocument, useDocumentDataOnce} from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/compat/app';
 import {firestore, auth} from './fire';
 import {Button, Input} from '@mui/material';
@@ -23,21 +17,18 @@ function UserTiles(props) {
 
   const [userBoxes, setUserBoxes] = useState(<Box />);
 
-  function getUsersPromises(idList) {
-    const promiseList = [];
-    //build list of queries
-    idList.map((uid) => {
-      promiseList.push(firestore.collection('users').doc(uid).get());
-    });
-    return Promise.all(promiseList);
+  function getUsersPromises(usersUidList) {
+    return Promise.all(
+      usersUidList.map((uid) => firestore.collection('users').doc(uid).get())
+    );
   }
+
   useEffect(() => {
     if (productHooked && productHooked.data() && productHooked.data().users) {
       getUsersPromises(productHooked.data().users).then((userArr) => {
-        // console.log('re-render product');
         setUserBoxes(
           <Box>
-            <h style={{textAlign: 'center'}}>Current Users</h>
+            <h3 style={{textAlign: 'center'}}>Current Users</h3>
             <Box
               sx={{
                 display: 'grid',
@@ -47,7 +38,7 @@ function UserTiles(props) {
             >
               {userArr.map((doc) => {
                 return (
-                  <Paper sx={itemStyle}>
+                  <Paper key={doc.id} sx={itemStyle}>
                     <Box>{doc.data().displayName}</Box>
                     <Box>{doc.data().email}</Box>
                   </Paper>
@@ -78,7 +69,6 @@ function Settings() {
 
     const EnterProductName = async (e) => {
       e.preventDefault();
-      const {uid} = auth.currentUser;
       //find user with this email
       const userRef = firestore
         .collection('users')
@@ -119,7 +109,7 @@ function Settings() {
     if (product && productOwner) {
       return (
         <Box>
-          <h>Product</h>
+          <h3>Product</h3>
           <h1 style={{textAlign: 'center'}}>{product.productName}</h1>
           <Box sx={{textAlign: 'center', marginBottom: 2}}>
             <Box>Owner</Box>
@@ -136,21 +126,24 @@ function Settings() {
   };
 
   return (
-    <div>{product ?
-    <Box>
-        <Paper sx={itemsStyle}>
-          {productTitleAndAdd(product, productOwner)}
-          {<UserTiles />}
-        </Paper>
-        <Paper sx={itemsStyle}>
+    <div>
+      {product ? (
+        <Box>
+          <Paper sx={itemsStyle}>
+            {productTitleAndAdd(product, productOwner)}
+            <UserTiles />
+          </Paper>
+          <Paper sx={itemsStyle}>
             <Box>
-            <h>Sprint</h>
+              <h3>Sprint</h3>
             </Box>
-        </Paper>
+          </Paper>
         </Box>
-    //   </Stack>
-      :
-      <Box><Paper sx={itemsStyle}>Select Product for Settings</Paper></Box>}
+      ) : (
+        <Box>
+          <Paper sx={itemsStyle}>Select Product for Settings</Paper>
+        </Box>
+      )}
     </div>
   );
 }

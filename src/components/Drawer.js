@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { 
+import {
   CalendarViewMonth,
   Home,
   ListAlt,
   Settings as SettingsIcon
 } from '@mui/icons-material';
 
-import { 
+import {
   Drawer as MUIDrawer,
   List,
   ListItem,
@@ -23,14 +23,14 @@ import { withRouter } from 'react-router';
 // by clicking a logo in the top left
 
 const Drawer = (props) => {
-  {/*Since the Drawer is inside the router component
-  the history object passed down through props. */}
+  /*Since the Drawer is inside the router component
+  the history object passed down through props. */
   const { history, drawerOpen } = props
   return (
     <MUIDrawer variant="persistent" open={drawerOpen}>
       {/* toolbar is just here for spacing so first component isn't covered by actual AppBAr */}
-      <Toolbar /> 
-      {/*Whe a list item is clicked, react uses the history 
+      <Toolbar />
+      {/*Whe a list item is clicked, react uses the history
       object to change the change the url, which in turn changes which
       components are visible in App.js*/}
       <List>
