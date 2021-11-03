@@ -12,7 +12,7 @@ import { useDocument, useCollection, useDocumentData } from 'react-firebase-hook
 import {firestore} from './fire';
 import UserContext from './UserContext';
 import UserStoryCard from './UserStoryCard';
-//import SprintSelector from './SprintSelector';
+import SprintSelector from './SprintSelector';
 import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
 

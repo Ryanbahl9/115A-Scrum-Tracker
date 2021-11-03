@@ -35,9 +35,6 @@ const SprintSelector = (props) => {
         value={sprintId}
         onChange={handleChange}
       >
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
         {!(sprintsLoading || !sprints) && sprints.docs.sort((a,b) => a.data().startDate - b.data().startDate).map(sprint => {
           return( <MenuItem value={sprint.id}>{sprint.id}</MenuItem> )
         })}
