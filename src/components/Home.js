@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {firestore, auth} from './fire';
-import {useCollectionData} from 'react-firebase-hooks/firestore';
 import {Box} from '@mui/system';
 import UserContext from './UserContext';
 import {Paper, Grid} from '@mui/material';
@@ -8,15 +7,10 @@ import Invites from './Invites';
 import {itemsStyle, itemStyle} from './CSS';
 import AddProduct from './AddProduct';
 import DeleteProduct from './DeleteProduct';
+import {useProductsByUID} from '../backEnd/DataBaseQueries';
 
 const Home = () => {
-  const productsRef = firestore.collection('products');
-  var query = productsRef.where(
-    'users',
-    'array-contains',
-    auth.currentUser.uid
-  );
-  const [products, productsLoading] = useCollectionData(query, {idField: 'id'});
+  const [products, productsLoading] = useProductsByUID(auth.currentUser.uid)
 
   const [productData, setProductData] = useState(null);
 

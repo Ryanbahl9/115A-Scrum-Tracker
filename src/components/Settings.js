@@ -8,13 +8,12 @@ import {Button, Input} from '@mui/material';
 
 import {doc, updateDoc} from '@firebase/firestore';
 import UserContext from './UserContext';
-import {itemsStyle, itemStyle} from './CSS.js';
+import {itemsStyle, itemStyle, settingsItems} from './CSS.js';
+import {getUserByEmail, useProductById, useProductOwnerByProduct} from '../backEnd/DataBaseQueries';
 
 function UserTiles(props) {
   let {product} = useContext(UserContext);
-  const productHookedRef = firestore.collection('products').doc(product.id);
-  const [productHooked] = useDocument(productHookedRef, {idField: 'id'});
-
+  const [productHooked] = useProductById(product.id);
   const [userBoxes, setUserBoxes] = useState(<Box />);
 
   function getUsersPromises(usersUidList) {
@@ -30,11 +29,7 @@ function UserTiles(props) {
           <Box>
             <h3 style={{textAlign: 'center'}}>Current Users</h3>
             <Box
-              sx={{
-                display: 'grid',
-                rowGap: 2,
-                gridTemplateColumns: 'repeat(3, 1fr)',
-              }}
+              sx={settingsItems}
             >
               {userArr.map((doc) => {
                 return (
@@ -55,27 +50,22 @@ function UserTiles(props) {
 
 function Settings() {
   let {product} = useContext(UserContext);
-  var productOwnerRef = firestore.collection('users');
-  if (product) {
-    productOwnerRef = firestore.collection('users').doc(product.uid);
-  }
-  const [productOwner] = useDocumentDataOnce(productOwnerRef);
+  const [productOwner] = useProductOwnerByProduct(product);
 
   //##submission Field, state and function
-
   const [formValue, setFormValue] = useState('');
-  const MyForm = () => {
+  const InviteSubmissionForm = () => {
     const style = {background: 'white'};
 
     const EnterProductName = async (e) => {
       e.preventDefault();
-      //find user with this email
+      // find user with this email
       const userRef = firestore
         .collection('users')
         .where('email', '==', formValue);
       //get user with this Reference
       const invitee = await userRef.get();
-
+      // const invitee = await getUserByEmail(formValue)
       //if user exists
       if (!invitee.empty) {
         const snapShot = invitee.docs[0];
@@ -116,7 +106,7 @@ function Settings() {
             {productOwner.displayName}
           </Box>
           {productOwner.uid === auth.currentUser.uid && (
-            <Box sx={{textAlign: 'center'}}>Add Users {MyForm()}</Box>
+            <Box sx={{textAlign: 'center'}}>Add Users {InviteSubmissionForm()}</Box>
           )}
         </Box>
       );
