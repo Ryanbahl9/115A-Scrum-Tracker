@@ -18,9 +18,9 @@ const Board = () => {
     const userStoryRef = firestore.collection('userStory');
     let userStoriesQuery;
     if(product){
-        userStoriesQuery = userStoryRef.where('productID', '==', product.id);
+        userStoriesQuery = userStoryRef.where('productId', '==', product.id);
     } else {
-        userStoriesQuery = userStoryRef.where('productID', '==', '0');
+        userStoriesQuery = userStoryRef.where('productId', '==', '0');
     }
     const [UserStories, loadingStories] = useCollectionData(userStoriesQuery, { idField: 'id' });
     
@@ -93,15 +93,15 @@ const Board = () => {
                 </FormControl> */}
 
                 <Box className={styles.stageTitlesContainer}>
-                    <Box sx={{ display:"inline-flex", width: `${(stageTitles.length * 200) + 300}px` }}>
+                    <Box sx={{ display:"inline-flex"}}>
                     {stageTitleComponents}
                     </Box>
-                    <Box className={styles.addStage}>
+                    {/* <Box className={styles.addStage}>
                         <TextField sx={{ maxHeight: "40px", paddingTop:"0px", marginBottom: "30px" }}inputRef={newColumnRef}  id="standard-basic" label="Add Stage" variant="standard" />
                         <Button sx={{ maxHeight: "45px" }} variant="outlined" onClick={addColumn} disabled={loadingProduct}>
                             + add
                         </Button>
-                    </Box>
+                    </Box> */}
                 </Box>
 
                 <Box sx={{width: `${(stageTitles.length * 200) + 300}px`}} className={styles.userStoriesContainer}>

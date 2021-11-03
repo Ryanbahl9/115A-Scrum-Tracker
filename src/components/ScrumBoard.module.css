@@ -1,7 +1,6 @@
 
 .stageTitlesContainer {
     display: inline-flex;
-    justify-content: start;
     margin-top: 6%;
     max-height: 40px;
 }
@@ -59,11 +58,11 @@
     padding-left: 50px;
     min-width: 250px;
     padding-right: 100px;
-    padding-bottom: 5px;
 }
 
 .userStoriesContainer {
     height: 85%;
+    margin-top: 0px;
     overflow-y: scroll;
     overflow-x: hidden;
     scroll-snap-type: y mandatory;
@@ -73,7 +72,5 @@
     overflow-x: scroll;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
-    scroll-padding:5px;
-    background: aliceBlue;
     height: 90vh;
 }
