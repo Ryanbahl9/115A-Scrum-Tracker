@@ -27,10 +27,8 @@ const Backlog = () => {
     } else {
         query = userStoryRef.where('productId', '==', '0');
     }
-    //let [UserStories, loading] = useCollectionData(query);
     let [UserStories, loading] = useCollection(query);
     
-    const [formValue, setFormValue] = useState('');
     const createUserStory = async (e) => {
         toggleUserInput();
         e.preventDefault();
@@ -87,7 +85,7 @@ const Backlog = () => {
                                 <h3>
                                     Priority: {userStory.data().priorty}
                                 </h3>
-                                <TaskInput userStoryId={userStory.id}/>
+                                <TaskInput userStoryId={userStory.id} taskArray={userStory.data().tasks}/>
                             </Paper>
                         </Box>
                     ))}
