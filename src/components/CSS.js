@@ -21,3 +21,9 @@ export const deleteButtonStyle = {
   right: 2,
   bottom: 2,
 };
+
+export const settingsItems = {
+  display: 'grid',
+  rowGap: 2,
+  gridTemplateColumns: 'repeat(3, 1fr)',
+}

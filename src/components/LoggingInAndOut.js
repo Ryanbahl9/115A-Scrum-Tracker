@@ -2,8 +2,6 @@ import firebase from 'firebase/compat/app';
 import * as React from 'react';
 import { Button } from '@mui/material';
 import { auth, firestore } from './fire';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { SettingsApplicationsRounded } from '@mui/icons-material';
 
 export function SignIn(props) {
 
@@ -16,10 +14,9 @@ export function SignIn(props) {
   function AddToDataBase() {
     const usersRef = firestore.collection('users');
 
-    usersRef.where('uid', '==', auth.currentUser.uid).get().then((snapShot) => {
-      if (snapShot.empty) {
+    usersRef.where('uid', '==', auth.currentUser.uid).get().then((doc) => {
+      if (doc.empty) {
         const { displayName, uid, email } = auth.currentUser;
-        // usersRef.add({
           usersRef.doc(auth.currentUser.uid).set({
           uid,
           displayName,
@@ -37,7 +34,6 @@ export function SignIn(props) {
   }
 
   return (
-    // <Button variant="contained" className="sign-in" onClick={signInWithGoogle}>Sign in with Google</Button>
     <Button variant="contained" className="sign-in" onClick={wrapper}>Sign in with Google</Button>
   )
 

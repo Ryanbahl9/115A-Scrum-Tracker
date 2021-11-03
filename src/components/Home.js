@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {firestore, auth} from './fire';
-import {useCollectionData} from 'react-firebase-hooks/firestore';
 import {Box} from '@mui/system';
 import UserContext from './UserContext';
 import {Paper, Grid} from '@mui/material';
@@ -8,33 +7,24 @@ import Invites from './Invites';
 import {itemsStyle, itemStyle} from './CSS';
 import AddProduct from './AddProduct';
 import DeleteProduct from './DeleteProduct';
+import {useProductsByUID} from '../backEnd/DataBaseQueries';
 
 const Home = () => {
-  const productsRef = firestore.collection('products');
-  var query = productsRef.where(
-    'users',
-    'array-contains',
-    auth.currentUser.uid
-  );
-
-  const [products] = useCollectionData(query, {idField: 'id'});
+  const [products, productsLoading] = useProductsByUID(auth.currentUser.uid)
 
   const [productData, setProductData] = useState(null);
 
   function getUsersPromises(idList) {
-    const promiseList = [];
-    //build list of queries
-    idList.map((uid) => {
-      promiseList.push(firestore.collection('users').doc(uid).get());
-    });
-    return Promise.all(promiseList);
+    return Promise.all(
+      idList.map((uid) => firestore.collection('users').doc(uid).get())
+    );
   }
 
   useEffect(() => {
-    if (products) {
+    if (!productsLoading) {
       var ownerId = [];
       var docs = [];
-      products.map((doc) => {
+      products.forEach((doc) => {
         docs.push(doc);
         ownerId.push(doc.uid);
       });
@@ -42,7 +32,7 @@ const Home = () => {
         setProductData({docs: [...docs], userArr: [...userArr]});
       });
     }
-  }, [products]);
+  }, [products, productsLoading]);
 
   return (
     <UserContext.Consumer>
@@ -58,6 +48,7 @@ const Home = () => {
                 productData.docs.map((doc, index) => {
                   return (
                     <Paper
+                      key={doc.id}
                       elevation={4}
                       id={doc.id}
                       sx={itemStyle}
