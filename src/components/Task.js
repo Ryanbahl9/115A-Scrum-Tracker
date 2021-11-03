@@ -5,7 +5,7 @@ import { ListItem } from '@mui/material';
 const Task = (props) => {
     return (
         <ListItem sx={{ display: "flex", justifyContent: "space-between", maxWidth: "180px", marginLeft: "10px", borderBottom: "1px solid grey" }}>
-            <div>{props.data.name}</div>{' '}<BasicMenu />
+            <div>{props.description}</div>{' '}<BasicMenu />
         </ListItem>
     )
 }

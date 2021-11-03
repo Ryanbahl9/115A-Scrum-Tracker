@@ -23,7 +23,8 @@ const TaskInput = (props) => {
                 tasks: arrayUnion({
                     userId: auth.currentUser.uid,
                     userStoryId: props.userStoryId,
-                    description: value
+                    description: value,
+                    stage: 'Queue',
                 })
             })
     }

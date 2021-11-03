@@ -16,6 +16,7 @@ const AddProduct = () => {
         productName: formValue,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         uid,
+        stages: ['Development'],
         users: [uid],
       })
 

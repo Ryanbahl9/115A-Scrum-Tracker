@@ -50,21 +50,22 @@ const Board = () => {
 
     useEffect(() => {
         if (!product || loadingProduct || !productData) return;
-        let tempStageTitles = ["To Do"];
+        let tempStageTitles = ["Queue"];
         let tempStageTitleComponents = [<Box className={styles.firstStageTitle} key={0}></Box>,
                                         <Box className={styles.stageTitle} key={1}>User Stories</Box>,
-                                        <Box className={styles.stageTitle} key={2}>To Do</Box>];
+                                        <Box className={styles.stageTitle} key={2}>Queue</Box>];
         if (productData.stages){
             tempStageTitleComponents = tempStageTitleComponents
                 .concat(productData.stages
-                .map((stageTitle, i) => <Box className={styles.stageTitle} key={i+3}>
-                                            {stageTitle}
+                .map((stageTitle, i) => 
+                (<Box className={styles.stageTitle} key={i+3}>
+                    {stageTitle}
                     <BasicMenu className={styles.titleIcon}/>
-                                        </Box>));
+                </Box>)));
             tempStageTitles = tempStageTitles.concat(productData.stages);
         }
-        tempStageTitleComponents.push(<Box className={styles.lastStageTitle} key={tempStageTitleComponents.length+2}>Completed</Box>);
-        tempStageTitles.push("Completed")
+        tempStageTitleComponents.push(<Box className={styles.lastStageTitle} key={tempStageTitleComponents.length+2}>Complete</Box>);
+        tempStageTitles.push("Complete")
         setStageTitleComponents(tempStageTitleComponents);
         setStageTitles(tempStageTitles);
     }, [product, loadingProduct, productData]);

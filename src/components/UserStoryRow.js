@@ -8,9 +8,6 @@ import Task from './Task';
 import styles from './UserStoryRow.module.css';
 
 const UserStoryRow = (props) => {
-    const taskRef = firestore.collection('tasks');
-    const query = taskRef.where('userStoryId', '==', props.id);
-    let [tasks, loading] = useCollectionData(query, { idField: 'id' });
 
     return (<Box className={styles.outerDiv} sx={{width: `${(props.stageTitles.length * 200) + 300}px`}}>
                 <Box className={styles.handleContainer}>
@@ -23,10 +20,9 @@ const UserStoryRow = (props) => {
                     {props.stageTitles.map((title, i)=>
                         (<Box key={i} className={styles.stage}>
                             <List sx={{paddingTop:"0px", paddingBottom:"0px"}} className={styles.taskList}>
-                                {loading && <div>loading</div>}
-                                {!loading && tasks && tasks.map(doc => {
-                                    if (doc.stage === title) {
-                                        return <Task key={doc.id} id={doc.id} data={doc}/>
+                                {props.data.tasks.map((task, i) => {
+                                    if (task.stage === title) {
+                                        return <Task key={i} description={task.description}/>
                                     } else {
                                         return null;
                                     }
