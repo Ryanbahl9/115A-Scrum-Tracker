@@ -4,12 +4,13 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
 
-import { useDocument, useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
+import { useDocument, useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
 import {firestore, auth} from './fire';
 import UserContext from './UserContext';
 import UserStoryCard from './UserStoryCard';
-import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { doc, addDoc, collection, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
 const TaskInput = (props) => {
     const [value, setValue] = React.useState('');
@@ -17,17 +18,21 @@ const TaskInput = (props) => {
         setValue(event.target.value);
       };
 
+    let taskQuery;
+    const taskRef = firestore.collection('task');
+    taskQuery = taskRef.where('userStoryId', '==', props.userStoryId);
+    let [tasks, tasksLoading] = useCollectionData(taskQuery, { idField: 'id' });
+
     const createTask = () => {
-        if (value == '') return;
-            firestore.collection('userStory').doc(props.userStoryId).update({
-                tasks: arrayUnion({
-                    userId: auth.currentUser.uid,
-                    userStoryId: props.userStoryId,
-                    description: value,
-                    stage: 'Queue',
-                })
-            })
+      if (value == '') return;
+      addDoc(collection(firestore, 'task'), {
+        userId: auth.currentUser.uid,
+        userStoryId: props.userStoryId,
+        description: value,
+        stage: 'Queue'
+      });
     }
+
 
     return (
         <Stack>
@@ -46,11 +51,19 @@ const TaskInput = (props) => {
                     Create Task
                 </Button>
             </Stack>
-            {props.taskArray.map(task => (
-                <h3>
-                    -{task.description}
-                </h3>
-            ))}
+            {tasksLoading ?
+              <CircularProgress />
+            :
+              <>
+              {
+                tasks.map(task => (
+                    <h3>
+                        -{task.description}
+                    </h3>
+                ))
+              }
+              </>
+            }
         </Stack>
     );
 }

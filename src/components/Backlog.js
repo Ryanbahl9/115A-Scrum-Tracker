@@ -6,9 +6,10 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 //import Typography from '@mui/material/Typography';
 import {itemsStyle} from './CSS';
-import { useCollectionData, useCollection } from 'react-firebase-hooks/firestore';
+import { useCollection, useCollectionData } from 'react-firebase-hooks/firestore';
 import UserStoryInput, {getUserStoryDes, getPriority} from './UserStory';
 import TaskInput from './TaskInput';
+import CircularProgress from '@mui/material/CircularProgress';
 
 //import ProductContext from './ProductContext';
 import UserContext from './UserContext';
@@ -22,25 +23,34 @@ const Backlog = () => {
     let {product} = useContext(UserContext)
     const userStoryRef = firestore.collection('userStory');
     let query;
-    if (product) {
+    if(product) {
         query = userStoryRef.where('productId', '==', product.id);
     } else {
         query = userStoryRef.where('productId', '==', '0');
     }
     let [UserStories, loading] = useCollection(query);
+
+    let taskQuery;
+    const taskRef = firestore.collection('task');
+    if(product) {
+        taskQuery = taskRef.where('productId', '==', product.id);
+    } else {
+        taskQuery = taskRef.where('productId', '==', '0');
+    }
+    let [tasks, tasksLoading] = useCollectionData(taskQuery, { idField: 'id' });
     
     const createUserStory = async (e) => {
-        toggleUserInput();
-        e.preventDefault();
-        if (product) {
-            await userStoryRef.add({
-                productId: product.id,
-                description: getUserStoryDes(),
-                tasks: [],
-                priority: getPriority(),
-                state: 'productBacklog'
-            });
-        }
+      toggleUserInput();
+      e.preventDefault();
+      if (product) {
+        await userStoryRef.add({
+          productId: product.id,
+          description: getUserStoryDes(),
+          tasks: [],
+          priority: getPriority(),
+          state: 'productBacklog'
+        });
+      }
     }
 
     const [inputOpen, setinputOpen] = React.useState(false);
@@ -59,6 +69,8 @@ const Backlog = () => {
             return <div/>
         }
     }
+
+    console.log(tasks);
 
     const UserStoryTiles = () => {
         if (loading) return <div/>;
@@ -85,7 +97,14 @@ const Backlog = () => {
                                 <h3>
                                     Priority: {userStory.data().priority}
                                 </h3>
-                                <TaskInput userStoryId={userStory.id} taskArray={userStory.data().tasks}/>
+                                {tasksLoading ?
+                                  <CircularProgress />
+                                :
+                                  <TaskInput userStoryId={userStory.id}
+                                    taskArray={tasks
+                                      .filter(task => task.userStoryId === userStory.id)} />
+                                }
+                                
                             </Paper>
                         </Box>
                     ))}
