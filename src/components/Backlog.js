@@ -37,7 +37,7 @@ const Backlog = () => {
                 productId: product.id,
                 description: getUserStoryDes(),
                 tasks: [],
-                priorty: getPriority(),
+                priority: getPriority(),
                 state: 'productBacklog'
             });
         }
@@ -83,7 +83,7 @@ const Backlog = () => {
                                     {userStory.data().description}
                                 </h1>
                                 <h3>
-                                    Priority: {userStory.data().priorty}
+                                    Priority: {userStory.data().priority}
                                 </h3>
                                 <TaskInput userStoryId={userStory.id} taskArray={userStory.data().tasks}/>
                             </Paper>
