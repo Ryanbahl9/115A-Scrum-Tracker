@@ -34,7 +34,7 @@ const UserStoryRow = (props) => {
                                       if (task.stage === title) {
                                         return <Task key={task.id}
                                             userStoryId={props.data.id}
-                                            description={task.description} />
+                                            data={task}/>
                                       } else {
                                         return null;
                                       }

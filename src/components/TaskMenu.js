@@ -4,8 +4,10 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import Divider from '@mui/material/Divider';
+import {doc, deleteDoc} from "firebase/firestore";
+import {firestore} from './fire';
 
-export default function BasicMenu() {
+export default function BasicMenu(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -14,6 +16,12 @@ export default function BasicMenu() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleDelete = (e) => {
+        e.preventDefault();
+        const taskRef = doc(firestore, "task", props.id);
+        deleteDoc(taskRef);
+    }
 
     return (
         <div>
@@ -40,7 +48,7 @@ export default function BasicMenu() {
                 <MenuItem onClick={handleClose}>Move task to prev stage</MenuItem>
                 <MenuItem onClick={handleClose}>Assign yourself to task</MenuItem>
                 <Divider />
-                <MenuItem onClick={handleClose}>Delete task</MenuItem>
+                <MenuItem sx={{color: 'red'}}onClick={handleDelete}>Delete task</MenuItem>
             </Menu>
         </div>
     );
