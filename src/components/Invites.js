@@ -7,6 +7,8 @@ import firebase from 'firebase/compat/app';
 import {firestore, auth} from './fire';
 import {doc, updateDoc} from '@firebase/firestore';
 import {itemStyle} from './CSS';
+import {removeFromInviteList} from '../backEnd/DataBaseQueries';
+import {ProductionQuantityLimitsOutlined} from '@mui/icons-material';
 
 function Invites({children}) {
   const thisUserRef = firestore.collection('users').doc(auth.currentUser.uid);
@@ -32,16 +34,16 @@ function Invites({children}) {
       if (userDocData) {
         if (userDocData.invites.length > 0) {
           var productList = [];
-
           getProductPromises(userDocData.invites)
             .then((promiseList) => {
-              productList = [...promiseList];
-              productList = promistList.map((doc) => {
+              promiseList.forEach((doc) => {
                 if(doc.exists){
-                  return doc;
+                  productList.push(doc)
+                }else{
+                  removeFromInviteList(doc.id, auth.currentUser.uid);
                 }
               });
-              return promiseList.map((item) => item.data().uid);
+              return productList.map((item) => item.data().uid);
             })
             .then((idList) => getCreatorFromList(idList))
             .then((userList) => {
@@ -63,14 +65,7 @@ function Invites({children}) {
     [userDocData] /**This is useEffect dependency */
   );
 
-  // remove this productId from current User
-  const removeFromInviteList = (productId) => {
-    const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
-    const thisDoc = doc(firestore, 'users', auth.currentUser.uid);
-    updateDoc(thisDoc, {
-      invites: arrayRemove(productId),
-    });
-  };
+
 
   // add this user uid to given product
   const addToProductUserList = (productId) => {
@@ -99,14 +94,14 @@ function Invites({children}) {
             <Button
               onClick={() => {
                 addToProductUserList(index.productId);
-                removeFromInviteList(index.productId);
+                removeFromInviteList(index.productId, auth.currentUser.uid);
               }}
             >
               Accept
             </Button>
             <Button
               onClick={() => {
-                removeFromInviteList(index.productId);
+                removeFromInviteList(index.productId, auth.currentUser.uid);
               }}
             >
               Reject

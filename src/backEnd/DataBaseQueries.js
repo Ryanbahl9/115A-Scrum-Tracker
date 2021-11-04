@@ -5,6 +5,9 @@ import {
   useDocument,
   useDocumentDataOnce,
 } from 'react-firebase-hooks/firestore';
+import firebase from 'firebase/compat/app';
+import {doc, updateDoc} from '@firebase/firestore';
+
 
 //Return Array of Docs
 export function useProductsByUID(uid) {
@@ -32,3 +35,11 @@ export function getUserByEmail(email) {
   //get user with this Reference
   return userRef.get();
 }
+
+export const removeFromInviteList = (productId, uid) => {
+  const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
+  const thisDoc = doc(firestore, 'users', uid);
+  updateDoc(thisDoc, {
+    invites: arrayRemove(productId),
+  });
+};
