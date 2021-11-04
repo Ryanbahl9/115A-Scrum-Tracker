@@ -32,9 +32,9 @@ const UserStoryRow = (props) => {
                                   {
                                     tasks.map((task, i) => {
                                       if (task.stage === title) {
-                                        return <Task key={props.data.id}
+                                        return <Task key={task.id}
                                             userStoryId={props.data.id}
-                                            description={props.data.description} />
+                                            description={task.description} />
                                       } else {
                                         return null;
                                       }
