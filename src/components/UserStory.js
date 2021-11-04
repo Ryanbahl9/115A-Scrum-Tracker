@@ -26,11 +26,11 @@ export const getPriority = () => {
 const UserStoryInput = (props) => {
     const {inputOpen} = props;
 
-    const [value, setValue] = React.useState('Controlled');
+    const [value, setValue] = React.useState('');
   
     const handleChange = (event) => {
       setValue(event.target.value);
-      currentInputString = value;
+      currentInputString = event.target.value;
     };
 
     if (inputOpen) {

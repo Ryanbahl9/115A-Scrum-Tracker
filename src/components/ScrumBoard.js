@@ -97,12 +97,12 @@ const Board = () => {
                     <Box sx={{ display:"inline-flex"}}>
                     {stageTitleComponents}
                     </Box>
-                    {/* <Box className={styles.addStage}>
+                    <Box className={styles.addStage}>
                         <TextField sx={{ maxHeight: "40px", paddingTop:"0px", marginBottom: "30px" }}inputRef={newColumnRef}  id="standard-basic" label="Add Stage" variant="standard" />
                         <Button sx={{ maxHeight: "45px" }} variant="outlined" onClick={addColumn} disabled={loadingProduct}>
                             + add
                         </Button>
-                    </Box> */}
+                    </Box>
                 </Box>
 
                 <Box sx={{width: `${(stageTitles.length * 200) + 300}px`}} className={styles.userStoriesContainer}>

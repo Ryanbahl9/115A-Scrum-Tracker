@@ -12,7 +12,7 @@ import { useDocument, useCollection, useDocumentData } from 'react-firebase-hook
 import {firestore} from './fire';
 import UserContext from './UserContext';
 import UserStoryCard from './UserStoryCard';
-//import SprintSelector from './SprintSelector';
+import SprintSelector from './SprintSelector';
 import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
 
@@ -20,26 +20,19 @@ const SprintBacklog = (props) => {
 
   const [btnClk, setBtnClk] = useState(0)
   const fixDatabase = () => {
-    // console.log(firestore.collection('userStory').get())
-    // firestore.collection('userStory').get().then((result) => result.docs.map((doc) => firestore.collection('userStory').doc(doc.id).update({state: 'productBacklog'})))
-    // firestore.collection('userStory')
-    //   .where('productId', '==', 'DYcnuAejVq7k3e5CVYVR')
-    //   .get().then(doc => firestore.collection('userStory').doc(doc.id).delete())
-    // firestore.collection('userStory').get().map((doc) => doc.update({state: 'productBacklog'}))
     setBtnClk(btnClk+1)
   }
 
-  //const newColumnRef = useRef(null);
-  //const [stageTitles, setStageTitles] = useState([]);
-  //const [stageTitleComponents, setStageTitleComponents] = useState([]);
   let { product } = useContext(UserContext);
 
   const [sprintID, setSprintID] = useState('qoQPtehTrvrvLXjF4v9w')
   const [sprintStories, setSprintStories] = useState([])
 
 
-  const sprintRef = firestore.collection('sprints').doc(sprintID)
-  let [sprint, sprintLoading, error] = useDocument(sprintRef);
+  let sprintRef = firestore.collection('sprints').doc(sprintID)
+
+  let [sprintSS, setSprintSS] = useState(null)
+  let sprintObserver = null
 
   const backlogStoriesRef = firestore.collection('userStory');
   if (product) {
@@ -52,11 +45,26 @@ const SprintBacklog = (props) => {
   const [backlogStories, backlogStoriesLoading] = useCollection(backlogStoriesQuery);
 
 
-  useEffect(async () => {
-    if (sprintLoading) return;
 
+  useEffect(() => {
+    console.log( 'updating sprintSS' )
+    // Stop listening to the previous snapshot call back
+    if (sprintObserver != null) {
+      sprintObserver()
+    }
+    // set new query / reference using new sprintID
+    sprintRef = firestore.collection('sprints').doc(sprintID)
+    // set up new callback function using new sprintRef
+    sprintObserver = sprintRef.onSnapshot((snapShot) => {
+      setSprintSS(snapShot)
+    })
+  }, [sprintID, btnClk])
+
+
+  useEffect(async () => {
+    if (sprintSS === null) return;
     let tempSprintStories = []
-    for (const storyId of sprint.data().userStories) {
+    for (const storyId of sprintSS.data().userStories) {
       await firestore.collection('userStory').doc(storyId)
       .get()
       .then((doc) => {
@@ -68,7 +76,8 @@ const SprintBacklog = (props) => {
       })
     }
     setSprintStories(tempSprintStories)
-  }, [sprintLoading, btnClk, sprint])
+
+  }, [sprintSS])
   
 
   const moveStoryToSprint = (storyID) => {
@@ -93,21 +102,21 @@ const SprintBacklog = (props) => {
     <Fragment>
     {product &&
     <Box>
-      {error && <p>=================Error==================</p>}
-      {!sprint && <p>=================Data Is Nil==================</p>}
-      {!sprintLoading && 
+      <SprintSelector sprintId={sprintID} setSprintID={setSprintID}/>
+      {!sprintSS && <p>=================Data Is Nil==================</p>}
+      {(sprintSS != null) && 
       <box>
         <p>Product ID: {product.id}</p>
-        <p>Sprint ID: {sprint.id}</p>
-        <p>Sprint Start Date: {sprint.data().startDate}</p>
-        <p>Sprint Length: {sprint.data().length}</p>
-        <p>Sprint ProductID: {sprint.data().ProductID}</p>
-        <p>Sprint User Stories: {sprint.data().userStories}</p>
+        <p>Sprint ID: {sprintSS.id}</p>
+        <p>Sprint Start Date: {sprintSS.data().startDate}</p>
+        <p>Sprint Length: {sprintSS.data().length}</p>
+        <p>Sprint ProductID: {sprintSS.data().ProductID}</p>
+        <p>Sprint User Stories: {sprintSS.data().userStories}</p>
       </box>
       }
       {/* {product && <SprintSelector productId={product.id} sprintCallback={backlogStoriesLoading}/>} */}
-      <Box sx={{display: "flex"}}>
-        <Box>
+      <Box sx={{display: "flex" }}>
+        <Box sx={{ width: 275 }}>
           {!(backlogStoriesLoading) && backlogStories.docs.map(story => { 
             return (
               <p key={story.id}>
@@ -121,8 +130,8 @@ const SprintBacklog = (props) => {
           })}
         </Box>
         <Box>|     |      |</Box>
-        <Box>
-          {!(sprintLoading || sprintStories.length === 0) && sprintStories.map(story => { 
+        <Box sx={{ width: 275 }}>
+          {(sprintSS != null && sprintStories.length > 0) && sprintStories.map(story => { 
             return (
               <p key={story.id}>
                 <UserStoryCard 

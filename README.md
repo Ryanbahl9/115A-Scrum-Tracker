@@ -4,6 +4,7 @@ products:   {
                 productName: "str",
                 uid, //who created it
                 users: []// array of users who have access
+                stages:
             }
 users:      {
                 email: @,
@@ -16,7 +17,6 @@ userStory:  {
                 id: Auto Set Up by FireBase
                 productId: id,
                 description: "str"
-                tasks: [id,..],
                 priority: #,
                 state: "productBacklog", "sprintBacklog", or "completed"
             }
@@ -32,5 +32,7 @@ tasks:      {
                 userId: uid,
                 userStoryId: id,
                 description: "str"
+                stage/stage: "str"
             }
+
 
