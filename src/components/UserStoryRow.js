@@ -3,11 +3,16 @@ import { Box, List } from '@mui/material';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { firestore } from './fire';
 import { useCollectionData} from 'react-firebase-hooks/firestore';
+import CircularProgress from '@mui/material/CircularProgress';
 import Task from './Task';
 
 import styles from './UserStoryRow.module.css';
 
 const UserStoryRow = (props) => {
+    let taskQuery;
+    const taskRef = firestore.collection('task');
+    taskQuery = taskRef.where('userStoryId', '==', props.data.id);
+    let [tasks, tasksLoading] = useCollectionData(taskQuery, { idField: 'id' });
 
     return (<Box className={styles.outerDiv} sx={{width: `${(props.stageTitles.length * 200) + 300}px`}}>
                 <Box className={styles.handleContainer}>
@@ -20,13 +25,24 @@ const UserStoryRow = (props) => {
                     {props.stageTitles.map((title, i)=>
                         (<Box key={i} className={styles.stage}>
                             <List sx={{paddingTop:"0px", paddingBottom:"0px"}} className={styles.taskList}>
-                                {props.data.tasks.map((task, i) => {
-                                    if (task.stage === title) {
-                                        return <Task key={i} description={task.description}/>
-                                    } else {
+                                {tasksLoading ?
+                                  <CircularProgress />
+                                :
+                                  <>
+                                  {
+                                    tasks.map((task, i) => {
+                                      if (task.stage === title) {
+                                        return <Task key={props.data.id}
+                                            userStoryId={props.data.id}
+                                            description={props.data.description} />
+                                      } else {
                                         return null;
-                                    }
-                                })}
+                                      }
+                                    })
+                                  }
+                                  </>
+                                }
+
                             </List>
                         </Box>))}
                 </Box>

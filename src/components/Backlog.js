@@ -61,8 +61,6 @@ const Backlog = () => {
         }
     }
 
-    console.log(tasks);
-
     const UserStoryTiles = () => {
         if (loading) return <div/>;
         if (UserStories.docs.length > 0) {
