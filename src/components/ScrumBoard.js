@@ -4,7 +4,7 @@ import UserContext from './UserContext';
 import {useCollectionData,
   useDocumentData} from 'react-firebase-hooks/firestore';
 import UserStoryRow from "./UserStoryRow"
-import {doc, updateDoc} from "firebase/firestore";
+import { doc, getDoc, updateDoc} from "firebase/firestore";
 import {Container, Button, Box, TextField} from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import styles from './ScrumBoard.module.css'
@@ -44,14 +44,9 @@ const Board = () => {
     const addColumn = async (e) => {
       if (newColumnRef.current.value.length === 0) return;
       e.preventDefault();
-      const productRef = doc(firestore, "products", product.id);
       if (productData.stages){
-        await updateDoc(productRef, {
-          stages: [...product.stages, newColumnRef.current.value]
-        });
-      }else{
-        await updateDoc(productRef, {
-          stages: [newColumnRef.current.value]
+        await updateDoc(doc(firestore, "products", productData.id), {
+          stages: [...productData.stages, newColumnRef.current.value]
         });
       }
     }
