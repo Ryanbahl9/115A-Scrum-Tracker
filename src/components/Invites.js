@@ -36,6 +36,11 @@ function Invites({children}) {
           getProductPromises(userDocData.invites)
             .then((promiseList) => {
               productList = [...promiseList];
+              productList = promistList.map((doc) => {
+                if(doc.exists){
+                  return doc;
+                }
+              });
               return promiseList.map((item) => item.data().uid);
             })
             .then((idList) => getCreatorFromList(idList))
