@@ -2,8 +2,11 @@ import React from 'react'
 import { Box, List } from '@mui/material';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { firestore } from './fire';
+import { doc, updateDoc } from "firebase/firestore";
 import { useCollectionData} from 'react-firebase-hooks/firestore';
 import CircularProgress from '@mui/material/CircularProgress';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import Task from './Task';
 
 
@@ -14,22 +17,35 @@ const UserStoryRow = (props) => {
     taskQuery = taskRef.where('userStoryId', '==', props.data.id);
     let [tasks, tasksLoading] = useCollectionData(taskQuery, { idField: 'id' });
 
+  const increasePriority = () => {
+    if(props.data.priority === 1) return; 
+    updateDoc(doc(firestore, 'userStory', props.id), {priority: props.data.priority - 1})
+  };
+  const decreasePriority = () => {
+    if (props.data.priority === 8) return;
+    updateDoc(doc(firestore, 'userStory', props.id), { priority: props.data.priority + 1 })
+  };
+
     return (<Box sx={{display: 'flex'}}>
                 <Box sx={{minWidth: '100px',
                           height: '200px',
                           display: 'flex',
-                          justifyContent: 'center',
+                          justifyContent: 'space-evenly',
                           alignItems: 'center',
+                          flexDirection: 'column',
                           boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px'}}>
-                    <DragHandleIcon />
+        <ArrowCircleUpIcon onClick={increasePriority} sx={{fontSize:  '2em', cursor: 'pointer'}}/>
+                  <ArrowCircleDownIcon onClick={decreasePriority} sx={{fontSize: '2em', cursor: 'pointer'}} />
                 </Box>
                 <Box sx={{minWidth: '200px',
                           height: '200px',
                           display: 'flex',
-                          justifyContent: 'center',
+                          justifyContent: 'space-evenly',
                           alignItems: 'center',
+                          flexDirection: 'column',
                           boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px'}}>
-                    {props.data.description}
+                    <div><strong>{props.data.description}</strong></div>
+                    <div>Priority: {props.data.priority}</div>
                 </Box>
                 <Box sx={{display: 'flex'}}>
                     {props.stageTitles.map((title, i)=>
