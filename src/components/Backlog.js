@@ -9,7 +9,7 @@ import {itemsStyle} from './CSS';
 import { useCollection, useCollectionData } from 'react-firebase-hooks/firestore';
 import UserStoryInput, {getUserStoryDes, getPriority} from './UserStory';
 import TaskInput from './TaskInput';
-import CircularProgress from '@mui/material/CircularProgress';
+
 
 //import ProductContext from './ProductContext';
 import UserContext from './UserContext';
@@ -29,15 +29,6 @@ const Backlog = () => {
         query = userStoryRef.where('productId', '==', '0');
     }
     let [UserStories, loading] = useCollection(query);
-
-    let taskQuery;
-    const taskRef = firestore.collection('task');
-    if(product) {
-        taskQuery = taskRef.where('productId', '==', product.id);
-    } else {
-        taskQuery = taskRef.where('productId', '==', '0');
-    }
-    let [tasks, tasksLoading] = useCollectionData(taskQuery, { idField: 'id' });
     
     const createUserStory = async (e) => {
       toggleUserInput();
@@ -97,13 +88,7 @@ const Backlog = () => {
                                 <h3>
                                     Priority: {userStory.data().priority}
                                 </h3>
-                                {tasksLoading ?
-                                  <CircularProgress />
-                                :
-                                  <TaskInput userStoryId={userStory.id}
-                                    taskArray={tasks
-                                      .filter(task => task.userStoryId === userStory.id)} />
-                                }
+                                <TaskInput userStoryId={userStory.id} />
                                 
                             </Paper>
                         </Box>
