@@ -1,15 +1,31 @@
-import * as React from 'react';
+import React, { useState, useContext} from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import Divider from '@mui/material/Divider';
-import {doc, deleteDoc} from "firebase/firestore";
+import {doc, deleteDoc, updateDoc} from "firebase/firestore";
 import {firestore} from './fire';
+import UserContext from './UserContext';
+import {
+    useDocumentData
+} from 'react-firebase-hooks/firestore';
 
 export default function BasicMenu(props) {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const { product } = useContext(UserContext);
+    const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+    let pid;
+    if (product) {
+        pid = product.id;
+    } else {
+        pid = '0';
+    }
+    const [productData,
+        loadingProduct] = useDocumentData(firestore
+            .collection('products')
+            .doc(pid), { idField: 'id' });
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -21,7 +37,34 @@ export default function BasicMenu(props) {
         e.preventDefault();
         const taskRef = doc(firestore, "task", props.id);
         deleteDoc(taskRef);
+        handleClose();
     }
+
+    const handleMoveNext = async (e) => {
+        e.preventDefault();
+        if(props.data.stage === 'Queue'){
+            await updateDoc(doc(firestore,"task",props.id), {stage: productData.stages[0]})
+        } else if (productData.stages.indexOf(props.data.stage) === productData.stages.length - 1) {
+            await updateDoc(doc(firestore, "task", props.id), { stage: 'Complete' })
+        } else {
+            await updateDoc(doc(firestore, "task", props.id), { stage: productData.stages[productData.stages.indexOf(props.data.stage) + 1] })
+        }
+        handleClose();
+    }
+
+    const handleMovePrev = async (e) => {
+        e.preventDefault();
+        if (props.data.stage === 'Complete') {
+            await updateDoc(doc(firestore, "task", props.id), { stage: productData.stages[productData.stages.length] })
+        } else if (productData.stages.indexOf(props.data.stage) === 0) {
+            await updateDoc(doc(firestore, "task", props.id), { stage: 'Queue' })
+        } else {
+            await updateDoc(doc(firestore, "task", props.id), { stage: productData.stages[productData.stages.indexOf(props.data.stage) - 1] })
+        }
+        handleClose();
+    }
+
+
 
     return (
         <div>
@@ -44,8 +87,8 @@ export default function BasicMenu(props) {
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                <MenuItem onClick={handleClose}>Move task to next stage</MenuItem>
-                <MenuItem onClick={handleClose}>Move task to prev stage</MenuItem>
+                <MenuItem disabled={props.data.stage === 'Complete'} onClick={handleMoveNext}>Move task to next stage</MenuItem>
+                <MenuItem disabled={props.data.stage === 'Queue'} onClick={handleMovePrev}>Move task to prev stage</MenuItem>
                 <MenuItem onClick={handleClose}>Assign yourself to task</MenuItem>
                 <Divider />
                 <MenuItem sx={{color: 'red'}}onClick={handleDelete}>Delete task</MenuItem>

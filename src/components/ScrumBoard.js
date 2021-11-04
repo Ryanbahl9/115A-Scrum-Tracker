@@ -42,6 +42,9 @@ const Board = () => {
     //the product will be updated,
     const addColumn = async (e) => {
       if (newColumnRef.current.value.length === 0) return;
+      if (productData.stages.includes(newColumnRef.current.value.length)) return;
+      if (newColumnRef.current.value.length === 'Queue') return;
+      if (newColumnRef.current.value.length === 'Complete') return;
       e.preventDefault();
       if (productData.stages){
         await updateDoc(doc(firestore, "products", productData.id), {
@@ -57,17 +60,17 @@ const Board = () => {
       if (!product || loadingProduct || !productData) return;
       //add the mandatory titles
       let tempStageTitles = ["Queue"];
-      let tempStageTitleComponents = [<Box sx={{minWidth: '100px'}} key={0}></Box>,
+      let tempStageTitleComponents = [<Box sx={{ minWidth: '100px', boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }} key={0}></Box>,
         <Box sx={{ minWidth: '200px' ,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          boxShadow: 'rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px'}}key={1}>User Stories</Box>,
+          boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px'}}key={1}>User Stories</Box>,
         <Box sx={{ minWidth: '200px',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          boxShadow: 'rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }}key={2}>Queue</Box>];
+          boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }}key={2}>Queue</Box>];
       //add the custom titles from the db
       if (productData.stages){
         tempStageTitleComponents = tempStageTitleComponents
@@ -77,7 +80,7 @@ const Board = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            boxShadow: 'rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }}key={i+3}>
+            boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }}key={i+3}>
             {stageTitle}
             <BasicMenu />
           </Box>)));
@@ -88,7 +91,7 @@ const Board = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        boxShadow: 'rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }}key={tempStageTitleComponents.length+2}>Complete</Box>);
+        boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }}key={tempStageTitleComponents.length+2}>Complete</Box>);
       tempStageTitles.push("Complete")
       setStageTitleComponents(tempStageTitleComponents);
       setStageTitles(tempStageTitles);
@@ -96,7 +99,7 @@ const Board = () => {
 
     return (<>{
       product ?
-        (<Container sx={{overflowX: 'scroll', overflowY: 'hidden', maxHeight: '90vh'}}>
+        (<Container sx={{marginTop: "10px", overflowX: 'scroll', overflowY: 'hidden', maxHeight: '90vh'}}>
           {/* Probably should make this its own component  
           <FormControl size="sm" className={styles.sprintSelector}>
               <InputLabel id="demo-simple-select-label">
@@ -119,7 +122,7 @@ const Board = () => {
           <Box sx={{display: 'flex'}}>
 
             {stageTitleComponents}
-            <Box >
+            <Box sx={{display: 'flex', minWidth: '300px'}}>
               <TextField inputRef={newColumnRef} id="standard-basic" label="Add Stage" variant="standard" />
               <Button variant="outlined" onClick={addColumn} disabled={loadingProduct}>
                 + add
