@@ -37,7 +37,7 @@ const Board = () => {
         if (newColumnRef.current.value.length === 0) return;
         e.preventDefault();
         const productRef = doc(firestore, "products", product.id);
-        if(product.stages){
+        if (productData.stages){
             await updateDoc(productRef, {
                 stages: [...product.stages, newColumnRef.current.value]
             });
