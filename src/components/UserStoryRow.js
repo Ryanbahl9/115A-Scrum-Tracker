@@ -6,7 +6,7 @@ import { useCollectionData} from 'react-firebase-hooks/firestore';
 import CircularProgress from '@mui/material/CircularProgress';
 import Task from './Task';
 
-import styles from './UserStoryRow.module.css';
+
 
 const UserStoryRow = (props) => {
     let taskQuery;
@@ -14,17 +14,30 @@ const UserStoryRow = (props) => {
     taskQuery = taskRef.where('userStoryId', '==', props.data.id);
     let [tasks, tasksLoading] = useCollectionData(taskQuery, { idField: 'id' });
 
-    return (<Box className={styles.outerDiv} sx={{width: `${(props.stageTitles.length * 200) + 300}px`}}>
-                <Box className={styles.handleContainer}>
-                    <DragHandleIcon sx={{cursor:"grab"}}/>
+    return (<Box sx={{display: 'flex'}}>
+                <Box sx={{minWidth: '100px',
+                          height: '200px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px'}}>
+                    <DragHandleIcon />
                 </Box>
-        <Box sx={{ margin: '0px', height: "200px", width: "201px", borderBottom: "1px solid black", borderRight: "1px solid black", display:"flex", alignItems:"center", justifyContent:"center"}}>
+                <Box sx={{minWidth: '200px',
+                          height: '200px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px'}}>
                     {props.data.description}
                 </Box>
-                <Box className={styles.stagesDiv} sx={{width:`${props.stageTitles.length * 200 }px`}}>
+                <Box sx={{display: 'flex'}}>
                     {props.stageTitles.map((title, i)=>
-                        (<Box key={i} className={styles.stage}>
-                            <List sx={{paddingTop:"0px", paddingBottom:"0px"}} className={styles.taskList}>
+                    (<Box sx={{width: '200px',
+                               height: '200px',
+                               boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px'}}
+                          key={i} >
+                            <List sx={{maxHeight: '90%', overflowY: 'scroll'}} >
                                 {tasksLoading ?
                                   <CircularProgress />
                                 :

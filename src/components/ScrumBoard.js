@@ -7,7 +7,6 @@ import UserStoryRow from "./UserStoryRow"
 import { doc, getDoc, updateDoc} from "firebase/firestore";
 import {Container, Button, Box, TextField} from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import styles from './ScrumBoard.module.css'
 import BasicMenu from './StageMenu';
 
 const Board = () => {
@@ -58,22 +57,38 @@ const Board = () => {
       if (!product || loadingProduct || !productData) return;
       //add the mandatory titles
       let tempStageTitles = ["Queue"];
-      let tempStageTitleComponents = [<Box className={styles.firstStageTitle} key={0}></Box>,
-        <Box className={styles.stageTitle} key={1}>User Stories</Box>,
-        <Box className={styles.stageTitle} key={2}>Queue</Box>];
+      let tempStageTitleComponents = [<Box sx={{minWidth: '100px'}} key={0}></Box>,
+        <Box sx={{ minWidth: '200px' ,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          boxShadow: 'rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px'}}key={1}>User Stories</Box>,
+        <Box sx={{ minWidth: '200px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          boxShadow: 'rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }}key={2}>Queue</Box>];
       //add the custom titles from the db
       if (productData.stages){
         tempStageTitleComponents = tempStageTitleComponents
           .concat(productData.stages
           .map((stageTitle, i) => 
-          (<Box className={styles.stageTitle} key={i+3}>
+          (<Box sx={{ minWidth: '200px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            boxShadow: 'rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }}key={i+3}>
             {stageTitle}
-            <BasicMenu className={styles.titleIcon}/>
+            <BasicMenu />
           </Box>)));
         tempStageTitles = tempStageTitles.concat(productData.stages);
       }
       //add the mandatory Complete title
-      tempStageTitleComponents.push(<Box className={styles.lastStageTitle} key={tempStageTitleComponents.length+2}>Complete</Box>);
+      tempStageTitleComponents.push(<Box sx={{ minWidth: '200px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        boxShadow: 'rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }}key={tempStageTitleComponents.length+2}>Complete</Box>);
       tempStageTitles.push("Complete")
       setStageTitleComponents(tempStageTitleComponents);
       setStageTitles(tempStageTitles);
@@ -81,7 +96,7 @@ const Board = () => {
 
     return (<>{
       product ?
-        (<Container className={styles.boardContainer}>
+        (<Container sx={{overflowX: 'scroll', overflowY: 'hidden', maxHeight: '90vh'}}>
           {/* Probably should make this its own component  
           <FormControl size="sm" className={styles.sprintSelector}>
               <InputLabel id="demo-simple-select-label">
@@ -100,33 +115,34 @@ const Board = () => {
                   <MenuItem value={0}>sprint 3</MenuItem>
               </Select>
           </FormControl> */}  
-          <Box className={styles.stageTitlesContainer}>
-            <Box sx={{display:"inline-flex"}}>
+          
+          <Box sx={{display: 'flex'}}>
+
             {stageTitleComponents}
-            </Box>
-            <Box className={styles.addStage}>
-              <TextField sx={{maxHeight: "40px",
-                paddingTop:"0px",
-                marginBottom: "30px"}}inputRef={newColumnRef}  id="standard-basic" label="Add Stage" variant="standard" />
-              <Button sx={{maxHeight: "45px"}} variant="outlined" onClick={addColumn} disabled={loadingProduct}>
+            <Box >
+              <TextField inputRef={newColumnRef} id="standard-basic" label="Add Stage" variant="standard" />
+              <Button variant="outlined" onClick={addColumn} disabled={loadingProduct}>
                 + add
               </Button>
             </Box>
+            
           </Box>  
-          <Box sx={{width: `${(stageTitles.length * 200) + 300}px`}} className={styles.userStoriesContainer}>
+
+
               {(loadingStories || loadingProduct) &&
-                <Box sx={{ width: "100%", display: "flex"}}><CircularProgress/></Box> }
+                <Box ><CircularProgress/></Box> }
 
               {/*load the user stories into user story rows*/}
+              
               {(!loadingStories && !loadingProduct) &&
-                  UserStories.sort((firstDoc, secondDoc) => firstDoc.priority - secondDoc.priority)
-                             .map(doc => {
-                  return (<UserStoryRow key={doc.id} id={doc.id} data={doc} stageTitles={stageTitles}/>)
-              })}
-
+                <Box sx={{minWidth: `${stageTitles.length * 200 + 300}px`, maxHeight: '80vh', overflowY: 'scroll', overflowX: 'hidden'}}>
+                  {UserStories.sort((firstDoc, secondDoc) => firstDoc.priority - secondDoc.priority)
+                      .map(doc => <UserStoryRow key={doc.id} id={doc.id} data={doc} stageTitles={stageTitles}/>)}
+                </Box>
+              }
+            
               {(!loadingStories && !loadingProduct) && (UserStories.length===0) &&
                 <h3>There are no user stories for this board</h3>}
-          </Box>
         </Container >)
       :
         <div>You must select a project to view the board</div>
