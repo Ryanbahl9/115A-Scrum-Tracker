@@ -17,6 +17,7 @@ const Board = () => {
     const { product } = useContext(UserContext);
     const userStoryRef = firestore.collection('userStory');
     let userStoriesQuery;
+
     if(product){
         userStoriesQuery = userStoryRef.where('productId', '==', product.id);
     } else {
@@ -107,7 +108,9 @@ const Board = () => {
 
                 <Box sx={{width: `${(stageTitles.length * 200) + 300}px`}} className={styles.userStoriesContainer}>
                     {(loadingStories || loadingProduct) && <Box sx={{ width: "100%", display: "flex"}}><CircularProgress/></Box> }
-                    {(!loadingStories && !loadingProduct) && UserStories.map(doc => {
+                    {(!loadingStories && !loadingProduct) &&
+                        UserStories.sort((firstDoc, secondDoc) => firstDoc.priority - secondDoc.priority)
+                                   .map(doc => {
                         return (<UserStoryRow key={doc.id} id={doc.id} data={doc} stageTitles={stageTitles}/>)
                     })}
                     {(!loadingStories && !loadingProduct) && (UserStories.length===0) && <h3>There are no user stories for this board</h3>}
