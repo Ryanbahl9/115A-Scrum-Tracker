@@ -12,12 +12,11 @@ import StageMenu from './StageMenu';
 const Board = () => {
     const newColumnRef = useRef(null);
     const [stageTitles, setStageTitles] = useState([]);
+    const [sprint, setSprint] = useState();
+    const [taskView, setTaskView] = useState();
     const [stageTitleComponents, setStageTitleComponents] = useState([]);
     const { product } = useContext(UserContext);
     const userStoryRef = firestore.collection('userStory');
-
-    
-
     let userStoriesQuery;
     if(product) {
       userStoriesQuery = userStoryRef.where('productId', '==', product.id);
@@ -33,11 +32,22 @@ const Board = () => {
     } else {
       pid = '0';
     }
-
     const [productData,
       loadingProduct] = useDocumentData(firestore
         .collection('products')
         .doc(pid), {idField: 'id'});
+
+    let sprintQuery;
+    const sprintRef = firestore.collection('userStory');
+    if (product) {
+      sprintQuery = sprintRef.where('productId', '==', product.id);
+    } else {
+      sprintQuery = sprintRef.where('productId', '==', '0');
+    }
+    const [sprints,
+      loadingSprints] = useDocumentData(firestore
+        .collection('sprints')
+        .doc(pid), { idField: 'id' });
 
     //this is for adding a new stage to the database,
     //this function will force the use effect function to be called since
@@ -103,25 +113,48 @@ const Board = () => {
       product ?
         (<Container sx={{marginTop: "10px", overflowX: 'scroll', overflowY: 'hidden', maxHeight: '90vh'}}>
 
-          <FormControl sx={{marginTop: "10px"}}size="sm">
+          <Box sx={{ position: 'absolute', marginTop: "10px" }}>
+            <FormControl size="sm">
+                <InputLabel id="demo-simple-select-label">
+                    View Sprint
+                </InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={0}
+                    label="Age"
+                    sx={{maxHeight:"30px"}}
+                    
+                >
+                  {!loadingSprints && sprints &&
+                  sprints.map((sprint, i) => <MenuItem key={sprint.id} value={i}>sprints need a name field</MenuItem>)
+                  }
+                {!loadingSprints && !sprints && <MenuItem value={0}>There are no sprints for this product</MenuItem>}
+                </Select>
+            </FormControl>  
+          </Box>
+
+            {/* <Box sx={{ position: 'absolute', marginTop: "10px", marginLeft: '120px'}}>
+            <FormControl size="sm">
               <InputLabel id="demo-simple-select-label">
-                  Select Sprint
+                View Tasks
               </InputLabel>
               <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={0}
-                  label="Age"
-                  sx={{maxHeight:"30px"}}
-                  // onChange={handleChange}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={1}
+                label="Age"
+                sx={{maxHeight:"30px"}}
               >
-                  <MenuItem value={0}>sprint 1</MenuItem>
-                  <MenuItem value={0}>sprint 2</MenuItem>
-                  <MenuItem value={0}>sprint 3</MenuItem>
+                <MenuItem value={1}>Your tasks</MenuItem>
+                <MenuItem value={2}>member 2</MenuItem>
+                <MenuItem value={3}>member 3</MenuItem>
+                <MenuItem value={4}>Unassigned Tasks</MenuItem>
               </Select>
-          </FormControl>  
+            </FormControl>
+          </Box> */}
           
-          <Box sx={{display: 'flex', marginTop: '10px'}}>
+          <Box sx={{display: 'flex', marginTop: '50px'}}>
 
             {stageTitleComponents}
             <Box sx={{display: 'flex', minWidth: '300px'}}>
