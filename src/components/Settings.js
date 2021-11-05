@@ -9,7 +9,34 @@ import {Button, Input} from '@mui/material';
 import {doc, updateDoc} from '@firebase/firestore';
 import UserContext from './UserContext';
 import {itemsStyle, itemStyle, settingsItems} from './CSS.js';
-import {getUserByEmail, useProductById, useProductOwnerByProduct} from '../backEnd/DataBaseQueries';
+import {
+  getAvailableColors,
+  getUserByEmail,
+  useAvailableColors,
+  useProductById,
+  useProductOwnerByProduct,
+  setColor,
+  setProductColor
+} from '../backEnd/DataBaseQueries';
+
+function ColorSelection(props) {
+  let {product} = useContext(UserContext);
+  const [colors] = useAvailableColors(product.id);
+  const setColor = (e) => {
+    console.log('set Color: ' + e.target.value);
+    setProductColor(product.id, auth.currentUser.uid, e.target.value);
+  };
+  return (
+    <Box>
+      {colors &&
+        colors.availableColors.map((color) => (
+          <button onClick={setColor} style={{background: color}} value={color}>
+            {color}
+          </button>
+        ))}
+    </Box>
+  );
+}
 
 function UserTiles(props) {
   let {product} = useContext(UserContext);
@@ -28,9 +55,7 @@ function UserTiles(props) {
         setUserBoxes(
           <Box>
             <h3 style={{textAlign: 'center'}}>Current Users</h3>
-            <Box
-              sx={settingsItems}
-            >
+            <Box sx={settingsItems}>
               {userArr.map((doc) => {
                 return (
                   <Paper key={doc.id} sx={itemStyle}>
@@ -106,7 +131,9 @@ function Settings() {
             {productOwner.displayName}
           </Box>
           {productOwner.uid === auth.currentUser.uid && (
-            <Box sx={{textAlign: 'center'}}>Add Users {InviteSubmissionForm()}</Box>
+            <Box sx={{textAlign: 'center'}}>
+              Add Users {InviteSubmissionForm()}
+            </Box>
           )}
         </Box>
       );
@@ -126,6 +153,12 @@ function Settings() {
           <Paper sx={itemsStyle}>
             <Box>
               <h3>Sprint</h3>
+            </Box>
+          </Paper>
+          <Paper sx={itemsStyle}>
+            <Box>
+              <h3>Color Selection</h3>
+              {ColorSelection()}
             </Box>
           </Paper>
         </Box>

@@ -1,5 +1,6 @@
 import {Box} from '@mui/system';
 import React, {useContext, useState} from 'react';
+import {deleteProduct} from '../backEnd/DataBaseQueries';
 import {deleteButtonStyle} from './CSS';
 import {auth, firestore} from './fire';
 import UserContext from './UserContext';
@@ -13,7 +14,7 @@ export default function DeleteProduct(props) {
     if (product && product.id === value.id) {
       setProduct(null);
     }
-    firestore.collection('products').doc(value.id).delete();
+    deleteProduct(value.id)
   };
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
