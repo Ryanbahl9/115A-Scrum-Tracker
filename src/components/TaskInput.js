@@ -57,7 +57,7 @@ const TaskInput = (props) => {
               <>
               {
                 tasks.map(task => (
-                    <h3>
+                    <h3 key={task.id}>
                         -{task.description}
                     </h3>
                 ))
