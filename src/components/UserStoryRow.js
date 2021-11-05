@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { Box, List } from '@mui/material';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { firestore } from './fire';
@@ -14,6 +14,7 @@ import Task from './Task';
 const UserStoryRow = (props) => {
     let taskQuery;
     const taskRef = firestore.collection('task');
+    const [complete, setComplete] = useState(false);
     taskQuery = taskRef.where('userStoryId', '==', props.data.id);
     let [tasks, tasksLoading] = useCollectionData(taskQuery, { idField: 'id' });
 
@@ -25,6 +26,15 @@ const UserStoryRow = (props) => {
     if (props.data.priority === 8) return;
     updateDoc(doc(firestore, 'userStory', props.id), { priority: props.data.priority + 1 })
   };
+
+  useEffect(() => {
+    if (!tasksLoading && tasks.length !== 0) {
+      if (tasks.every((task) => task.stage === 'Complete')) {
+        setComplete(true);
+      }
+    }
+  }, [setComplete, tasksLoading, tasks]);
+
 
     return (<Box sx={{display: 'flex'}}>
                 <Box sx={{minWidth: '100px',
@@ -46,7 +56,11 @@ const UserStoryRow = (props) => {
                           flexDirection: 'column',
                           boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px'}}>
                     <div><strong>{props.data.description}</strong></div>
-                    <div>Priority: {props.data.priority}</div>
+                    {complete ?
+                      <Box sx={{ border: '2px solid #0e0'}}>All tasks complete!</Box>
+                    :
+                      <div>Priority: {props.data.priority}</div>
+                    }
                 </Box>
                 <Box sx={{display: 'flex'}}>
                     {props.stageTitles.map((title, i)=>
