@@ -43,3 +43,13 @@ export const removeFromInviteList = (productId, uid) => {
     invites: arrayRemove(productId),
   });
 };
+
+export const addProduct = async (name, currentUserUid) => {
+  await firestore.collection('products').add({
+    productName: name,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    uid: currentUserUid,
+    stages: ['Development'],
+    users: [currentUserUid],
+  })
+}

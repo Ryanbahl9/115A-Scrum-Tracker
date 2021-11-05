@@ -1,29 +1,18 @@
-import React, { useState } from 'react';
-import firebase from 'firebase/compat/app';
-import { firestore, auth } from './fire';
-import { Button, Input } from '@mui/material';
+import React, {useState} from 'react';
+import {auth} from './fire';
+import {Button, Input} from '@mui/material';
+import {addProduct} from '../backEnd/DataBaseQueries';
 
 const AddProduct = () => {
-  const productsRef = firestore.collection('products');
-
   const [formValue, setFormValue] = useState('');
   const enterProductName = async (e) => {
     e.preventDefault();
-
-    const { uid } = auth.currentUser;
-    await productsRef
-      .add({
-        productName: formValue,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        uid,
-        stages: ['Development'],
-        users: [uid],
-      })
+    addProduct(formValue, auth.currentUser.uid);
 
     setFormValue('');
   };
 
-  const style = { background: 'white' };
+  const style = {background: 'white'};
 
   return (
     <form onSubmit={enterProductName}>
