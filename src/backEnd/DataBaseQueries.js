@@ -1,5 +1,5 @@
 // import React from 'react';
-import {firestore} from '../components/fire';
+import { firestore } from '../components/fire';
 import {
   useCollectionData,
   useDocument,
@@ -7,19 +7,19 @@ import {
   useDocumentDataOnce,
 } from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/compat/app';
-import {doc, updateDoc} from '@firebase/firestore';
+import { doc, updateDoc } from '@firebase/firestore';
 
 //Return Array of Docs
 export function useProductsByUID(uid) {
   const productsRef = firestore.collection('products');
   var query = productsRef.where('users', 'array-contains', uid);
-  return useCollectionData(query, {idField: 'id'});
+  return useCollectionData(query, { idField: 'id' });
 }
 
 //Return Single Doc
 export function useProductById(id) {
   const productHookedRef = firestore.collection('products').doc(id);
-  return useDocument(productHookedRef, {idField: 'id'});
+  return useDocument(productHookedRef, { idField: 'id' });
 }
 
 export function useProductOwnerByProduct(product) {
@@ -39,18 +39,18 @@ export function getUserByEmail(email) {
 
 export const addProduct = async (name, currentUserUid) => {
   await firestore
-  .collection('products')
-  .add({
-    productName: name,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-    uid: currentUserUid,
-    stages: ['Development'],
-    users: [currentUserUid],
-  })
-  .then((doc) => {
-    firestore.collection('productColor').doc(doc.id).set({
-      productId: doc.id,
-      availableColors: [
+    .collection('products')
+    .add({
+      productName: name,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      uid: currentUserUid,
+      stages: ['Development'],
+      users: [currentUserUid],
+    })
+    .then((doc) => {
+      firestore.collection('productColor').doc(doc.id).set({
+        productId: doc.id,
+        availableColors: [
           'silver',
           'gray',
           'red',
@@ -69,44 +69,44 @@ export const addProduct = async (name, currentUserUid) => {
         userColor: [],//{uid,color}
       });
     });
-  };
+};
 
-  export function useAvailableColors(productId){
-    // const productsRef = firestore.collection('products');
-    // var query = productsRef.where('users', 'array-contains', uid);
-    // return useCollectionData(query, {idField: 'id'});
-    const productColorRef = firestore.collection('productColor');
-    const query = productColorRef.doc(productId);
-    return useDocumentData(query)
-  }
+export function useAvailableColors(productId) {
+  // const productsRef = firestore.collection('products');
+  // var query = productsRef.where('users', 'array-contains', uid);
+  // return useCollectionData(query, {idField: 'id'});
+  const productColorRef = firestore.collection('productColor');
+  const query = productColorRef.doc(productId);
+  return useDocumentData(query)
+}
 
-  export function deleteProduct(productId){
-    firestore.collection('products').doc(productId).delete();
-    firestore.collection('productColor').doc(productId).delete();
-  }
+export function deleteProduct(productId) {
+  firestore.collection('products').doc(productId).delete();
+  firestore.collection('productColor').doc(productId).delete();
+}
 
-export function setProductColor(productId, uid, color){
+export function setProductColor(productId, uid, color) {
   const isUserColorSet = async (docRef, uid) => {
-
+    //checks docRef if user is already there. 
   }
 
   const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
-  const arrayUnion =  firebase.firestore.FieldValue.arrayUnion;
-    //check to see if user is already in color
-    const docRef = doc(firestore, 'productColor', productId);
-    if(isUserColorSet(docRef,uid)){
-console.log("User Has Color Set")
-    }
-    // console.log(Object.keys(t)
+  const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
+  //check to see if user is already in color
+  const docRef = doc(firestore, 'productColor', productId);
+  if (isUserColorSet(docRef, uid)) {
+    console.log("User Has Color Set")
+  }
+  // console.log(Object.keys(t)
   //if (no color selected) {
-    // updateDoc(docRef, {
-      // availableColors: arrayRemove(color)
-    // })
-    // updateDoc(docRef,{
-      // userColor: arrayUnion({uid, color: color})
-    // })
+  // updateDoc(docRef, {
+  // availableColors: arrayRemove(color)
+  // })
+  // updateDoc(docRef,{
+  // userColor: arrayUnion({uid, color: color})
+  // })
   // } else {
-    // add color back and change color
+  // add color back and change color
   // }
 
 

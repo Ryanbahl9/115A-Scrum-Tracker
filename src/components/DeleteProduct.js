@@ -1,9 +1,11 @@
-import {Box} from '@mui/system';
+// import {Box, Button} from '@mui/system';
 import React, {useContext, useState} from 'react';
 import {deleteProduct} from '../backEnd/DataBaseQueries';
 import {deleteButtonStyle} from './CSS';
 import {auth, firestore} from './fire';
 import UserContext from './UserContext';
+import {Box, Button} from '@mui/material';
+
 
 export default function DeleteProduct(props) {
   const {value} = props;
@@ -22,7 +24,7 @@ export default function DeleteProduct(props) {
   const Delete = () => {
     return (
       <Box>
-        <button
+        <Button
           style={deleteButtonStyle}
           onClick={(e) => {
             e.stopPropagation();
@@ -30,7 +32,7 @@ export default function DeleteProduct(props) {
           }}
         >
           Delete
-        </button>
+        </Button>
       </Box>
     );
   };
@@ -56,12 +58,12 @@ export default function DeleteProduct(props) {
     return (
       <Box style={deleteButtonStyle}>
         <h3>Confirm Delete</h3>
-        <button style={{width: '50%', color: 'red'}} onClick={clickKeep}>
+        <Button style={{width: '50%', color: 'red'}} onClick={clickKeep}>
           Keep
-        </button>
-        <button style={{width: '50%', color: 'red'}} onClick={clickDelete}>
+        </Button>
+        <Button style={{width: '50%', color: 'red'}} onClick={clickDelete}>
           Delete
-        </button>
+        </Button>
       </Box>
     );
   };

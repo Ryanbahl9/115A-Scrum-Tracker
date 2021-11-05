@@ -38,7 +38,7 @@ const Home = () => {
     <UserContext.Consumer>
       {({setProduct, product}) => (
         <Box>
-          <Paper className={'productSelection'} sx={itemsStyle}>
+          <Paper className={'productSelection'} sx={itemsStyle} variant={'outlined'} >
             <header>
               <h1>Select Product</h1>
             </header>
@@ -67,11 +67,11 @@ const Home = () => {
                 })}
             </Grid>
           </Paper>
-          <Paper sx={itemsStyle}>
+          <Paper className={'addProduct'} sx={itemsStyle} variant={'outlined'}>
             <h1>Add Product</h1>
             <AddProduct />
           </Paper>
-          <Paper sx={itemsStyle}>
+          <Paper sx={itemsStyle} variant={'outlined'}>
             <h1>Invites</h1>
             <Invites />
           </Paper>
