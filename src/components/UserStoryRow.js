@@ -38,6 +38,7 @@ const UserStoryRow = (props) => {
                   <ArrowCircleDownIcon onClick={decreasePriority} sx={{fontSize: '2em', cursor: 'pointer'}} />
                 </Box>
                 <Box sx={{minWidth: '200px',
+                          maxWidth: '200px',
                           height: '200px',
                           display: 'flex',
                           justifyContent: 'space-evenly',

@@ -17,51 +17,51 @@ export default function BasicMenu(props) {
     const open = Boolean(anchorEl);
     let pid;
     if (product) {
-        pid = product.id;
+      pid = product.id;
     } else {
-        pid = '0';
+      pid = '0';
     }
     const [productData,
-        loadingProduct] = useDocumentData(firestore
-            .collection('products')
-            .doc(pid), { idField: 'id' });
+      loadingProduct] = useDocumentData(firestore
+        .collection('products')
+        .doc(pid), { idField: 'id' });
 
     const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+      setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
-        setAnchorEl(null);
+      setAnchorEl(null);
     };
 
     const handleDelete = (e) => {
-        e.preventDefault();
-        const taskRef = doc(firestore, "task", props.id);
-        deleteDoc(taskRef);
-        handleClose();
+      e.preventDefault();
+      const taskRef = doc(firestore, "task", props.id);
+      deleteDoc(taskRef);
+      handleClose();
     }
 
     const handleMoveNext = async (e) => {
-        e.preventDefault();
-        if(props.data.stage === 'Queue'){
-            await updateDoc(doc(firestore,"task",props.id), {stage: productData.stages[0]})
-        } else if (productData.stages.indexOf(props.data.stage) === productData.stages.length - 1) {
-            await updateDoc(doc(firestore, "task", props.id), { stage: 'Complete' })
-        } else {
-            await updateDoc(doc(firestore, "task", props.id), { stage: productData.stages[productData.stages.indexOf(props.data.stage) + 1] })
-        }
-        handleClose();
+      e.preventDefault();
+      if(props.data.stage === 'Queue'){
+        await updateDoc(doc(firestore,"task",props.id), {stage: productData.stages[0]})
+      } else if (productData.stages.indexOf(props.data.stage) === productData.stages.length - 1) {
+        await updateDoc(doc(firestore, "task", props.id), { stage: 'Complete' })
+      } else {
+        await updateDoc(doc(firestore, "task", props.id), { stage: productData.stages[productData.stages.indexOf(props.data.stage) + 1] })
+      }
+      handleClose();
     }
 
     const handleMovePrev = async (e) => {
-        e.preventDefault();
-        if (props.data.stage === 'Complete') {
-            await updateDoc(doc(firestore, "task", props.id), { stage: productData.stages[productData.stages.length] })
-        } else if (productData.stages.indexOf(props.data.stage) === 0) {
-            await updateDoc(doc(firestore, "task", props.id), { stage: 'Queue' })
-        } else {
-            await updateDoc(doc(firestore, "task", props.id), { stage: productData.stages[productData.stages.indexOf(props.data.stage) - 1] })
-        }
-        handleClose();
+      e.preventDefault();
+      if (props.data.stage === 'Complete') {
+        await updateDoc(doc(firestore, "task", props.id), { stage: productData.stages[productData.stages.length - 1] })
+      } else if (productData.stages.indexOf(props.data.stage) === 0) {
+        await updateDoc(doc(firestore, "task", props.id), { stage: 'Queue' })
+      } else {
+        await updateDoc(doc(firestore, "task", props.id), { stage: productData.stages[productData.stages.indexOf(props.data.stage) - 1] })
+      }
+      handleClose();
     }
 
 

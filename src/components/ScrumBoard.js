@@ -7,7 +7,7 @@ import UserStoryRow from "./UserStoryRow"
 import { doc, getDoc, updateDoc} from "firebase/firestore";
 import {Container, Button, Box, TextField} from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import BasicMenu from './StageMenu';
+import StageMenu from './StageMenu';
 
 const Board = () => {
     const newColumnRef = useRef(null);
@@ -16,26 +16,28 @@ const Board = () => {
     const { product } = useContext(UserContext);
     const userStoryRef = firestore.collection('userStory');
 
+    
+
     let userStoriesQuery;
     if(product) {
-        userStoriesQuery = userStoryRef.where('productId', '==', product.id);
+      userStoriesQuery = userStoryRef.where('productId', '==', product.id);
     } else {
-        userStoriesQuery = userStoryRef.where('productId', '==', '0');
+      userStoriesQuery = userStoryRef.where('productId', '==', '0');
     }
     const [UserStories,
       loadingStories] = useCollectionData(userStoriesQuery, {idField: 'id'});
     
     let pid;
     if(product) {
-        pid = product.id;
+      pid = product.id;
     } else {
-        pid = '0';
+      pid = '0';
     }
+
     const [productData,
       loadingProduct] = useDocumentData(firestore
         .collection('products')
         .doc(pid), {idField: 'id'});
-
 
     //this is for adding a new stage to the database,
     //this function will force the use effect function to be called since
@@ -57,7 +59,7 @@ const Board = () => {
     //so that anytime the stages of a product are changed
     //the board will rerender with the changed stages
     useEffect(() => {
-      if (!product || loadingProduct || !productData) return;
+      if (!product || loadingProduct || !productData || loadingStories) return;
       //add the mandatory titles
       let tempStageTitles = ["Queue"];
       let tempStageTitleComponents = [<Box sx={{ minWidth: '100px', boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }} key={0}></Box>,
@@ -80,9 +82,9 @@ const Board = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }}key={i+3}>
+            boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }} key={i+3}>
             {stageTitle}
-            <BasicMenu />
+            <StageMenu stage={stageTitle} userStoryIds={UserStories.map(story => story.id)}/>
           </Box>)));
         tempStageTitles = tempStageTitles.concat(productData.stages);
       }
@@ -91,7 +93,7 @@ const Board = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }}key={tempStageTitleComponents.length+2}>Complete</Box>);
+        boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }} key={tempStageTitleComponents.length+2}>Complete</Box>);
       tempStageTitles.push("Complete")
       setStageTitleComponents(tempStageTitleComponents);
       setStageTitles(tempStageTitles);
