@@ -8,8 +8,11 @@ import {itemsStyle, itemStyle} from './CSS';
 import AddProduct from './AddProduct';
 import DeleteProduct from './DeleteProduct';
 import {useProductsByUID} from '../backEnd/DataBaseQueries';
+import {useHistory} from 'react-router-dom';
 
 const Home = () => {
+  const history = useHistory()
+
   const [products, productsLoading] = useProductsByUID(auth.currentUser.uid)
 
   const [productData, setProductData] = useState(null);
@@ -55,6 +58,7 @@ const Home = () => {
                       value={doc}
                       onClick={() => {
                         setProduct(doc);
+                        history.push('/board')
                       }}
                     >
                       <h1>{doc.productName}</h1>
