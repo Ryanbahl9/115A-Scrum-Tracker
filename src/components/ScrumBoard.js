@@ -5,7 +5,7 @@ import {useCollectionData,
   useDocumentData} from 'react-firebase-hooks/firestore';
 import UserStoryRow from "./UserStoryRow"
 import { doc, getDoc, updateDoc} from "firebase/firestore";
-import {Container, Button, Box, TextField} from '@mui/material';
+import { Container, Button, Box, TextField, FormControl, Select, InputLabel, MenuItem} from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import StageMenu from './StageMenu';
 
@@ -102,10 +102,10 @@ const Board = () => {
     return (<>{
       product ?
         (<Container sx={{marginTop: "10px", overflowX: 'scroll', overflowY: 'hidden', maxHeight: '90vh'}}>
-          {/* Probably should make this its own component  
-          <FormControl size="sm" className={styles.sprintSelector}>
+
+          <FormControl sx={{marginTop: "10px"}}size="sm">
               <InputLabel id="demo-simple-select-label">
-                  Sprint
+                  Select Sprint
               </InputLabel>
               <Select
                   labelId="demo-simple-select-label"
@@ -119,9 +119,9 @@ const Board = () => {
                   <MenuItem value={0}>sprint 2</MenuItem>
                   <MenuItem value={0}>sprint 3</MenuItem>
               </Select>
-          </FormControl> */}  
+          </FormControl>  
           
-          <Box sx={{display: 'flex'}}>
+          <Box sx={{display: 'flex', marginTop: '10px'}}>
 
             {stageTitleComponents}
             <Box sx={{display: 'flex', minWidth: '300px'}}>
