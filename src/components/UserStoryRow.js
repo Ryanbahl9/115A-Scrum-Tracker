@@ -31,6 +31,8 @@ const UserStoryRow = (props) => {
     if (!tasksLoading && tasks.length !== 0) {
       if (tasks.every((task) => task.stage === 'Complete')) {
         setComplete(true);
+      }else {
+        setComplete(false);
       }
     }
   }, [setComplete, tasksLoading, tasks]);
