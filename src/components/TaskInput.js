@@ -26,7 +26,7 @@ const TaskInput = (props) => {
     const createTask = () => {
       if (value == '') return;
       addDoc(collection(firestore, 'task'), {
-        userId: auth.currentUser.uid,
+        userId: null,
         userStoryId: props.userStoryId,
         description: value,
         stage: 'Queue'
