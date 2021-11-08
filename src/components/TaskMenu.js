@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import Divider from '@mui/material/Divider';
 import {doc, deleteDoc, updateDoc} from "firebase/firestore";
-import {firestore} from './fire';
+import {firestore, auth} from './fire';
 import UserContext from './UserContext';
 import {
     useDocumentData
@@ -66,8 +66,7 @@ export default function BasicMenu(props) {
 
     const handleAssignOwner = async (e) => {
       e.preventDefault();
-      //TODO
-
+      await updateDoc(doc(firestore, "task", props.id), {userId: auth.currentUser.uid});
       handleClose();
     }
 
