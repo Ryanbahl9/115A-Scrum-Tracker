@@ -58,11 +58,11 @@ export default function DeleteProduct(props) {
     return (
       <Box style={deleteButtonStyle}>
         <h3>Confirm Delete</h3>
-        <Button style={{width: '50%', color: 'red'}} onClick={clickKeep}>
-          Keep
-        </Button>
         <Button style={{width: '50%', color: 'red'}} onClick={clickDelete}>
           Delete
+        </Button>
+        <Button style={{width: '50%', color: 'red'}} onClick={clickKeep}>
+          Keep
         </Button>
       </Box>
     );

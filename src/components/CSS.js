@@ -25,3 +25,8 @@ export const settingsItems = {
   rowGap: 2,
   gridTemplateColumns: 'repeat(3, 1fr)',
 }
+
+export const dateSelector = {
+  // position: 'relative',
+  padding: 1,
+}
