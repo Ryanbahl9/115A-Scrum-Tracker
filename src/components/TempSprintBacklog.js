@@ -120,8 +120,6 @@ import {
       <Fragment>
         {product ? (
           <Box>
-              {hookedSprints}
-            {/* <SprintSelector sprintId={sprintID} setSprintID={setSprintID} /> */}
             <AddSprint product={product} hookedSprints={hookedSprints} />
           </Box>
         ) : (
