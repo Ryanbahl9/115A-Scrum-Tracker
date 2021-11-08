@@ -79,7 +79,7 @@ const Backlog = () => {
                             }}
                             justifyContent="center"
                         >
-                            <Paper key={userStory.data().description} variant="elevation" elevation={5}>
+                            <Paper key={userStory.data().description} variant="elevation" elevation={5} sx={itemsStyle}>
                                 <h1>
                                     {userStory.data().description}
                                 </h1>
