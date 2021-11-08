@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import Divider from '@mui/material/Divider';
 import {doc, deleteDoc, updateDoc} from "firebase/firestore";
-import {firestore} from './fire';
+import {firestore, auth} from './fire';
 import UserContext from './UserContext';
 import {
     useDocumentData
@@ -64,6 +64,12 @@ export default function BasicMenu(props) {
       handleClose();
     }
 
+    const handleAssignOwner = async (e) => {
+      e.preventDefault();
+      await updateDoc(doc(firestore, "task", props.id), {userId: auth.currentUser.uid});
+      handleClose();
+    }
+
 
 
     return (
@@ -89,7 +95,7 @@ export default function BasicMenu(props) {
             >
                 <MenuItem disabled={props.data.stage === 'Complete'} onClick={handleMoveNext}>Move task to next stage</MenuItem>
                 <MenuItem disabled={props.data.stage === 'Queue'} onClick={handleMovePrev}>Move task to prev stage</MenuItem>
-                <MenuItem onClick={handleClose}>Assign yourself to task</MenuItem>
+                <MenuItem onClick={handleAssignOwner}>Assign yourself to task</MenuItem>
                 <Divider />
                 <MenuItem sx={{color: 'red'}}onClick={handleDelete}>Delete task</MenuItem>
             </Menu>
