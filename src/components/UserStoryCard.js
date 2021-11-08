@@ -10,7 +10,7 @@ import {
 const UserStoryCard = props => {
   const {storyID, storyName, storyDescription, onClick, btnText} = props
   return (
-    <Card variant="outlined" sx={{ width: 275 }} >
+    <Card variant="elevation" elevation="4" sx={{ width: 275 }} >
       <CardContent>
         <Typography variant="h5" component="div">
           {storyDescription}
