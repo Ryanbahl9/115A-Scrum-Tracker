@@ -36,9 +36,8 @@ import {
   useProductById,
   useProductOwnerByProduct,
 } from '../backEnd/DataBaseQueries';
-import {dateSelector, itemSelectSytle, itemStyle} from './CSS';
+import {dateSelector, itemSelectSytle, itemsStyle, itemStyle} from './CSS';
 import {SettingsSystemDaydreamTwoTone} from '@mui/icons-material';
-
 
 function AddSprint(props) {
   const [dateStart, setDateStart] = useState(null);
@@ -49,19 +48,21 @@ function AddSprint(props) {
     if (hookedSprints) {
       if (hookedSprints.length === 0) {
         setDateStart(new Date());
-        setDateEnd(new Date(Date.now() + 1000 *3600 * 24 * 14))
+        setDateEnd(new Date(Date.now() + 1000 * 3600 * 24 * 14));
       } else {
         //find end of last sprint, make that the start point
         var greatestDate = 0;
         var lastDate = null;
+        var lastLength = null;
         hookedSprints.forEach((doc) => {
           if (doc.startDate.seconds > greatestDate) {
             greatestDate = doc.startDate.seconds;
             lastDate = doc.endDate;
+            lastLength = doc.length
           }
         });
-        setDateStart(new Date(lastDate.seconds * 1000))
-        setDateEnd(new Date(lastDate.seconds * 1000 + 1000 *3600 * 24 * 14))
+        setDateStart(new Date(lastDate.seconds * 1000));
+        setDateEnd(new Date(lastDate.seconds * 1000 + 1000 * 3600 * 24 * lastLength));
       }
     }
   }, [hookedSprints]);
@@ -71,7 +72,7 @@ function AddSprint(props) {
       <h3>Add Sprint</h3>
       <Box sx={{display: 'flex'}}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <Box className={"StartDate"} sx={dateSelector}>
+          <Box className={'StartDate'} sx={dateSelector}>
             <DatePicker
               label="Sprint Start Date"
               value={dateStart}
@@ -82,7 +83,7 @@ function AddSprint(props) {
               renderInput={(params) => <TextField {...params} />}
             />
           </Box>
-          <Box className={"EndDate"}  sx={dateSelector}>
+          <Box className={'EndDate'} sx={dateSelector}>
             <DatePicker
               label="Sprint End Date"
               value={dateEnd}
@@ -97,7 +98,7 @@ function AddSprint(props) {
         <Button
           onClick={() => {
             const difference = dateEnd.getTime() - dateStart.getTime();
-            const days = Math.floor(difference / (1000 * 3600 * 24));
+            const days = Math.ceil(difference / (1000 * 3600 * 24));
             addSprint(dateStart, dateEnd, days, product.id);
           }}
         >
@@ -199,12 +200,12 @@ const SprintBacklog = (props) => {
       state: 'productBacklog',
     });
   };
-
+  //for adding sprints
   const [hookedSprints] = useGetSprintsData(product ? product.id : null);
 
   return (
     <Fragment>
-      {product && (
+      {product ? (
         <Box>
           <SprintSelector sprintId={sprintID} setSprintID={setSprintID} />
           {!sprintSS && <p>=================Data Is Nil==================</p>}
@@ -258,6 +259,10 @@ const SprintBacklog = (props) => {
             for testing {btnClk}
           </Button>
           <AddSprint product={product} hookedSprints={hookedSprints} />
+        </Box>
+      ) : (
+        <Box>
+          <Paper sx={itemsStyle}>Select Product for SprintBacklog</Paper>
         </Box>
       )}
     </Fragment>
