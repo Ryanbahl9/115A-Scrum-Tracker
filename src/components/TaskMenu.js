@@ -64,6 +64,13 @@ export default function BasicMenu(props) {
       handleClose();
     }
 
+    const handleAssignOwner = async (e) => {
+      e.preventDefault();
+      //TODO
+
+      handleClose();
+    }
+
 
 
     return (
@@ -89,7 +96,7 @@ export default function BasicMenu(props) {
             >
                 <MenuItem disabled={props.data.stage === 'Complete'} onClick={handleMoveNext}>Move task to next stage</MenuItem>
                 <MenuItem disabled={props.data.stage === 'Queue'} onClick={handleMovePrev}>Move task to prev stage</MenuItem>
-                <MenuItem onClick={handleClose}>Assign yourself to task</MenuItem>
+                <MenuItem onClick={handleAssignOwner}>Assign yourself to task</MenuItem>
                 <Divider />
                 <MenuItem sx={{color: 'red'}}onClick={handleDelete}>Delete task</MenuItem>
             </Menu>

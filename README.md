@@ -6,7 +6,8 @@ products:   {
                 productName: "str",
                 uid, //who created it
                 users: []// array of users who have access
-                stages:
+                stages: [],
+                sprints: 0 //int how many current sprints
             }
 users:      {
                 email: @,
@@ -26,8 +27,9 @@ sprints:    {
                 id: Auto Set Up by FireBase
                 productID: id,
                 userStories: [id,..],
-                startDate: date
-                length: dateDuration
+                startDate: date,
+                length: dateDuration,
+
             }
 tasks:      {
                 id: Auto Set Up by Firebase
