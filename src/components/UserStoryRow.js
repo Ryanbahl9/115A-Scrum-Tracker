@@ -34,6 +34,7 @@ const UserStoryRow = (props) => {
         updateDoc(doc(firestore, 'userStory', props.id), {state: "completed"})
       }else {
         setComplete(false);
+        updateDoc(doc(firestore, 'userStory', props.id), {state: "sprintBacklog"})
       }
     }
   }, [setComplete, tasksLoading, tasks]);

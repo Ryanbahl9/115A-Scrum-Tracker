@@ -31,8 +31,10 @@ const TaskInput = (props) => {
         description: value,
         stage: 'Queue'
       });
+      if (props.userStoryState === "completed") {
+        updateDoc(doc(firestore, 'userStory', props.userStoryId), {state: "sprintBacklog"})
+      }
     }
-
 
     return (
         <Stack>

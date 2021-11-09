@@ -63,6 +63,7 @@ const Backlog = () => {
 
     const UserStoryTiles = () => {
         if (loading) return <div/>;
+        //TODO: sort by complete and incomplete userStories
         if (UserStories.docs.length > 0) {
             return (
                 <Stack direction="column" spacing={2}>
@@ -86,7 +87,7 @@ const Backlog = () => {
                                 <h3>
                                     Priority: {userStory.data().priority}
                                 </h3>
-                                <TaskInput userStoryId={userStory.id} />
+                                <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state}/>
                                 
                             </Paper>
                         </Box>
