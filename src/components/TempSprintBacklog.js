@@ -115,11 +115,20 @@ import {
 
     //for adding sprints
     const [hookedSprints] = useGetSprintsData(product ? product.id : null);
-    
+
+
+
     return (
       <Fragment>
         {product ? (
           <Box>
+              <Paper>
+                  {hookedSprints && hookedSprints.map((docData)=>{
+                      return (<Box>
+                          {"This Sprint ProductId: " + docData.productId}
+                      </Box>)
+                  })}
+              </Paper>
             <AddSprint product={product} hookedSprints={hookedSprints} />
           </Box>
         ) : (
