@@ -95,7 +95,7 @@ export default function BasicMenu(props) {
             >
                 <MenuItem disabled={props.data.stage === 'Complete'} onClick={handleMoveNext}>Move task to next stage</MenuItem>
                 <MenuItem disabled={props.data.stage === 'Queue'} onClick={handleMovePrev}>Move task to prev stage</MenuItem>
-                <MenuItem onClick={handleAssignOwner}>Assign yourself to task</MenuItem>
+                <MenuItem disabled={props.data.userId} onClick={handleAssignOwner}>Assign yourself to task</MenuItem>
                 <Divider />
                 <MenuItem sx={{color: 'red'}}onClick={handleDelete}>Delete task</MenuItem>
             </Menu>
