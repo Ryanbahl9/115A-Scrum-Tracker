@@ -59,6 +59,11 @@ const SprintBacklog = (props) => {
   var sprintObserver = null;
   var backlogStoriesObserver = null;
 
+  // Set initial sprint id
+  useEffect(async () => {
+    setSprintId(await getCurrentSprintId(productId))
+  })
+
   /// ------Effects and Firebase Hooks------
   // Set up hook for sprint inside useEffect watching sprint id state
   useEffect(() => {
