@@ -8,7 +8,6 @@ import AppBar from './components/AppBar';
 import ScrumBoard from './components/ScrumBoard';
 import Backlog from './components/Backlog';
 import SprintBacklog from './components/SprintBacklog';
-import TempSprintBacklog from './components/TempSprintBacklog';
 import {auth} from './components/fire';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import UserContext from './components/UserContext';
@@ -47,7 +46,7 @@ function App() {
                 <Route path="/board" component={ScrumBoard} />
                 <Route path="/backlog" component={Backlog} />
                 {/* <Route path="/sprintBacklog" component={SprintBacklog} /> */}
-                <Route path="/sprintBacklog" component={TempSprintBacklog} />
+                <Route path="/sprintBacklog" component={SprintBacklog} />
                 <Route path="/Settings" component={Settings} />
               </Switch>
             ) : (

@@ -163,7 +163,8 @@ export function useGetSprintsData(productId) {
 // Returns sprint with the closest endDate after the current date
 // if that DNE, then returns sprint with closest endDate before
 // current date  
-export function getCurrentSprintID(productId) {
+export function getCurrentSprintId(productId) {
+  if (productId === null) return null;
   const sprintRef = firestore.collection('sprints');
   let queryAsc = sprintRef.orderBy('endDate')
   queryAsc = queryAsc.limit(1);
@@ -172,7 +173,7 @@ export function getCurrentSprintID(productId) {
   queryAsc.get().then((colAsc) => {
     if (!colAsc.empty) {
       console.log('----------Here-----------')
-      return colAsc.docs[0]
+      return colAsc.docs[0].id
     } else {
       let queryDesc = sprintRef.orderBy('endDate', 'desc')
       queryDesc = sprintRef.limit(1)
@@ -180,9 +181,9 @@ export function getCurrentSprintID(productId) {
       queryDesc = queryDesc.where('productId', '==', productId);
       queryDesc.get().then((colDesc) => {
         if (!colDesc.empty) {
-          return colDesc.docs[0]
+          return colDesc.docs[0].id
         } else {
-          return null
+          return ''
         }
       })
     }

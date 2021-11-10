@@ -1,4 +1,4 @@
-import {React, Fragment, useContext} from 'react'
+import {React, Fragment, useContext, useState, useEffect} from 'react'
 import {
   Box,
   FormControl,
@@ -14,17 +14,29 @@ import UserContext from './UserContext';
 
 
 const SprintSelector = (props) => {
-  const {sprintId, setSprintID} = props
-
   let { product } = useContext(UserContext);
 
-  const sprintsRef = firestore.collection('sprints');
-  var sprintsQuery = sprintsRef
-  sprintsQuery = sprintsQuery.orderBy('startDate', 'desc')
-  const [sprints, sprintsLoading] = useCollection(sprintsQuery);
+  const {sprintId, setSprintId} = props
+  const [sprintIdsArr, setSprintIdsArr] = useState([])
+  var sprintsObserver = null
 
+  useEffect(() => {
+    if (sprintsObserver != null) sprintsObserver();
+    const sprintsRef = firestore.collection('sprints');
+    var sprintsQuery = sprintsRef.orderBy('endDate', 'desc')
+    sprintsQuery = sprintsQuery.where('productId', '==', (product ? product.id : ''));
+    sprintsQuery.onSnapshot((collection) => {
+      console.log('Loading Sprints with productId ordered by endDate')
+      let tempSprintIdsArr = []
+      collection.docs.forEach((doc) => {
+        tempSprintIdsArr.push(doc.id)
+      })
+      setSprintIdsArr(tempSprintIdsArr)
+    })
+  }, [])
+  
   const handleChange = (event) => {
-    setSprintID(event.target.value);
+    setSprintId(event.target.value);
   };
 
   return (
@@ -35,19 +47,11 @@ const SprintSelector = (props) => {
         value={sprintId}
         onChange={handleChange}
       >
-        {!(sprintsLoading || !sprints) && sprints.docs.sort((a,b) => a.data().startDate - b.data().startDate).map(sprint => {
-          return( <MenuItem value={sprint.id}>{sprint.id}</MenuItem> )
+        {(sprintIdsArr.length > 0) && sprintIdsArr.map(id => {
+          return( <MenuItem value={id}>{id}</MenuItem> )
         })}
       </Select>
     </FormControl>
-    {/* <Box>
-      {!(sprintsLoading || !sprints) && sprints.docs.sort((a,b) => a.data().startDate - b.data().startDate).map(sprint => {
-        return( <p>sprint id: {sprint.id}</p> )
-      })}
-    </Box> */}
-    {/* <Button onClick={() => {
-      console.log(product.id)
-    }}>Testing</Button> */}
     </Fragment>
   )
 }

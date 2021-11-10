@@ -35,133 +35,50 @@ import {
   useGetSprintsData,
   useProductById,
   useProductOwnerByProduct,
+  getCurrentSprintId
 } from '../backEnd/DataBaseQueries';
 import {dateSelector, itemSelectSytle, itemsStyle, itemStyle} from './CSS';
-import {SettingsSystemDaydreamTwoTone} from '@mui/icons-material';
+import AddSprint from './AddSprint';
 
-function AddSprint(props) {
-  const [dateStart, setDateStart] = useState(null);
-  const [dateEnd, setDateEnd] = useState(null);
-  var {product, hookedSprints} = props;
 
-  useEffect(() => {
-    if (hookedSprints) {
-      if (hookedSprints.length === 0) {
-        setDateStart(new Date());
-        setDateEnd(new Date(Date.now() + 1000 * 3600 * 24 * 14));
-      } else {
-        //find end of last sprint, make that the start point
-        var greatestDate = 0;
-        var lastDate = null;
-        var lastLength = null;
-        hookedSprints.forEach((doc) => {
-          if (doc.startDate.seconds > greatestDate) {
-            greatestDate = doc.startDate.seconds;
-            lastDate = doc.endDate;
-            lastLength = doc.length
-          }
-        });
-        setDateStart(new Date(lastDate.seconds * 1000));
-        setDateEnd(new Date(lastDate.seconds * 1000 + 1000 * 3600 * 24 * lastLength));
-      }
-    }
-  }, [hookedSprints]);
-
-  return (
-    <Paper variant={'outlined'} sx={itemSelectSytle}>
-      <h3>Add Sprint</h3>
-      <Box sx={{display: 'flex'}}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <Box className={'StartDate'} sx={dateSelector}>
-            <DatePicker
-              label="Sprint Start Date"
-              value={dateStart}
-              minDate={dateStart}
-              onChange={(newValue) => {
-                setDateStart(newValue);
-              }}
-              renderInput={(params) => <TextField {...params} />}
-            />
-          </Box>
-          <Box className={'EndDate'} sx={dateSelector}>
-            <DatePicker
-              label="Sprint End Date"
-              value={dateEnd}
-              minDate={dateStart}
-              onChange={(newValue) => {
-                setDateEnd(newValue);
-              }}
-              renderInput={(params) => <TextField {...params} />}
-            />
-          </Box>
-        </LocalizationProvider>
-        <Button
-          onClick={() => {
-            const difference = dateEnd.getTime() - dateStart.getTime();
-            const days = Math.ceil(difference / (1000 * 3600 * 24));
-            addSprint(dateStart, dateEnd, days, product.id);
-          }}
-        >
-          Add Sprint
-        </Button>
-      </Box>
-    </Paper>
-  );
-}
-//######################################################
 const SprintBacklog = (props) => {
-  const [btnClk, setBtnClk] = useState(0);
-  const fixDatabase = () => {
-    setBtnClk(btnClk + 1);
-  };
 
+  /// ------States and Variables-----
+  // get product state
   let {product} = useContext(UserContext);
+  // if product state is null, set product id to null
+  const productId = product ? product.id : null;
 
-  const [sprintID, setSprintID] = useState('qoQPtehTrvrvLXjF4v9w');
+  // Set up states
+  const [sprintId, setSprintId] = useState('');
+  const [sprint, setSprint] = useState(null);
   const [sprintStories, setSprintStories] = useState([]);
+  const [backlogStories, setBacklogStories] = useState([]);
 
-  let sprintRef = firestore.collection('sprints').doc(sprintID);
+  // Set Vars
+  var sprintObserver = null;
+  var backlogStoriesObserver = null;
 
-  let [sprintSS, setSprintSS] = useState(null);
-  let sprintObserver = null;
-
-  const backlogStoriesRef = firestore.collection('userStory');
-  if (product) {
-    var backlogStoriesQuery = backlogStoriesRef;
-    backlogStoriesQuery = backlogStoriesQuery.where(
-      'productId',
-      '==',
-      product.id
-    );
-    backlogStoriesQuery = backlogStoriesQuery.where(
-      'state',
-      '==',
-      'productBacklog'
-    );
-  } else {
-    var backlogStoriesQuery = backlogStoriesRef.where('productId', '==', 0);
-  }
-  const [backlogStories, backlogStoriesLoading] =
-    useCollection(backlogStoriesQuery);
-
+  /// ------Effects and Firebase Hooks------
+  // Set up hook for sprint inside useEffect watching sprint id state
   useEffect(() => {
-    console.log('updating sprintSS');
+    if (sprintId === '') return
     // Stop listening to the previous snapshot call back
-    if (sprintObserver != null) {
-      sprintObserver();
-    }
-    // set new query / reference using new sprintID
-    sprintRef = firestore.collection('sprints').doc(sprintID);
+    if (sprintObserver != null) { sprintObserver() }
+    // set new query / reference using new sprintId
+    let sprintRef = firestore.collection('sprints').doc(sprintId);
     // set up new callback function using new sprintRef
     sprintObserver = sprintRef.onSnapshot((snapShot) => {
-      setSprintSS(snapShot);
+      setSprint(snapShot);
     });
-  }, [sprintID, btnClk]);
+  }, [sprintId]);
 
+  // Set up hook for sprint stories inside useEffect watching sprint state
   useEffect(async () => {
-    if (sprintSS === null) return;
+    console.log('Sprint Changed')
+    if (sprint === null) return;
     let tempSprintStories = [];
-    for (const storyId of sprintSS.data().userStories) {
+    for (const storyId of sprint.data().userStories) {
       await firestore
         .collection('userStory')
         .doc(storyId)
@@ -175,12 +92,27 @@ const SprintBacklog = (props) => {
         });
     }
     setSprintStories(tempSprintStories);
-  }, [sprintSS]);
+  }, [sprint]);
+ 
+  // Set up hook to watch all userStories with this product id in the product backlog
+   useEffect(() => {
+    if (backlogStoriesObserver != null) backlogStoriesObserver();
+    const backlogStoriesRef = firestore.collection('userStory');
+    let backlogStoriesQuery = backlogStoriesRef.where('productId', '==', productId);
+    backlogStoriesQuery = backlogStoriesRef.where('state', '==', 'productBacklog');
+    backlogStoriesObserver = backlogStoriesQuery.onSnapshot((collection) => {
+      setBacklogStories(collection.docs)
+    })
+  }, [])
 
+
+  // Set up button handlers 
   const moveStoryToSprint = (storyID) => {
+    console.log('moving to sprint')
+    console.log(storyID)
     firestore
       .collection('sprints')
-      .doc(sprintID)
+      .doc(sprintId)
       .update({
         userStories: arrayUnion(storyID),
       });
@@ -192,7 +124,7 @@ const SprintBacklog = (props) => {
   const removeStoryFromSprint = (storyID) => {
     firestore
       .collection('sprints')
-      .doc(sprintID)
+      .doc(sprintId)
       .update({
         userStories: arrayRemove(storyID),
       });
@@ -201,64 +133,54 @@ const SprintBacklog = (props) => {
     });
   };
   //for adding sprints
-  const [hookedSprints] = useGetSprintsData(product ? product.id : null);
+  // const [hookedSprints] = useGetSprintsData(product ? product.id : null);
 
   return (
     <Fragment>
       {product ? (
         <Box>
-          <SprintSelector sprintId={sprintID} setSprintID={setSprintID} />
-          {!sprintSS && <p>=================Data Is Nil==================</p>}
-          {sprintSS != null && (
-            <box>
-              <p>Product ID: {product.id}</p>
-              <p>Sprint ID: {sprintSS.id}</p>
-              <p>Sprint Start Date: {sprintSS.data().startDate}</p>
-              <p>Sprint Length: {sprintSS.data().length}</p>
-              <p>Sprint ProductID: {sprintSS.data().ProductID}</p>
-              <p>Sprint User Stories: {sprintSS.data().userStories}</p>
-            </box>
-          )}
+          <SprintSelector sprintId={sprintId} setSprintId={setSprintId} />
+          {(sprintId != '') ? 
+          <Fragment>
+            <Box sx={{display: 'flex'}}>
+              <Box sx={{width: 275}}>
+                {(backlogStories.length > 0) &&
+                  backlogStories.map((story) => {
+                    return (
+                      <p key={story.id}>
+                        <UserStoryCard
+                          storyID={story.id}
+                          storyDescription={story.data().description}
+                          btnText="Move To Sprint"
+                          onClick={moveStoryToSprint}
+                        />
+                      </p>
+                    );
+                  })}
+              </Box>
+              <Box>| | |</Box>
+              <Box sx={{width: 275}}>
+                {sprint != null &&
+                  sprintStories.length > 0 &&
+                  sprintStories.map((story) => {
+                    return (
+                      <p key={story.id}>
+                        <UserStoryCard
+                          storyID={story.id}
+                          storyDescription={story.data().description}
+                          btnText="Remove From Sprint"
+                          onClick={removeStoryFromSprint}
+                        />
+                      </p>
+                    );
+                  })}
+              </Box>
+            </Box>
+            {/* <AddSprint product={product} hookedSprints={hookedSprints} /> */}
+          </Fragment>
+          :
+          (<Box>Please Select Sprint</Box>)}
 
-          {/* {product && <SprintSelector productId={product.id} sprintCallback={backlogStoriesLoading}/>} */}
-          <Box sx={{display: 'flex'}}>
-            <Box sx={{width: 275}}>
-              {!backlogStoriesLoading &&
-                backlogStories.docs.map((story) => {
-                  return (
-                    <p key={story.id}>
-                      <UserStoryCard
-                        storyID={story.id}
-                        storyDescription={story.data().description}
-                        btnText="Move To Sprint"
-                        onClick={moveStoryToSprint}
-                      />
-                    </p>
-                  );
-                })}
-            </Box>
-            <Box>| | |</Box>
-            <Box sx={{width: 275}}>
-              {sprintSS != null &&
-                sprintStories.length > 0 &&
-                sprintStories.map((story) => {
-                  return (
-                    <p key={story.id}>
-                      <UserStoryCard
-                        storyID={story.id}
-                        storyDescription={story.data().description}
-                        btnText="Remove From Sprint"
-                        onClick={removeStoryFromSprint}
-                      />
-                    </p>
-                  );
-                })}
-            </Box>
-          </Box>
-          <Button variant="contained" onClick={fixDatabase}>
-            for testing {btnClk}
-          </Button>
-          <AddSprint product={product} hookedSprints={hookedSprints} />
         </Box>
       ) : (
         <Box>
