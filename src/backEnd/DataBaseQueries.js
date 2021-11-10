@@ -1,5 +1,5 @@
 // import React from 'react';
-import {firestore} from '../components/fire';
+import { firestore } from '../components/fire';
 import {
   useCollectionData,
   useDocument,
@@ -7,19 +7,19 @@ import {
   useDocumentDataOnce,
 } from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/compat/app';
-import {doc, updateDoc} from '@firebase/firestore';
+import { doc, updateDoc } from '@firebase/firestore';
 
 //Return Array of Docs
 export function useProductsByUID(uid) {
   const productsRef = firestore.collection('products');
   var query = productsRef.where('users', 'array-contains', uid);
-  return useCollectionData(query, {idField: 'id'});
+  return useCollectionData(query, { idField: 'id' });
 }
 
 //Return Single Doc
 export function useProductById(id) {
   const productHookedRef = firestore.collection('products').doc(id);
-  return useDocument(productHookedRef, {idField: 'id'});
+  return useDocument(productHookedRef, { idField: 'id' });
 }
 
 export function useProductOwnerByProduct(product) {
@@ -91,8 +91,8 @@ export function deleteProduct(productId) {
     .collection('sprints')
     .where('productId', '==', productId)
     .get()
-    .then((docs)=>{
-      docs.forEach((doc)=>{
+    .then((docs) => {
+      docs.forEach((doc) => {
         doc.ref.delete()
       })
       // console.log(doc)
@@ -157,7 +157,7 @@ export function addSprint(startDate, endDate, length, productId) {
 export function useGetSprintsData(productId) {
   const sprintRef = firestore.collection('sprints');
   const query = sprintRef.where('productId', '==', productId);
-  return useCollectionData(query, {idField: 'id'});
+  return useCollectionData(query, { idField: 'id' });
 }
 
 // Returns sprint with the closest endDate after the current date

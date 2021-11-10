@@ -63,6 +63,7 @@ const Backlog = () => {
 
     const UserStoryTiles = () => {
         if (loading) return <div/>;
+        //TODO (@Brandon): sort by complete and incomplete userStories
         if (UserStories.docs.length > 0) {
             return (
                 <Stack direction="column" spacing={2}>
@@ -79,14 +80,14 @@ const Backlog = () => {
                             }}
                             justifyContent="center"
                         >
-                            <Paper key={userStory.data().description} variant="elevation" elevation={5}>
+                            <Paper key={userStory.data().description} variant="elevation" elevation={5} sx={itemsStyle}>
                                 <h1>
                                     {userStory.data().description}
                                 </h1>
                                 <h3>
                                     Priority: {userStory.data().priority}
                                 </h3>
-                                <TaskInput userStoryId={userStory.id} />
+                                <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state}/>
                                 
                             </Paper>
                         </Box>

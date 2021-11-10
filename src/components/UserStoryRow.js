@@ -31,8 +31,10 @@ const UserStoryRow = (props) => {
     if (!tasksLoading && tasks.length !== 0) {
       if (tasks.every((task) => task.stage === 'Complete')) {
         setComplete(true);
+        updateDoc(doc(firestore, 'userStory', props.id), {state: "completed"})
       }else {
         setComplete(false);
+        updateDoc(doc(firestore, 'userStory', props.id), {state: "sprintBacklog"})
       }
     }
   }, [setComplete, tasksLoading, tasks]);
