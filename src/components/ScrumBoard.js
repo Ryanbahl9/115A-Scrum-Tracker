@@ -8,6 +8,8 @@ import { doc, getDoc, updateDoc} from "firebase/firestore";
 import { Container, Button, Box, TextField, FormControl, Select, InputLabel, MenuItem} from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import StageMenu from './StageMenu';
+import SprintSelector from './SprintSelector';
+
 
 const Board = () => {
     const newColumnRef = useRef(null);
