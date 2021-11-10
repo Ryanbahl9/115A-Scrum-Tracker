@@ -80,7 +80,6 @@ const SprintBacklog = (props) => {
 
   // Set up hook for sprint stories inside useEffect watching sprint state
   useEffect(async () => {
-    console.log('Sprint Changed')
     if (sprint === null) return;
     let tempSprintStories = [];
     for (const storyId of sprint.data().userStories) {
@@ -113,8 +112,6 @@ const SprintBacklog = (props) => {
 
   // Set up button handlers 
   const moveStoryToSprint = (storyID) => {
-    console.log('moving to sprint')
-    console.log(storyID)
     firestore
       .collection('sprints')
       .doc(sprintId)
