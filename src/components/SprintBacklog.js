@@ -67,7 +67,7 @@ const SprintBacklog = (props) => {
   /// ------Effects and Firebase Hooks------
   // Set up hook for sprint inside useEffect watching sprint id state
   useEffect(() => {
-    if (sprintId === '') return
+    if (sprintId === '' || sprintId === null) return
     // Stop listening to the previous snapshot call back
     if (sprintObserver != null) { sprintObserver() }
     // set new query / reference using new sprintId

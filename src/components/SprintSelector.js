@@ -36,7 +36,12 @@ const SprintSelector = (props) => {
   }, [])
   
   const handleChange = (event) => {
-    setSprintId(event.target.value);
+    if (event.target.value === null) {
+      setSprintId('');
+    } else {
+      setSprintId(event.target.value);
+    }
+    
   };
 
   return (
@@ -47,6 +52,7 @@ const SprintSelector = (props) => {
         value={sprintId}
         onChange={handleChange}
       >
+        <MenuItem value={''}>(None)</MenuItem>
         {(sprintIdsArr.length > 0) && sprintIdsArr.map(id => {
           return( <MenuItem value={id}>{id}</MenuItem> )
         })}
