@@ -16,12 +16,14 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import { addSprint } from '../backEnd/DataBaseQueries';
 import {dateSelector, itemSelectSytle, itemsStyle, itemStyle} from './CSS';
+import {useGetSprintsData} from '../backEnd/DataBaseQueries'
 
 
 const AddSprint = (props) => {
+  var {product} = props;
   const [dateStart, setDateStart] = useState(null);
   const [dateEnd, setDateEnd] = useState(null);
-  var {product, hookedSprints} = props;
+  const [hookedSprints] = useGetSprintsData(product ? product.id : null);
 
   useEffect(() => {
     if (hookedSprints) {

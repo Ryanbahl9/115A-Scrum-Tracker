@@ -134,8 +134,6 @@ const SprintBacklog = (props) => {
       state: 'productBacklog',
     });
   };
-  //for adding sprints
-  // const [hookedSprints] = useGetSprintsData(product ? product.id : null);
 
   return (
     <Fragment>
@@ -178,7 +176,7 @@ const SprintBacklog = (props) => {
                   })}
               </Box>
             </Box>
-            {/* <AddSprint product={product} hookedSprints={hookedSprints} /> */}
+            <AddSprint product={product} />
           </Fragment>
           :
           (<Box>Please Select Sprint</Box>)}
