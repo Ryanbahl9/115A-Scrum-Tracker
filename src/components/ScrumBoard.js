@@ -9,16 +9,65 @@ import { Container, Button, Box, TextField, FormControl, Select, InputLabel, Men
 import CircularProgress from '@mui/material/CircularProgress';
 import StageMenu from './StageMenu';
 import SprintSelector from './SprintSelector';
+import {getCurrentSprintId} from '../backEnd/DataBaseQueries';
 
 
 const Board = () => {
     const newColumnRef = useRef(null);
     const [stageTitles, setStageTitles] = useState([]);
-    const [sprint, setSprint] = useState();
+    const [sprintId, setSprintId] = useState('');
+    const [sprint, setSprint] = useState(null);
+    const [sprintStories, setSprintStories] = useState([]);
     const [taskView, setTaskView] = useState();
     const [stageTitleComponents, setStageTitleComponents] = useState([]);
     const { product } = useContext(UserContext);
+    const productId = product ? product.id : null;
     const userStoryRef = firestore.collection('userStory');
+
+
+
+    /// ----- Set up hooks for user story data -----
+    // set observers, these are used to stop listening to the onSnapshot functions 
+    var sprintObserver = null;
+    var backlogStoriesObserver = null;
+    // set up auto select current sprint
+    useEffect(async () => {
+      setSprintId(await getCurrentSprintId(productId))
+    }, [])
+
+    // Set up hook for sprint inside useEffect watching sprint id state
+    useEffect(() => {
+      if (sprintId === '') return
+      // Stop listening to the previous snapshot call back
+      if (sprintObserver != null) { sprintObserver() }
+      // set new query / reference using new sprintId
+      let sprintRef = firestore.collection('sprints').doc(sprintId);
+      // set up new callback function using new sprintRef
+      sprintObserver = sprintRef.onSnapshot((snapShot) => {
+        setSprint(snapShot);
+      });
+    }, [sprintId]);
+
+    // Set up hook for sprint stories inside useEffect watching sprint state
+    useEffect(async () => {
+      if (sprint === null) return;
+      let tempSprintStories = [];
+      for (const storyId of sprint.data().userStories) {
+        await firestore
+          .collection('userStory')
+          .doc(storyId)
+          .get()
+          .then((doc) => {
+            tempSprintStories.push(doc);
+          })
+          .catch((e) => {
+            console.log('There was an error!!!');
+            console.log(e);
+          });
+      }
+      setSprintStories(tempSprintStories);
+    }, [sprint]);
+
     let userStoriesQuery;
     if(product) {
       userStoriesQuery = userStoryRef.where('productId', '==', product.id);
@@ -96,7 +145,7 @@ const Board = () => {
             alignItems: 'center',
             boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }} key={i+3}>
             {stageTitle}
-            <StageMenu stage={stageTitle} userStoryIds={UserStories.map(story => story.id)}/>
+            <StageMenu stage={stageTitle} userStoryIds={sprintStories.map(story => story.id)}/>
           </Box>)));
         tempStageTitles = tempStageTitles.concat(productData.stages);
       }
@@ -115,26 +164,7 @@ const Board = () => {
       product ?
         (<Container sx={{marginTop: "10px", overflowX: 'scroll', overflowY: 'hidden', maxHeight: '90vh'}}>
 
-          <Box sx={{ position: 'absolute', marginTop: "10px" }}>
-            <FormControl size="sm">
-                <InputLabel id="demo-simple-select-label">
-                    View Sprint
-                </InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={0}
-                    label="Age"
-                    sx={{maxHeight:"30px"}}
-                    
-                >
-                  {!loadingSprints && sprints &&
-                  sprints.map((sprint, i) => <MenuItem key={sprint.id} value={i}>sprints need a name field</MenuItem>)
-                  }
-                {!loadingSprints && !sprints && <MenuItem value={0}>There are no sprints for this product</MenuItem>}
-                </Select>
-            </FormControl>  
-          </Box>
+          <SprintSelector sx={{ position: 'absolute', marginTop: "10px" }} sprintId={sprintId} setSprintId={setSprintId} />
 
             {/* <Box sx={{ position: 'absolute', marginTop: "10px", marginLeft: '120px'}}>
             <FormControl size="sm">
@@ -176,12 +206,12 @@ const Board = () => {
               
               {(!loadingStories && !loadingProduct) &&
                 <Box sx={{minWidth: `${stageTitles.length * 200 + 300}px`, maxHeight: '80vh', overflowY: 'scroll', overflowX: 'hidden'}}>
-                  {UserStories.sort((firstDoc, secondDoc) => firstDoc.priority - secondDoc.priority)
-                      .map(doc => <UserStoryRow key={doc.id} id={doc.id} data={doc} stageTitles={stageTitles}/>)}
+                  {sprintStories.sort((firstDoc, secondDoc) => firstDoc.data().priority - secondDoc.data().priority)
+                      .map(doc => <UserStoryRow key={doc.id} id={doc.id} data={doc.data()} stageTitles={stageTitles}/>)}
                 </Box>
               }
             
-              {(!loadingStories && !loadingProduct) && (UserStories.length===0) &&
+              {(!loadingStories && !loadingProduct) && (sprintStories.length===0) &&
                 <h3>There are no user stories for this board</h3>}
         </Container >)
       :

@@ -15,7 +15,7 @@ const UserStoryRow = (props) => {
     let taskQuery;
     const taskRef = firestore.collection('task');
     const [complete, setComplete] = useState(false);
-    taskQuery = taskRef.where('userStoryId', '==', props.data.id);
+    taskQuery = taskRef.where('userStoryId', '==', props.id);
     let [tasks, tasksLoading] = useCollectionData(taskQuery, { idField: 'id' });
 
   const increasePriority = () => {

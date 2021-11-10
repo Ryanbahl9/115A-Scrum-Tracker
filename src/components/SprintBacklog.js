@@ -103,7 +103,7 @@ const SprintBacklog = (props) => {
     if (backlogStoriesObserver != null) backlogStoriesObserver();
     const backlogStoriesRef = firestore.collection('userStory');
     let backlogStoriesQuery = backlogStoriesRef.where('productId', '==', productId);
-    backlogStoriesQuery = backlogStoriesRef.where('state', '==', 'productBacklog');
+    backlogStoriesQuery = backlogStoriesQuery.where('state', '==', 'productBacklog');
     backlogStoriesObserver = backlogStoriesQuery.onSnapshot((collection) => {
       setBacklogStories(collection.docs)
     })
