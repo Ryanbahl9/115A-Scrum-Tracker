@@ -16,7 +16,7 @@ const TaskInput = (props) => {
     const [value, setValue] = React.useState('');
     const handleChange = (event) => {
         setValue(event.target.value);
-      };
+    };
 
     let taskQuery;
     const taskRef = firestore.collection('task');
@@ -34,6 +34,7 @@ const TaskInput = (props) => {
       if (props.userStoryState === "completed") {
         updateDoc(doc(firestore, 'userStory', props.userStoryId), {state: "sprintBacklog"})
       }
+      setValue("")
     }
 
     return (
@@ -47,7 +48,7 @@ const TaskInput = (props) => {
                     noValidate
                     autoComplete="off"
                     >
-                        <TextField id="filled-basic" label="Add Task" variant="filled" width="110ch" onChange = {handleChange}/>
+                        <TextField id="filled-basic" value={value} label="Add Task" variant="filled" width="110ch" onChange = {handleChange}/>
                 </Box>
                 <Button onClick={createTask}>
                     Create Task
