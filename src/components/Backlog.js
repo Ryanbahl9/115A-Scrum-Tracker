@@ -63,11 +63,109 @@ const Backlog = () => {
 
     const UserStoryTiles = () => {
         if (loading) return <div/>;
-        //TODO (@Brandon): sort by complete and incomplete userStories
-        if (UserStories.docs.length > 0) {
+        let complete = [];
+        let incomplete = [];
+        UserStories.docs.forEach(userStoryDoc => {
+            if (userStoryDoc.data().state === "completed") {
+                complete.push(userStoryDoc)
+            } else {
+                incomplete.push(userStoryDoc)
+            }
+        })
+
+        if (complete.length > 0 && incomplete.length > 0) {
             return (
                 <Stack direction="column" spacing={2}>
-                    {UserStories.docs.map(userStory => (
+                    <h1 style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '5vh'}}>Incomplete</h1>
+                    {incomplete.map(userStory => (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                '& > :not(style)': {
+                                m: 1,
+                                width: 1024,
+                                minHeight: 128,
+                                },
+                            }}
+                            justifyContent="center"
+                        >
+                            <Paper key={userStory.data().description} variant="elevation" elevation={5} sx={itemsStyle}>
+                                <h1>
+                                    {userStory.data().description}
+                                </h1>
+                                <h3>
+                                    Priority: {userStory.data().priority}
+                                </h3>
+                                <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state}/>
+                                
+                            </Paper>
+                        </Box>
+                    ))}
+                    <h1 style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '5vh'}}>Complete</h1>
+                    {complete.map(userStory => (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                '& > :not(style)': {
+                                m: 1,
+                                width: 1024,
+                                minHeight: 128,
+                                },
+                            }}
+                            justifyContent="center"
+                        >
+                            <Paper key={userStory.data().description} variant="elevation" elevation={5} sx={itemsStyle}>
+                                <h1>
+                                    {userStory.data().description}
+                                </h1>
+                                <h3>
+                                    Priority: {userStory.data().priority}
+                                </h3>
+                                <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state}/>
+                                
+                            </Paper>
+                        </Box>
+                    ))}
+                </Stack>
+            );
+        } else if (complete.length > 0) {
+            return (
+                <Stack direction="column" spacing={2}>
+                    <h1 style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '5vh'}}>Complete</h1>
+                    {complete.map(userStory => (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                '& > :not(style)': {
+                                m: 1,
+                                width: 1024,
+                                minHeight: 128,
+                                },
+                            }}
+                            justifyContent="center"
+                        >
+                            <Paper key={userStory.data().description} variant="elevation" elevation={5} sx={itemsStyle}>
+                                <h1>
+                                    {userStory.data().description}
+                                </h1>
+                                <h3>
+                                    Priority: {userStory.data().priority}
+                                </h3>
+                                <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state}/>
+                                
+                            </Paper>
+                        </Box>
+                    ))}
+                </Stack>
+            );
+        } else if (incomplete.length > 0) {
+            return (
+                <Stack direction="column" spacing={2}>
+                    <h1 style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '5vh'}}>Incomplete</h1>
+                    {incomplete.map(userStory => (
                         <Box
                             sx={{
                                 display: 'flex',

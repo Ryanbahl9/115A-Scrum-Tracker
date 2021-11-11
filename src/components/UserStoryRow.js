@@ -27,14 +27,22 @@ const UserStoryRow = (props) => {
     updateDoc(doc(firestore, 'userStory', props.id), { priority: props.data.priority + 1 })
   };
 
-  useEffect(() => {
+  const updateUserStoryState = async (isComplete) => { //Must use function argument since state setting is async
+    if (isComplete) {
+      await updateDoc(doc(firestore, 'userStory', props.id), {state: "completed"});
+    } else {
+      await updateDoc(doc(firestore, 'userStory', props.id), {state: "sprintBacklog"});
+    }
+  }
+
+  useEffect(() => { //Calling updateDoc in useEffect leads to memory leaks
     if (!tasksLoading && tasks.length !== 0) {
       if (tasks.every((task) => task.stage === 'Complete')) {
         setComplete(true);
-        updateDoc(doc(firestore, 'userStory', props.id), {state: "completed"})
+        updateUserStoryState(true);
       }else {
         setComplete(false);
-        updateDoc(doc(firestore, 'userStory', props.id), {state: "sprintBacklog"})
+        updateUserStoryState(false);
       }
     }
   }, [setComplete, tasksLoading, tasks]);
