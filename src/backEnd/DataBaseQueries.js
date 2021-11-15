@@ -22,6 +22,11 @@ export function useProductById(id) {
   return useDocument(productHookedRef, { idField: 'id' });
 }
 
+export function useProductColorById(id) {
+  const productHookedRef = firestore.collection('productColor').doc(id);
+  return useDocument(productHookedRef, { idField: 'id' });
+}
+
 export function useProductOwnerByProduct(product) {
   var productOwnerRef = firestore.collection('users');
   if (product) {
@@ -34,6 +39,32 @@ export function getUserByEmail(email) {
   const userRef = firestore.collection('users').where('email', '==', email);
   //get user with this Reference
   return userRef.get();
+}
+
+function addProductColor(doc) {
+  firestore
+    .collection('productColor')
+    .doc(doc.id)
+    .set({
+      productId: doc.id,
+      availableColors: [
+        'silver',
+        'gray',
+        'red',
+        'maroon',
+        'yellow',
+        'olive',
+        'lime',
+        'green',
+        'aqua',
+        'teal',
+        'blue',
+        'navy',
+        'fuchsia',
+        'purple',
+      ],
+      userColor: [], //{uid,color}
+    });
 }
 
 export const addProduct = async (name, currentUserUid) => {
@@ -49,29 +80,7 @@ export const addProduct = async (name, currentUserUid) => {
       currentSprint: null,
     })
     .then((doc) => {
-      firestore
-        .collection('productColor')
-        .doc(doc.id)
-        .set({
-          productId: doc.id,
-          availableColors: [
-            'silver',
-            'gray',
-            'red',
-            'maroon',
-            'yellow',
-            'olive',
-            'lime',
-            'green',
-            'aqua',
-            'teal',
-            'blue',
-            'navy',
-            'fuchsia',
-            'purple',
-          ],
-          userColor: [], //{uid,color}
-        });
+      addProductColor(doc)
     });
 };
 
@@ -84,9 +93,14 @@ export function useAvailableColors(productId) {
   return useDocumentData(query);
 }
 
+
+
 export function deleteProduct(productId) {
+  // TEMP NO DELETE TESTING FOR TASK DELETION.
+
   firestore.collection('products').doc(productId).delete();
   firestore.collection('productColor').doc(productId).delete();
+  // delete sprints
   firestore
     .collection('sprints')
     .where('productId', '==', productId)
@@ -94,48 +108,72 @@ export function deleteProduct(productId) {
     .then((docs) => {
       docs.forEach((doc) => {
         doc.ref.delete()
-      })
-      // console.log(doc)
-      // doc.delete();
+      });
     });
+
+    // delete userStories
+    firestore.collection('userStory')
+    .where('productId', '==', productId)
+    .get()
+    .then((docs) => {
+      const userStoryIds = []
+      docs.forEach((doc) => {
+        userStoryIds.push(doc.id);
+        doc.ref.delete();
+      });
+      return userStoryIds;
+    })
+    .then((userStoryIds) => {
+      //delete tasks
+
+    });
+
+  // ADD DELETE ALL USER STORIES AND TASKS
 }
 
-export function setProductColor(productId, uid, color) {
-  const isUserColorSet = async (docRef, uid) => {
-    //checks docRef if user is already there.
-  };
+
+
+export function setUserColorForProduct(productId, uid, color) {
+
 
   const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
   const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
   //check to see if user is already in color
-  const docRef = doc(firestore, 'productColor', productId);
-  if (isUserColorSet(docRef, uid)) {
-    console.log('User Has Color Set');
-  }
-  // console.log(Object.keys(t)
-  //if (no color selected) {
-  // updateDoc(docRef, {
-  // availableColors: arrayRemove(color)
-  // })
-  // updateDoc(docRef,{
-  // userColor: arrayUnion({uid, color: color})
-  // })
-  // } else {
-  // add color back and change color
-  // }
+  const docRef = firestore.collection('productColor').doc(productId);
+  docRef.get().then((doc) => {
 
-  //Remove From available && and or add back from change
-  // firestore.collection('productColor').doc(productId).get().then((doc)=> {
+    var docUserColor = doc.data().userColor;
+    var docObjWithUID = docUserColor.filter(obj => obj.uid === uid);
 
-  //   updateDoc(doc,{
-  //     availableColors: arrayRemove(color)
-  //   })
-  //   updateDoc(doc,{
-  //     userColor: arrayUnion({uid, color: color})
-  //   })
-  // })
-  //set this users color
+    if (docObjWithUID.length === 1) {
+      //change color, restore old color and set new one
+
+      const oldColor = docObjWithUID[0].color;
+
+      //specific order for useEffect
+      //set new color
+      docObjWithUID[0].color = color;
+      //save new color to database
+      updateDoc(docRef, { userColor: docUserColor });
+
+
+
+      //add back old color to available
+      updateDoc(docRef, { availableColors: arrayUnion(oldColor) });
+      //remove new color from available
+      updateDoc(docRef, { availableColors: arrayRemove(color) });
+
+
+    } else {
+      //first Time Color set
+      updateDoc(docRef, { userColor: arrayUnion({ uid, color: color }) });
+      updateDoc(docRef, { availableColors: arrayRemove(color) });
+
+    }
+  });
 }
+
+
 export const removeFromInviteList = (productId, uid) => {
   const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
   const thisDoc = doc(firestore, 'users', uid);
@@ -162,7 +200,7 @@ export function useGetSprintsData(productId) {
 
 // Returns sprint with the closest endDate after the current date
 // if that DNE, then returns sprint with closest endDate before
-// current date  
+// current date
 export async function getCurrentSprintId(productId) {
   if (productId === null) return '';
   var id = null
@@ -192,6 +230,6 @@ export async function getCurrentSprintId(productId) {
   // query.get().then((docs) => {
   //   if (docs.docs.length === 0) return null;
   //   docs.sort((a,b) => { (a.data().endDate < b.data().endDate) ? a : b })
-    
+
   // })
 }
