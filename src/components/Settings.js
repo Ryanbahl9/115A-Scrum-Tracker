@@ -35,10 +35,10 @@ function ColorSelection(props) {
   useEffect(() => {
     if (productColors) {
       var userColor = productColors.data().userColor;
-      var userColorByID = userColor.filter(obj => obj.uid === auth.currentUser.uid);
-      if(userColorByID.length === 1){
-        setCurColor(userColorByID[0].color)
-      }else{
+      const colorObj = userColor[auth.currentUser.uid];
+      if (colorObj) {
+        setCurColor(colorObj.color);
+      } else {
         setCurColor("Color Not Selected")
       }
 
@@ -57,18 +57,17 @@ function ColorSelection(props) {
           id="select"
           value={curColor}
           onChange={setColor}
-          sx={{backgroundColor: curColor}}
+          sx={{ backgroundColor: curColor }}
         >
           {colors &&
             colors.availableColors.map((color) => (
-
               <MenuItem value={color} key={color} sx={{ backgroundColor: color, minWidth: '25%' }}>
                 {color}
               </MenuItem>
             ))}
-              <MenuItem value={curColor} key={curColor} sx={{ backgroundColor: curColor, minWidth: '25%' }}>
-                {curColor}
-              </MenuItem>
+          <MenuItem value={curColor} key={curColor} sx={{ backgroundColor: curColor, minWidth: '25%' }}>
+            {curColor}
+          </MenuItem>
         </Select>
       </FormControl>
     </Box>

@@ -63,7 +63,7 @@ function addProductColor(doc) {
         'fuchsia',
         'purple',
       ],
-      userColor: [], //{uid,color}
+      userColor: {}, //{uid,color}
     });
 }
 
@@ -111,8 +111,8 @@ export function deleteProduct(productId) {
       });
     });
 
-    // delete userStories
-    firestore.collection('userStory')
+  // delete userStories
+  firestore.collection('userStory')
     .where('productId', '==', productId)
     .get()
     .then((docs) => {
@@ -141,35 +141,19 @@ export function setUserColorForProduct(productId, uid, color) {
   //check to see if user is already in color
   const docRef = firestore.collection('productColor').doc(productId);
   docRef.get().then((doc) => {
+    console.log("START OF MESS")
 
     var docUserColor = doc.data().userColor;
-    var docObjWithUID = docUserColor.filter(obj => obj.uid === uid);
+    const oldColor = docUserColor[uid] ? docUserColor[uid].color : null;
 
-    if (docObjWithUID.length === 1) {
-      //change color, restore old color and set new one
+    docUserColor[uid] = { "color": color };
+    updateDoc(docRef, { userColor: docUserColor });
+    updateDoc(docRef, { availableColors: arrayRemove(color) });
 
-      const oldColor = docObjWithUID[0].color;
-
-      //specific order for useEffect
-      //set new color
-      docObjWithUID[0].color = color;
-      //save new color to database
-      updateDoc(docRef, { userColor: docUserColor });
-
-
-
-      //add back old color to available
+    if (oldColor) {
       updateDoc(docRef, { availableColors: arrayUnion(oldColor) });
-      //remove new color from available
-      updateDoc(docRef, { availableColors: arrayRemove(color) });
-
-
-    } else {
-      //first Time Color set
-      updateDoc(docRef, { userColor: arrayUnion({ uid, color: color }) });
-      updateDoc(docRef, { availableColors: arrayRemove(color) });
-
     }
+
   });
 }
 
