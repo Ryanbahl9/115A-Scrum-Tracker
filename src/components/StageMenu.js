@@ -42,6 +42,24 @@ export default function BasicMenu(props) {
       }
     }
 
+  const handleMoveTasks = async (next) => {
+      const q = query(collection(firestore, 'task'),
+        where('userStoryId', 'in', props.userStoryIds),
+        where('stage', '==', props.stage));
+      const querySnapshot = await getDocs(q);
+      let stage;
+      if (next) {
+        stage = productData.stages[productData.stages.indexOf(props.stage) + 1];
+        if (!stage) stage = 'Complete';
+      } else {
+        stage = productData.stages[productData.stages.indexOf(props.stage) - 1];
+        if (!stage) stage = 'Queue';
+      }
+      querySnapshot.forEach(async docRef => {
+        updateDoc(doc(firestore, 'task', docRef.id), { stage });
+      })
+  }
+
     return (
         <div>
             <Button
@@ -63,8 +81,8 @@ export default function BasicMenu(props) {
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                <MenuItem onClick={handleClose}>Move All tasks to next column</MenuItem>
-                <MenuItem onClick={handleClose}>Move All tasks to prev column</MenuItem>
+          <MenuItem onClick={() => handleMoveTasks(true)}>Move All tasks to next column</MenuItem>
+          <MenuItem onClick={() => handleMoveTasks(false)}>Move All tasks to prev column</MenuItem>
 
                 <Divider />
                 <MenuItem sx={{color: 'red'}}onClick={handleDelete}>Delete Stage</MenuItem>
