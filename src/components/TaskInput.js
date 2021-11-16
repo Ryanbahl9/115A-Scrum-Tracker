@@ -42,6 +42,57 @@ const TaskInput = (props) => {
       await deleteDoc(doc(firestore, "task", task.id));
     }
 
+    const TileTask = (props) => {
+      const [editor, setEditor] = React.useState(false);
+
+      const updateTask = () => {
+        console.log("TODO: update firebase task doc")
+        setEditor(!editor)
+      }
+
+      const TaskEditor = (props) => {
+        //TODO: use state to keep track of current input in text field
+        return (
+          <Stack direction="row">
+            <Box
+              component="form"
+              sx={{
+                  '& > :not(style)': { m: 1, width: '100ch' },
+              }}
+              noValidate
+              autoComplete="off"
+              >
+              <TextField
+                id="filled-basic"
+                value={value}
+                label="Add Task"
+                variant="filled"
+                width="110ch"
+                defaultValue={props.task.description}
+              />
+            </Box>
+            <Button color="success" onClick={updateTask}>
+              Save
+            </Button>
+          </Stack>
+        );
+      }
+
+      return (
+        <Stack>
+          {editor ? <TaskEditor task={props.task}/> : <h3>-{props.task.description}</h3>}
+          <Stack direction="row" justifyContent="right">
+              <Button color="error" onClick={() => deleteTask(props.task)}>
+                Delete
+              </Button>
+              <Button onClick={() => setEditor(!editor)}>
+                {editor ? "Cancel" : "Edit"}
+              </Button>
+          </Stack>
+        </Stack>
+      );
+    }
+
     return (
         <Stack>
             <Stack direction="row" spacing={1}>
@@ -65,19 +116,7 @@ const TaskInput = (props) => {
               <>
               {
                 tasks.map(task => (
-                  <Stack>
-                    <h3>
-                      -{task.description}
-                    </h3>
-                    <Stack direction="row" justifyContent="right">
-                      <Button color="error" onClick={() => deleteTask(task)}>
-                        Delete
-                      </Button>
-                      <Button>
-                        Edit
-                      </Button>
-                    </Stack>
-                  </Stack>
+                  <TileTask task={task}/>
                 ))
               }
               </>
