@@ -44,10 +44,16 @@ const TaskInput = (props) => {
 
     const TileTask = (props) => {
       const [editor, setEditor] = React.useState(false);
+      let taskEditVal = ""
 
       const updateTask = () => {
-        console.log("TODO: update firebase task doc")
+        updateDoc(doc(firestore,"task", props.task.id), {description : taskEditVal})
         setEditor(!editor)
+      }
+
+      const updateTaskInput = (e) => {
+        taskEditVal = e.target.value
+        console.log(e.target.value)
       }
 
       const TaskEditor = (props) => {
@@ -64,11 +70,10 @@ const TaskInput = (props) => {
               >
               <TextField
                 id="filled-basic"
-                value={value}
-                label="Add Task"
                 variant="filled"
                 width="110ch"
                 defaultValue={props.task.description}
+                onChange={updateTaskInput}
               />
             </Box>
             <Button color="success" onClick={updateTask}>
