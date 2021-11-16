@@ -10,7 +10,8 @@ import { useDocument, useCollectionData, useDocumentData } from 'react-firebase-
 import {firestore, auth} from './fire';
 import UserContext from './UserContext';
 import UserStoryCard from './UserStoryCard';
-import { doc, addDoc, collection, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { doc, addDoc, collection, updateDoc, deleteDoc } from "firebase/firestore";
+import { Grid } from '@mui/material';
 
 const TaskInput = (props) => {
     const [value, setValue] = React.useState('');
@@ -37,6 +38,10 @@ const TaskInput = (props) => {
       setValue("")
     }
 
+    const deleteTask = async (task) => {
+      await deleteDoc(doc(firestore, "task", task.id));
+    }
+
     return (
         <Stack>
             <Stack direction="row" spacing={1}>
@@ -60,9 +65,19 @@ const TaskInput = (props) => {
               <>
               {
                 tasks.map(task => (
-                    <h3 key={task.id}>
-                        -{task.description}
+                  <Stack>
+                    <h3>
+                      -{task.description}
                     </h3>
+                    <Stack direction="row" justifyContent="right">
+                      <Button color="error" onClick={() => deleteTask(task)}>
+                        Delete
+                      </Button>
+                      <Button>
+                        Edit
+                      </Button>
+                    </Stack>
+                  </Stack>
                 ))
               }
               </>
