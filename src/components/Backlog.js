@@ -37,7 +37,6 @@ const Backlog = () => {
         await userStoryRef.add({
           productId: product.id,
           description: getUserStoryDes(),
-          tasks: [],
           priority: getPriority(),
           state: 'productBacklog'
         });

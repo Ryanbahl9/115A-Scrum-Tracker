@@ -10,7 +10,8 @@ import { useDocument, useCollectionData, useDocumentData } from 'react-firebase-
 import {firestore, auth} from './fire';
 import UserContext from './UserContext';
 import UserStoryCard from './UserStoryCard';
-import { doc, addDoc, collection, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { doc, addDoc, collection, updateDoc, deleteDoc } from "firebase/firestore";
+import { Grid } from '@mui/material';
 
 const TaskInput = (props) => {
     const [value, setValue] = React.useState('');
@@ -37,6 +38,68 @@ const TaskInput = (props) => {
       setValue("")
     }
 
+    const deleteTask = async (task) => {
+      await deleteDoc(doc(firestore, "task", task.id));
+    }
+
+    const TileTask = (props) => {
+      const [editor, setEditor] = React.useState(false);
+      let taskEditVal = ""
+
+      const updateTask = () => {
+        if (taskEditVal.length > 0) {
+          updateDoc(doc(firestore,"task", props.task.id), {description : taskEditVal})
+          setEditor(!editor)
+        } else {
+          deleteTask(props.task)
+        }
+      }
+
+      const updateTaskInput = (e) => {
+        taskEditVal = e.target.value
+      }
+
+      const TaskEditor = (props) => {
+        return (
+          <Stack direction="row">
+            <Box
+              component="form"
+              sx={{
+                  '& > :not(style)': { m: 1, width: '100ch' },
+              }}
+              noValidate
+              autoComplete="off"
+              >
+              <TextField
+                id="filled-basic"
+                variant="filled"
+                width="110ch"
+                defaultValue={props.task.description}
+                onChange={updateTaskInput}
+              />
+            </Box>
+            <Button color="success" onClick={updateTask}>
+              Save
+            </Button>
+          </Stack>
+        );
+      }
+
+      return (
+        <Stack>
+          {editor ? <TaskEditor task={props.task}/> : <h3>-{props.task.description}</h3>}
+          <Stack direction="row" justifyContent="right">
+              <Button color="error" onClick={() => deleteTask(props.task)}>
+                Delete
+              </Button>
+              <Button onClick={() => setEditor(!editor)}>
+                {editor ? "Cancel" : "Edit"}
+              </Button>
+          </Stack>
+        </Stack>
+      );
+    }
+
     return (
         <Stack>
             <Stack direction="row" spacing={1}>
@@ -60,9 +123,7 @@ const TaskInput = (props) => {
               <>
               {
                 tasks.map(task => (
-                    <h3 key={task.id}>
-                        -{task.description}
-                    </h3>
+                  <TileTask task={task}/>
                 ))
               }
               </>

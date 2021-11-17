@@ -120,7 +120,7 @@ const Board = () => {
     //so that anytime the stages of a product are changed
     //the board will rerender with the changed stages
     useEffect(() => {
-      if (!product || loadingProduct || !productData || loadingStories) return;
+      if (!product || loadingProduct || !productData || loadingStories ) return;
       //add the mandatory titles
       let tempStageTitles = ["Queue"];
       let tempStageTitleComponents = [<Box sx={{ minWidth: '100px', boxShadow: 'rgba(0, 0, 0, 0.9) 0px 0px 0px 1px' }} key={0}></Box>,
@@ -158,33 +158,13 @@ const Board = () => {
       tempStageTitles.push("Complete")
       setStageTitleComponents(tempStageTitleComponents);
       setStageTitles(tempStageTitles);
-    }, [product, loadingProduct, productData]);
+    }, [product, loadingProduct, productData, sprintStories]);
 
     return (<>{
       product ?
         (<Container sx={{marginTop: "10px", overflowX: 'scroll', overflowY: 'hidden', maxHeight: '90vh'}}>
 
           <SprintSelector sx={{ position: 'absolute', marginTop: "10px" }} sprintId={sprintId} setSprintId={setSprintId} />
-
-            {/* <Box sx={{ position: 'absolute', marginTop: "10px", marginLeft: '120px'}}>
-            <FormControl size="sm">
-              <InputLabel id="demo-simple-select-label">
-                View Tasks
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={1}
-                label="Age"
-                sx={{maxHeight:"30px"}}
-              >
-                <MenuItem value={1}>Your tasks</MenuItem>
-                <MenuItem value={2}>member 2</MenuItem>
-                <MenuItem value={3}>member 3</MenuItem>
-                <MenuItem value={4}>Unassigned Tasks</MenuItem>
-              </Select>
-            </FormControl>
-          </Box> */}
           
           <Box sx={{display: 'flex', marginTop: '50px'}}>
 
