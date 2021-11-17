@@ -47,17 +47,19 @@ const TaskInput = (props) => {
       let taskEditVal = ""
 
       const updateTask = () => {
-        updateDoc(doc(firestore,"task", props.task.id), {description : taskEditVal})
-        setEditor(!editor)
+        if (taskEditVal.length > 0) {
+          updateDoc(doc(firestore,"task", props.task.id), {description : taskEditVal})
+          setEditor(!editor)
+        } else {
+          deleteTask(props.task)
+        }
       }
 
       const updateTaskInput = (e) => {
         taskEditVal = e.target.value
-        console.log(e.target.value)
       }
 
       const TaskEditor = (props) => {
-        //TODO: use state to keep track of current input in text field
         return (
           <Stack direction="row">
             <Box
