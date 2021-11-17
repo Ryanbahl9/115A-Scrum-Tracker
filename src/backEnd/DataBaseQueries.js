@@ -63,7 +63,7 @@ function addProductColor(doc) {
         'fuchsia',
         'purple',
       ],
-      userColor: {}, //{uid,color}
+      userColor: {},
     });
 }
 
@@ -80,14 +80,12 @@ export const addProduct = async (name, currentUserUid) => {
       currentSprint: null,
     })
     .then((doc) => {
-      addProductColor(doc)
+      addProductColor(doc);
     });
 };
 
 export function useAvailableColors(productId) {
-  // const productsRef = firestore.collection('products');
-  // var query = productsRef.where('users', 'array-contains', uid);
-  // return useCollectionData(query, {idField: 'id'});
+
   const productColorRef = firestore.collection('productColor');
   const query = productColorRef.doc(productId);
   return useDocumentData(query);
@@ -115,18 +113,18 @@ export function deleteProduct(productId) {
   firestore.collection('userStory')
     .where('productId', '==', productId)
     .get()
-    .then((docs) => {
-      const userStoryIds = []
-      docs.forEach((doc) => {
-        userStoryIds.push(doc.id);
-        doc.ref.delete();
-      });
-      return userStoryIds;
-    })
-    .then((userStoryIds) => {
-      //delete tasks
+    .then((userStoryDocs) => {
+      userStoryDocs.forEach((userStoryDoc) => {
+        firestore.collection('task').where('userStoryId', '==', userStoryDoc.id).get().then((taskDocs) =>{
+          taskDocs.forEach((task) => {
+            task.ref.delete();
+          });
+        });
 
-    });
+        userStoryDoc.ref.delete();
+      });
+
+    })
 
   // ADD DELETE ALL USER STORIES AND TASKS
 }

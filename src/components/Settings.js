@@ -21,6 +21,7 @@ import {
   useProductColorById
 
 } from '../backEnd/DataBaseQueries';
+import { InvertColors } from '@material-ui/icons';
 
 function ColorSelection(props) {
   let { product } = useContext(UserContext);
@@ -28,7 +29,6 @@ function ColorSelection(props) {
   const [productColors] = useProductColorById(product.id);
   const [curColor, setCurColor] = useState('');
   const setColor = (e) => {
-    // console.log('set Color: ' + e.target.value);
     setUserColorForProduct(product.id, auth.currentUser.uid, e.target.value);
   };
 
@@ -41,9 +41,7 @@ function ColorSelection(props) {
       } else {
         setCurColor("Color Not Selected")
       }
-
     }
-
   }, [productColors]);
 
 
