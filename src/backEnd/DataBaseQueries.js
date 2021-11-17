@@ -131,7 +131,17 @@ export function deleteProduct(productId) {
   // ADD DELETE ALL USER STORIES AND TASKS
 }
 
-
+export function deleteSprint(sprintId) {
+  let sprintRef = firestore.collection('sprints').doc(sprintId);
+  sprintRef.get().then((snapShot) => {
+    for (const storyId of snapShot.data().userStories) {
+      firestore.collection('userStory').doc(storyId).update({
+        state: 'productBacklog'
+      });
+    }
+  });
+  sprintRef.delete()
+}
 
 export function setUserColorForProduct(productId, uid, color) {
 

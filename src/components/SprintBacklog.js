@@ -35,7 +35,8 @@ import {
   useGetSprintsData,
   useProductById,
   useProductOwnerByProduct,
-  getCurrentSprintId
+  getCurrentSprintId,
+  deleteSprint
 } from '../backEnd/DataBaseQueries';
 import {dateSelector, itemSelectSytle, itemsStyle, itemStyle} from './CSS';
 import AddSprint from './AddSprint';
@@ -80,7 +81,7 @@ const SprintBacklog = (props) => {
 
   // Set up hook for sprint stories inside useEffect watching sprint state
   useEffect(async () => {
-    if (sprint === null) return;
+    if (sprint === null || sprintId === '' || sprintId === null) return;
     let tempSprintStories = [];
     for (const storyId of sprint.data().userStories) {
       await firestore
@@ -135,15 +136,36 @@ const SprintBacklog = (props) => {
     });
   };
 
+  const deleteCurrSprint = () => {
+    var idCopy = sprintId
+    setSprintStories([])
+    setSprint(null)
+    setSprintId('')
+    deleteSprint(idCopy)
+  }
+
   return (
     <Fragment>
+      {/* <Button onClick={() => {
+        const backlogStoriesRef = firestore.collection('userStory');
+        let backlogStoriesQuery = backlogStoriesRef.where('productId', '==', productId);
+        backlogStoriesQuery.get().then((col) => col.docs.forEach((doc) => {
+          firestore.collection('userStory').doc(doc.id).update({state: 'productBacklog'})
+        }))
+      }}> fix </Button> */}
       {product ? (
         <Box>
           <SprintSelector sprintId={sprintId} setSprintId={setSprintId} />
-          {(sprintId != '') ? 
+          <Button onClick={deleteCurrSprint}>
+            Delete Sprint
+          </Button>
+          {(sprintId != '' && sprintId != null) ? 
           <Fragment>
             <Box sx={{display: 'flex'}}>
               <Box sx={{width: 275}}>
+                <Typography variant="h4" component="div">
+                  Backlog Stories
+                </Typography>
                 {(backlogStories.length > 0) &&
                   backlogStories.map((story) => {
                     return (
@@ -158,8 +180,11 @@ const SprintBacklog = (props) => {
                     );
                   })}
               </Box>
-              <Box>| | |</Box>
+              <Box sx={{width: 10}}/>
               <Box sx={{width: 275}}>
+                <Typography variant="h4" component="div">
+                  Sprint Stories
+                </Typography>
                 {sprint != null &&
                   sprintStories.length > 0 &&
                   sprintStories.map((story) => {
@@ -176,7 +201,6 @@ const SprintBacklog = (props) => {
                   })}
               </Box>
             </Box>
-            <AddSprint product={product} />
           </Fragment>
           :
           (<Box>Please Select Sprint</Box>)}
@@ -187,6 +211,7 @@ const SprintBacklog = (props) => {
           <Paper sx={itemsStyle}>Select Product for SprintBacklog</Paper>
         </Box>
       )}
+      <AddSprint product={product} />
     </Fragment>
   );
 };
