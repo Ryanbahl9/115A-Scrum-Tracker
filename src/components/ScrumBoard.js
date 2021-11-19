@@ -29,8 +29,11 @@ const Board = () => {
     // set observers, these are used to stop listening to the onSnapshot functions
     var sprintObserver = null;
     // set up auto select current sprint
-    useEffect(async () => {
-      setSprintId(await getCurrentSprintId(productId))
+    useEffect(() => {
+      const wrapper = async () => {
+        setSprintId(await getCurrentSprintId(productId))
+      }
+      wrapper();
     }, [])
 
     // Set up hook for sprint inside useEffect watching sprint id state
