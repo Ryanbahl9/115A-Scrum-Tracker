@@ -23,11 +23,11 @@ const AppBar = (props) => {
       <div style={{display: 'flex'}}>
         <MUIToolbar>
           {user && (
-            <IconButton button onClick={toggleDrawerOpen}>
+            <IconButton onClick={toggleDrawerOpen}>
               <Menu />
             </IconButton>
           )}
-          <IconButton button onClick={() => history.push('/')}>
+          <IconButton onClick={() => history.push('/')}>
             <Home />
           </IconButton>
         </MUIToolbar>
