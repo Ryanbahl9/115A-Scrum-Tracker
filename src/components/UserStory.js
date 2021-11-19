@@ -1,12 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-//import Button from '@mui/material/Button';
-
-//import firebase from 'firebase/compat/app';
-//import {auth, firestore} from './fire';
-//import {useCollectionData} from 'react-firebase-hooks/firestore';
-
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -24,10 +18,10 @@ export const getPriority = () => {
 }
 
 const UserStoryInput = (props) => {
-    const {inputOpen} = props;
+    const {inputOpen, passDownStyle} = props;
 
     const [value, setValue] = React.useState('');
-  
+
     const handleChange = (event) => {
       setValue(event.target.value);
       currentInputString = event.target.value;
@@ -37,9 +31,7 @@ const UserStoryInput = (props) => {
         return (
             <Box
                 component="form"
-                sx={{
-                    '& .MuiTextField-root': { m: 1, width: 1000 },
-                }}
+                sx={passDownStyle}
                 noValidate
                 autoComplete="off"
                 >

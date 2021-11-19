@@ -98,7 +98,7 @@ const SprintBacklog = (props) => {
     }
     setSprintStories(tempSprintStories);
   }, [sprint]);
- 
+
   // Set up hook to watch all userStories with this product id in the product backlog
    useEffect(() => {
     if (backlogStoriesObserver != null) backlogStoriesObserver();
@@ -111,7 +111,7 @@ const SprintBacklog = (props) => {
   }, [])
 
 
-  // Set up button handlers 
+  // Set up button handlers
   const moveStoryToSprint = (storyID) => {
     firestore
       .collection('sprints')
@@ -159,7 +159,7 @@ const SprintBacklog = (props) => {
           <Button onClick={deleteCurrSprint}>
             Delete Sprint
           </Button>
-          {(sprintId != '' && sprintId != null) ? 
+          {(sprintId != '' && sprintId != null) ?
           <Fragment>
             <Box sx={{display: 'flex'}}>
               <Box sx={{width: 275}}>
@@ -204,14 +204,14 @@ const SprintBacklog = (props) => {
           </Fragment>
           :
           (<Box>Please Select Sprint</Box>)}
-
+<AddSprint product={product} />
         </Box>
       ) : (
         <Box>
           <Paper sx={itemsStyle}>Select Product for SprintBacklog</Paper>
         </Box>
       )}
-      <AddSprint product={product} />
+
     </Fragment>
   );
 };

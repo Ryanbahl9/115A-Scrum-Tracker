@@ -4,8 +4,8 @@ import UserContext from './UserContext';
 import {useCollectionData,
   useDocumentData} from 'react-firebase-hooks/firestore';
 import UserStoryRow from "./UserStoryRow"
-import { doc, getDoc, updateDoc} from "firebase/firestore";
-import { Container, Button, Box, TextField, FormControl, Select, InputLabel, MenuItem} from '@mui/material';
+import { doc, updateDoc} from "firebase/firestore";
+import { Container, Button, Box, TextField} from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import StageMenu from './StageMenu';
 import SprintSelector from './SprintSelector';
@@ -18,7 +18,6 @@ const Board = () => {
     const [sprintId, setSprintId] = useState('');
     const [sprint, setSprint] = useState(null);
     const [sprintStories, setSprintStories] = useState([]);
-    const [taskView, setTaskView] = useState();
     const [stageTitleComponents, setStageTitleComponents] = useState([]);
     const { product } = useContext(UserContext);
     const productId = product ? product.id : null;
@@ -27,9 +26,8 @@ const Board = () => {
 
 
     /// ----- Set up hooks for user story data -----
-    // set observers, these are used to stop listening to the onSnapshot functions 
+    // set observers, these are used to stop listening to the onSnapshot functions
     var sprintObserver = null;
-    var backlogStoriesObserver = null;
     // set up auto select current sprint
     useEffect(async () => {
       setSprintId(await getCurrentSprintId(productId))
@@ -76,7 +74,7 @@ const Board = () => {
     }
     const [UserStories,
       loadingStories] = useCollectionData(userStoriesQuery, {idField: 'id'});
-    
+
     let pid;
     if(product) {
       pid = product.id;
@@ -138,7 +136,7 @@ const Board = () => {
       if (productData.stages){
         tempStageTitleComponents = tempStageTitleComponents
           .concat(productData.stages
-          .map((stageTitle, i) => 
+          .map((stageTitle, i) =>
           (<Box sx={{ minWidth: '200px',
             display: 'flex',
             justifyContent: 'center',
@@ -165,7 +163,7 @@ const Board = () => {
         (<Container sx={{marginTop: "10px", overflowX: 'scroll', overflowY: 'hidden', maxHeight: '90vh'}}>
 
           <SprintSelector sx={{ position: 'absolute', marginTop: "10px" }} sprintId={sprintId} setSprintId={setSprintId} />
-          
+
           <Box sx={{display: 'flex', marginTop: '50px'}}>
 
             {stageTitleComponents}
@@ -175,22 +173,22 @@ const Board = () => {
                 + add
               </Button>
             </Box>
-            
-          </Box>  
+
+          </Box>
 
 
               {(loadingStories || loadingProduct) &&
                 <Box ><CircularProgress/></Box> }
 
               {/*load the user stories into user story rows*/}
-              
+
               {(!loadingStories && !loadingProduct) &&
                 <Box sx={{minWidth: `${stageTitles.length * 200 + 300}px`, maxHeight: '80vh', overflowY: 'scroll', overflowX: 'hidden'}}>
                   {sprintStories.sort((firstDoc, secondDoc) => firstDoc.data().priority - secondDoc.data().priority)
                       .map(doc => <UserStoryRow key={doc.id} id={doc.id} data={doc.data()} stageTitles={stageTitles}/>)}
                 </Box>
               }
-            
+
               {(!loadingStories && !loadingProduct) && (sprintStories.length===0) &&
                 <h3>There are no user stories for this board</h3>}
         </Container >)

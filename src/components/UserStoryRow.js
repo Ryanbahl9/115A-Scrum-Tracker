@@ -19,7 +19,7 @@ const UserStoryRow = (props) => {
     let [tasks, tasksLoading] = useCollectionData(taskQuery, { idField: 'id' });
 
   const increasePriority = () => {
-    if(props.data.priority === 1) return; 
+    if(props.data.priority === 1) return;
     updateDoc(doc(firestore, 'userStory', props.id), {priority: props.data.priority - 1})
   };
   const decreasePriority = () => {
@@ -88,7 +88,9 @@ const UserStoryRow = (props) => {
                                   {
                                     tasks.map((task, i) => {
                                       if (task.stage === title) {
-                                        return <Task key={task.id}
+                                        return <Task
+                                            tasks={tasks}
+                                            key={task.id}
                                             userStoryId={props.data.id}
                                             data={task}/>
                                       } else {
