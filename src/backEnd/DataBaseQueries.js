@@ -81,8 +81,6 @@ export const addProduct = async (name, currentUserUid) => {
       uid: currentUserUid,
       stages: ['Development'],
       users: [currentUserUid],
-      howManySprints: 0,
-      currentSprint: null,
     })
     .then((doc) => {
       addProductColor(doc);
@@ -120,7 +118,7 @@ export function deleteProduct(productId) {
     .get()
     .then((userStoryDocs) => {
       userStoryDocs.forEach((userStoryDoc) => {
-        firestore.collection('task').where('userStoryId', '==', userStoryDoc.id).get().then((taskDocs) =>{
+        firestore.collection('task').where('userStoryId', '==', userStoryDoc.id).get().then((taskDocs) => {
           taskDocs.forEach((task) => {
             task.ref.delete();
           });
@@ -154,8 +152,6 @@ export function setUserColorForProduct(productId, uid, color) {
   //check to see if user is already in color
   const docRef = firestore.collection('productColor').doc(productId);
   docRef.get().then((doc) => {
-    console.log("START OF MESS")
-
     var docUserColor = doc.data().userColor;
     const oldColor = docUserColor[uid] ? docUserColor[uid].color : null;
 
@@ -224,9 +220,4 @@ export async function getCurrentSprintId(productId) {
     }
   })
   return id
-  // query.get().then((docs) => {
-  //   if (docs.docs.length === 0) return null;
-  //   docs.sort((a,b) => { (a.data().endDate < b.data().endDate) ? a : b })
-
-  // })
 }

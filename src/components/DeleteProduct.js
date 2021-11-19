@@ -2,7 +2,7 @@
 import React, {useContext, useState} from 'react';
 import {deleteProduct} from '../backEnd/DataBaseQueries';
 import {deleteButtonStyle} from './CSS';
-import {auth, firestore} from './fire';
+import {auth} from './fire';
 import UserContext from './UserContext';
 import {Box, Button} from '@mui/material';
 

@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { useDocument, useDocumentDataOnce } from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/compat/app';
 import { firestore, auth } from './fire';
 import { Button, Input } from '@mui/material';
@@ -10,18 +9,13 @@ import { doc, updateDoc } from '@firebase/firestore';
 import UserContext from './UserContext';
 import { itemsStyle, itemStyle, settingsItems } from './CSS.js';
 import {
-  getAvailableColors,
-  getUserByEmail,
   useAvailableColors,
   useProductById,
   useProductOwnerByProduct,
-  setColor,
-
   setUserColorForProduct,
   useProductColorById
 
 } from '../backEnd/DataBaseQueries';
-import { InvertColors } from '@material-ui/icons';
 
 function ColorSelection(props) {
   let { product } = useContext(UserContext);

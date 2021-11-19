@@ -8,7 +8,6 @@ import {firestore, auth} from './fire';
 import {doc, updateDoc} from '@firebase/firestore';
 import {itemStyle} from './CSS';
 import {removeFromInviteList} from '../backEnd/DataBaseQueries';
-import {ProductionQuantityLimitsOutlined} from '@mui/icons-material';
 
 function Invites({children}) {
   const thisUserRef = firestore.collection('users').doc(auth.currentUser.uid);
