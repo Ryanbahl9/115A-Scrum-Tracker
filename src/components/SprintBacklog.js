@@ -1,44 +1,24 @@
 import {
-  Card,
-  CardActions,
-  CardContent,
   Typography,
   Button,
   Box,
-  FormControl,
   Paper,
 } from '@mui/material';
-import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
-import {
-  useDocument,
-  useCollection,
-  useDocumentData,
-} from 'react-firebase-hooks/firestore';
-import {firestore} from './fire';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
+import { firestore } from './fire';
 import UserContext from './UserContext';
 import UserStoryCard from './UserStoryCard';
 import SprintSelector from './SprintSelector';
 import {
-  doc,
-  getDoc,
-  updateDoc,
   arrayUnion,
   arrayRemove,
 } from 'firebase/firestore';
 
-import TextField from '@mui/material/TextField';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DatePicker from '@mui/lab/DatePicker';
 import {
-  addSprint,
-  useGetSprintsData,
-  useProductById,
-  useProductOwnerByProduct,
   getCurrentSprintId,
   deleteSprint
 } from '../backEnd/DataBaseQueries';
-import {dateSelector, itemSelectSytle, itemsStyle, itemStyle} from './CSS';
+import { itemsStyle } from './CSS';
 import AddSprint from './AddSprint';
 
 
@@ -46,7 +26,7 @@ const SprintBacklog = (props) => {
 
   /// ------States and Variables-----
   // get product state
-  let {product} = useContext(UserContext);
+  let { product } = useContext(UserContext);
   // if product state is null, set product id to null
   const productId = product ? product.id : null;
 
@@ -62,7 +42,10 @@ const SprintBacklog = (props) => {
 
   // Set initial sprint id
   useEffect(async () => {
-    setSprintId(await getCurrentSprintId(productId))
+    const wrap = async () => {
+      setSprintId(await getCurrentSprintId(productId))
+    }
+    wrap();
   }, [])
 
   /// ------Effects and Firebase Hooks------
@@ -100,7 +83,7 @@ const SprintBacklog = (props) => {
   }, [sprint]);
 
   // Set up hook to watch all userStories with this product id in the product backlog
-   useEffect(() => {
+  useEffect(() => {
     if (backlogStoriesObserver != null) backlogStoriesObserver();
     const backlogStoriesRef = firestore.collection('userStory');
     let backlogStoriesQuery = backlogStoriesRef.where('productId', '==', productId);
@@ -160,51 +143,51 @@ const SprintBacklog = (props) => {
             Delete Sprint
           </Button>
           {(sprintId != '' && sprintId != null) ?
-          <Fragment>
-            <Box sx={{display: 'flex'}}>
-              <Box sx={{width: 275}}>
-                <Typography variant="h4" component="div">
-                  Backlog Stories
-                </Typography>
-                {(backlogStories.length > 0) &&
-                  backlogStories.map((story) => {
-                    return (
-                      <p key={story.id}>
-                        <UserStoryCard
-                          storyID={story.id}
-                          storyDescription={story.data().description}
-                          btnText="Move To Sprint"
-                          onClick={moveStoryToSprint}
-                        />
-                      </p>
-                    );
-                  })}
+            <Fragment>
+              <Box sx={{ display: 'flex' }}>
+                <Box sx={{ width: 275 }}>
+                  <Typography variant="h4" component="div">
+                    Backlog Stories
+                  </Typography>
+                  {(backlogStories.length > 0) &&
+                    backlogStories.map((story) => {
+                      return (
+                        <p key={story.id}>
+                          <UserStoryCard
+                            storyID={story.id}
+                            storyDescription={story.data().description}
+                            btnText="Move To Sprint"
+                            onClick={moveStoryToSprint}
+                          />
+                        </p>
+                      );
+                    })}
+                </Box>
+                <Box sx={{ width: 10 }} />
+                <Box sx={{ width: 275 }}>
+                  <Typography variant="h4" component="div">
+                    Sprint Stories
+                  </Typography>
+                  {sprint != null &&
+                    sprintStories.length > 0 &&
+                    sprintStories.map((story) => {
+                      return (
+                        <p key={story.id}>
+                          <UserStoryCard
+                            storyID={story.id}
+                            storyDescription={story.data().description}
+                            btnText="Remove From Sprint"
+                            onClick={removeStoryFromSprint}
+                          />
+                        </p>
+                      );
+                    })}
+                </Box>
               </Box>
-              <Box sx={{width: 10}}/>
-              <Box sx={{width: 275}}>
-                <Typography variant="h4" component="div">
-                  Sprint Stories
-                </Typography>
-                {sprint != null &&
-                  sprintStories.length > 0 &&
-                  sprintStories.map((story) => {
-                    return (
-                      <p key={story.id}>
-                        <UserStoryCard
-                          storyID={story.id}
-                          storyDescription={story.data().description}
-                          btnText="Remove From Sprint"
-                          onClick={removeStoryFromSprint}
-                        />
-                      </p>
-                    );
-                  })}
-              </Box>
-            </Box>
-          </Fragment>
-          :
-          (<Box>Please Select Sprint</Box>)}
-<AddSprint product={product} />
+            </Fragment>
+            :
+            (<Box>Please Select Sprint</Box>)}
+          <AddSprint product={product} />
         </Box>
       ) : (
         <Box>

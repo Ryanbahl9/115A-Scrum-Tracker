@@ -6,12 +6,9 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useDocument, useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
-import {firestore, auth} from './fire';
-import UserContext from './UserContext';
-import UserStoryCard from './UserStoryCard';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
+import {firestore} from './fire';
 import { doc, addDoc, collection, updateDoc, deleteDoc } from "firebase/firestore";
-import { Grid } from '@mui/material';
 
 const TaskInput = (props) => {
     const [value, setValue] = React.useState('');

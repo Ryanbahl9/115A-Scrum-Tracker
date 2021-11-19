@@ -19,7 +19,7 @@ import {
 
 function ColorSelection(props) {
   let { product } = useContext(UserContext);
-  const [colors, loadingColors] = useAvailableColors(product.id);
+  const [colors] = useAvailableColors(product.id);
   const [productColors] = useProductColorById(product.id);
   const [curColor, setCurColor] = useState('');
   const setColor = (e) => {
