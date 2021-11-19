@@ -105,15 +105,19 @@ const TaskInput = (props) => {
             <Stack direction="row" spacing={1}>
                 <Box
                     component="form"
-                    sx={{
-                        '& > :not(style)': { m: 1, width: '100ch' },
-                    }}
+                    sx={{width: '90%'}}
                     noValidate
                     autoComplete="off"
                     >
-                        <TextField id="filled-basic" value={value} label="Add Task" variant="filled" width="110ch" onChange = {handleChange}/>
+                        <TextField
+                          id="filled-basic"
+                          value={value}
+                          label="Add Task"
+                          variant="filled"
+                          sx={{width: '100%'}}
+                          onChange = {(e) => handleChange(e)}/>
                 </Box>
-                <Button onClick={createTask}>
+                <Button onClick={createTask} sx={{width: '10%'}}>
                     Create Task
                 </Button>
             </Stack>

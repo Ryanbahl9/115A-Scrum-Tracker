@@ -29,7 +29,7 @@ const Backlog = () => {
         query = userStoryRef.where('productId', '==', '0');
     }
     let [UserStories, loading] = useCollection(query);
-    
+
     const createUserStory = async (e) => {
       toggleUserInput();
       e.preventDefault();
@@ -97,7 +97,7 @@ const Backlog = () => {
                                     Priority: {userStory.data().priority}
                                 </h3>
                                 <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state}/>
-                                
+
                             </Paper>
                         </Box>
                     ))}
@@ -123,7 +123,7 @@ const Backlog = () => {
                                     Priority: {userStory.data().priority}
                                 </h3>
                                 <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state}/>
-                                
+
                             </Paper>
                         </Box>
                     ))}
@@ -154,7 +154,7 @@ const Backlog = () => {
                                     Priority: {userStory.data().priority}
                                 </h3>
                                 <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state}/>
-                                
+
                             </Paper>
                         </Box>
                     ))}
@@ -185,7 +185,7 @@ const Backlog = () => {
                                     Priority: {userStory.data().priority}
                                 </h3>
                                 <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state}/>
-                                
+
                             </Paper>
                         </Box>
                     ))}
@@ -197,6 +197,7 @@ const Backlog = () => {
     }
 
     return (
+        <div> {product ?
         <section>
             <h1/>
             <Stack direction="row" container justifyContent="flex-end">
@@ -212,7 +213,10 @@ const Backlog = () => {
             <h1/>
             <UserStoryTiles/>
         </section>
+        : <div>Select Product to view Backlog</div>
+        }
+        </div>
     )
 }
-    
+
 export default Backlog
