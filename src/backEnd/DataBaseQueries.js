@@ -23,8 +23,13 @@ export function useProductById(id) {
 }
 
 export function useProductColorById(id) {
-  const productHookedRef = firestore.collection('productColor').doc(id);
-  return useDocument(productHookedRef, { idField: 'id' });
+  const productColorRef = firestore.collection('productColor').doc(id);
+  return useDocument(productColorRef);
+}
+
+export function useTaskById(id) {
+  const productColorRef = firestore.collection('task').doc(id);
+  return useDocument(productColorRef);
 }
 
 export function useProductOwnerByProduct(product) {

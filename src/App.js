@@ -1,17 +1,17 @@
 // Starting point from https://github.com/fireship-io/react-firebase-chat
 
-import React, {useState} from 'react';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Drawer from './components/Drawer';
 import AppBar from './components/AppBar';
 import ScrumBoard from './components/ScrumBoard';
 import Backlog from './components/Backlog';
 import SprintBacklog from './components/SprintBacklog';
-import {auth} from './components/fire';
-import {useAuthState} from 'react-firebase-hooks/auth';
+import { auth } from './components/fire';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import UserContext from './components/UserContext';
-import {Box} from '@mui/system';
+import { Box } from '@mui/system';
 import Settings from './components/Settings';
 
 function App() {
@@ -29,9 +29,10 @@ function App() {
 
   const [product, setProduct] = useState(null);
 
+
   return (
-    <UserContext.Provider value={{product, setProduct}}>
-      <Box sx={{flexGrow: 1}}>
+    <UserContext.Provider value={{ product, setProduct}}>
+      <Box sx={{ flexGrow: 1 }}>
         <Router>
           <AppBar
             toggleDrawerOpen={toggleDrawerOpen}
@@ -39,7 +40,7 @@ function App() {
             product={product}
           />
           {user && <Drawer drawerOpen={drawerOpen} />}
-          <Box sx={{marginLeft: marginWidth}}>
+          <Box sx={{ marginLeft: marginWidth }}>
             {user ? (
               <Switch>
                 <Route exact path="/" component={Home} />
