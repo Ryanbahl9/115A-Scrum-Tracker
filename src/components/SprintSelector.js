@@ -28,8 +28,16 @@ const SprintSelector = (props) => {
     sprintsQuery.onSnapshot((collection) => {
       console.log('Loading Sprints with productId ordered by endDate')
       let tempSprintIdsArr = []
+      let sprintCounter = 0
       collection.docs.forEach((doc) => {
-        tempSprintIdsArr.push(doc.id)
+        sprintCounter++
+        tempSprintIdsArr.push(
+          'Sprint ' 
+          + sprintCounter
+          + ': '
+          + doc.data().startDate.toDate().toLocaleDateString('en-us', {month:"numeric", day:"numeric"}) 
+          + ' to ' 
+          + doc.data().endDate.toDate().toLocaleDateString('en-us', {month:"numeric", day:"numeric"}))
       })
       setSprintIdsArr(tempSprintIdsArr)
     })
