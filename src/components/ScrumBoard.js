@@ -29,8 +29,11 @@ const Board = () => {
     // set observers, these are used to stop listening to the onSnapshot functions
     var sprintObserver = null;
     // set up auto select current sprint
-    useEffect(async () => {
-      setSprintId(await getCurrentSprintId(productId))
+    useEffect(() => {
+      const wrapper = async () => {
+        setSprintId(await getCurrentSprintId(productId))
+      }
+      wrapper();
     }, [])
 
     // Set up hook for sprint inside useEffect watching sprint id state
@@ -47,23 +50,26 @@ const Board = () => {
     }, [sprintId]);
 
     // Set up hook for sprint stories inside useEffect watching sprint state
-    useEffect(async () => {
-      if (sprint === null) return;
-      let tempSprintStories = [];
-      for (const storyId of sprint.data().userStories) {
-        await firestore
-          .collection('userStory')
-          .doc(storyId)
-          .get()
-          .then((doc) => {
-            tempSprintStories.push(doc);
-          })
-          .catch((e) => {
-            console.log('There was an error!!!');
-            console.log(e);
-          });
+    useEffect(() => {
+      const wrapper = async () => {
+        if (sprint === null) return;
+        let tempSprintStories = [];
+        for (const storyId of sprint.data().userStories) {
+          await firestore
+            .collection('userStory')
+            .doc(storyId)
+            .get()
+            .then((doc) => {
+              tempSprintStories.push(doc);
+            })
+            .catch((e) => {
+              console.log('There was an error!!!');
+              console.log(e);
+            });
+        }
+        setSprintStories(tempSprintStories);
       }
-      setSprintStories(tempSprintStories);
+      wrapper();
     }, [sprint]);
 
     let userStoriesQuery;

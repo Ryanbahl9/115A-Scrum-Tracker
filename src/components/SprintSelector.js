@@ -1,14 +1,11 @@
 import {React, Fragment, useContext, useState, useEffect} from 'react'
 import {
-  Box,
   FormControl,
-  Button,
   InputLabel,
   Select,
   MenuItem
 } from '@mui/material'
 import {firestore} from './fire';
-import { useDocument, useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
 import UserContext from './UserContext';
 
 
@@ -42,14 +39,14 @@ const SprintSelector = (props) => {
       setSprintIdsArr(tempSprintIdsArr)
     })
   }, [])
-  
+
   const handleChange = (event) => {
     if (event.target.value === null) {
       setSprintId('');
     } else {
       setSprintId(event.target.value);
     }
-    
+
   };
 
   return (
