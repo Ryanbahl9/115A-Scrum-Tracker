@@ -57,7 +57,7 @@ function ColorSelection(props) {
                 {color}
               </MenuItem>
             ))}
-          <MenuItem value={curColor} key={curColor} sx={{ backgroundColor: curColor, minWidth: '25%' }}>
+          <MenuItem disabled={true} value={curColor} key={curColor} sx={{ backgroundColor: curColor, minWidth: '25%'}}>
             {curColor}
           </MenuItem>
         </Select>
