@@ -28,13 +28,17 @@ const SprintSelector = (props) => {
       let sprintCounter = 0
       collection.docs.forEach((doc) => {
         sprintCounter++
-        tempSprintIdsArr.push(
-          'Sprint '
+        let name = 'Sprint '
           + sprintCounter
           + ': '
           + doc.data().startDate.toDate().toLocaleDateString('en-us', {month:"numeric", day:"numeric"})
           + ' to '
-          + doc.data().endDate.toDate().toLocaleDateString('en-us', {month:"numeric", day:"numeric"}))
+          + doc.data().endDate.toDate().toLocaleDateString('en-us', {month:"numeric", day:"numeric"})
+
+        tempSprintIdsArr.push({
+          "id": doc.id,
+          "name": name 
+        })
       })
       setSprintIdsArr(tempSprintIdsArr)
     })
@@ -58,8 +62,8 @@ const SprintSelector = (props) => {
         onChange={handleChange}
       >
         <MenuItem value={''}>(None)</MenuItem>
-        {(sprintIdsArr.length > 0) && sprintIdsArr.map(id => {
-          return( <MenuItem key={id} value={id}>{id}</MenuItem> )
+        {(sprintIdsArr.length > 0) && sprintIdsArr.map(item => {
+          return( <MenuItem key={item['id']} value={item['id']}>{item['name']}</MenuItem> )
         })}
       </Select>
     </FormControl>
