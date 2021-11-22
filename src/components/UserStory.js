@@ -10,11 +10,11 @@ var currentInputString;
 var currentPriority;
 
 export const getUserStoryDes = () => {
-    return currentInputString
+    return currentInputString;
 }
 
 export const getPriority = () => {
-    return currentPriority
+    return currentPriority;
 }
 
 const UserStoryInput = (props) => {
@@ -24,7 +24,8 @@ const UserStoryInput = (props) => {
 
     const handleChange = (event) => {
       setValue(event.target.value);
-      currentInputString = event.target.value;
+      // currentInputString = event.target.value;
+      currentInputString = value;
     };
 
     if (inputOpen) {
