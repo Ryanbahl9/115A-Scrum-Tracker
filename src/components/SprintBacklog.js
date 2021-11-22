@@ -41,12 +41,12 @@ const SprintBacklog = (props) => {
   var backlogStoriesObserver = null;
 
   // Set initial sprint id
-  useEffect(async () => {
+  useEffect(() => {
     const wrap = async () => {
-      setSprintId(await getCurrentSprintId(productId))
-    }
+      setSprintId(await getCurrentSprintId(productId));
+    };
     wrap();
-  }, []);
+  }, [productId]);
 
   /// ------Effects and Firebase Hooks------
   // Set up hook for sprint inside useEffect watching sprint id state
@@ -65,7 +65,7 @@ const SprintBacklog = (props) => {
   // Set up hook for sprint stories inside useEffect watching sprint state
   useEffect(() => {
     const wrap = async () => {
-      if (sprint === null || sprintId === '' || sprintId === null) return;
+      if (sprint === null || sprint.data() === undefined || sprintId === '' || sprintId === null) return;
       let tempSprintStories = [];
       for (const storyId of sprint.data().userStories) {
         await firestore
@@ -81,11 +81,9 @@ const SprintBacklog = (props) => {
           });
       }
       setSprintStories(tempSprintStories);
-    }
+    };
     wrap();
-  }
-
-    , [sprint]);
+  }, [sprint]);
 
   // Set up hook to watch all userStories with this product id in the product backlog
   useEffect(() => {
