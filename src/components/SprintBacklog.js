@@ -42,10 +42,7 @@ const SprintBacklog = (props) => {
 
   // Set initial sprint id
   useEffect(() => {
-    const wrap = async () => {
-      setSprintId(await getCurrentSprintId(productId));
-    };
-    wrap();
+      getCurrentSprintId(productId).then((id) => setSprintId(id))
   }, [productId]);
 
   /// ------Effects and Firebase Hooks------
