@@ -40,6 +40,9 @@ const SprintSelector = (props) => {
         })
       })
       setSprintIdsArr(tempSprintIdsArr)
+      return () => {
+        if (sprintsObserver != null) sprintsObserver();
+      }
     })
   });
 
