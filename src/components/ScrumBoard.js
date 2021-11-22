@@ -52,7 +52,7 @@ const Board = () => {
     // Set up hook for sprint stories inside useEffect watching sprint state
     useEffect(() => {
       const wrapper = async () => {
-        if (sprint === null) return;
+        if (sprint === null || sprint.data() === undefined) return;
         let tempSprintStories = [];
         for (const storyId of sprint.data().userStories) {
           await firestore
