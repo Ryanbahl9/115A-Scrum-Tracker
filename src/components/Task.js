@@ -24,7 +24,7 @@ const Task = (props) => {
                         productColor.data().userColor[props.data.userId].color : 'black',
                 })
         }
-    }, [productColor, task]);
+    }, [productColor, task, props.data.id]);
 
     return (
         <ListItem sx={taskStyle}>

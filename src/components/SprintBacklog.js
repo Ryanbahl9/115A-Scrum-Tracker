@@ -46,7 +46,7 @@ const SprintBacklog = (props) => {
       setSprintId(await getCurrentSprintId(productId))
     }
     wrap();
-  }, [])
+  }, []);
 
   /// ------Effects and Firebase Hooks------
   // Set up hook for sprint inside useEffect watching sprint id state
@@ -63,24 +63,29 @@ const SprintBacklog = (props) => {
   }, [sprintId]);
 
   // Set up hook for sprint stories inside useEffect watching sprint state
-  useEffect(async () => {
-    if (sprint === null || sprintId === '' || sprintId === null) return;
-    let tempSprintStories = [];
-    for (const storyId of sprint.data().userStories) {
-      await firestore
-        .collection('userStory')
-        .doc(storyId)
-        .get()
-        .then((doc) => {
-          tempSprintStories.push(doc);
-        })
-        .catch((e) => {
-          console.log('There was an error!!!');
-          console.log(e);
-        });
+  useEffect(() => {
+    const wrap = async () => {
+      if (sprint === null || sprintId === '' || sprintId === null) return;
+      let tempSprintStories = [];
+      for (const storyId of sprint.data().userStories) {
+        await firestore
+          .collection('userStory')
+          .doc(storyId)
+          .get()
+          .then((doc) => {
+            tempSprintStories.push(doc);
+          })
+          .catch((e) => {
+            console.log('There was an error!!!');
+            console.log(e);
+          });
+      }
+      setSprintStories(tempSprintStories);
     }
-    setSprintStories(tempSprintStories);
-  }, [sprint]);
+    wrap();
+  }
+
+    , [sprint]);
 
   // Set up hook to watch all userStories with this product id in the product backlog
   useEffect(() => {

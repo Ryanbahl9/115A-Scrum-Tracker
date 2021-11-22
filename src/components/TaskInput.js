@@ -22,7 +22,7 @@ const TaskInput = (props) => {
     let [tasks, tasksLoading] = useCollectionData(taskQuery, { idField: 'id' });
 
     const createTask = () => {
-      if (value == '') return;
+      if (value === '') return;
       addDoc(collection(firestore, 'task'), {
         userId: null,
         userStoryId: props.userStoryId,

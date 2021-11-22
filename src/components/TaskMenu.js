@@ -21,8 +21,7 @@ export default function BasicMenu(props) {
     } else {
       pid = '0';
     }
-    const [productData,
-      loadingProduct] = useDocumentData(firestore
+    const [productData] = useDocumentData(firestore
         .collection('products')
         .doc(pid), { idField: 'id' });
 
@@ -96,7 +95,7 @@ export default function BasicMenu(props) {
                 <MenuItem disabled={props.data.stage === 'Complete'} onClick={handleMoveNext}>Move task to next stage</MenuItem>
                 <MenuItem disabled={props.data.stage === 'Queue'} onClick={handleMovePrev}>Move task to prev stage</MenuItem>
                 <MenuItem disabled={props.data.userId} onClick={handleAssignOwner}>
-                  {props.data.userId ? 
+                  {props.data.userId ?
                     `Assigned to ${props.data.displayName}`
                   :
                     <div>Assigne yourself to task</div>
