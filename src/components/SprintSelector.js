@@ -23,7 +23,6 @@ const SprintSelector = (props) => {
     var sprintsQuery = sprintsRef.orderBy('endDate', 'desc')
     sprintsQuery = sprintsQuery.where('productId', '==', (product ? product.id : ''));
     sprintsQuery.onSnapshot((collection) => {
-      console.log('Loading Sprints with productId ordered by endDate')
       let tempSprintIdsArr = []
       let sprintCounter = 0
       collection.docs.forEach((doc) => {

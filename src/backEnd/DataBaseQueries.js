@@ -196,7 +196,7 @@ export function useGetSprintsData(productId) {
 // current date
 export async function getCurrentSprintId(productId) {
   if (productId === null) return '';
-  var id = null
+  var id = ''
   const sprintRef = firestore.collection('sprints');
   let queryAsc = sprintRef.orderBy('endDate')
   queryAsc = queryAsc.limit(1);

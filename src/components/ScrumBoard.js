@@ -30,10 +30,7 @@ const Board = () => {
     var sprintObserver = null;
     // set up auto select current sprint
     useEffect(() => {
-      const wrapper = async () => {
-        setSprintId(await getCurrentSprintId(productId))
-      }
-      wrapper();
+      getCurrentSprintId(productId).then((id) => setSprintId(id))
     }, [])
 
     // Set up hook for sprint inside useEffect watching sprint id state
