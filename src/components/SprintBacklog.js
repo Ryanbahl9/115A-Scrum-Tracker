@@ -57,6 +57,9 @@ const SprintBacklog = (props) => {
     sprintObserver = sprintRef.onSnapshot((snapShot) => {
       setSprint(snapShot);
     });
+    return () => {
+      if (sprintObserver != null) { sprintObserver() }
+    }
   }, [sprintId]);
 
   // Set up hook for sprint stories inside useEffect watching sprint state
@@ -91,6 +94,9 @@ const SprintBacklog = (props) => {
     backlogStoriesObserver = backlogStoriesQuery.onSnapshot((collection) => {
       setBacklogStories(collection.docs)
     })
+    return () => {
+      if (backlogStoriesObserver != null) backlogStoriesObserver();
+    }
   }, [])
 
 
@@ -152,14 +158,13 @@ const SprintBacklog = (props) => {
                   {(backlogStories.length > 0) &&
                     backlogStories.map((story) => {
                       return (
-                        <p key={story.id}>
-                          <UserStoryCard
-                            storyID={story.id}
-                            storyDescription={story.data().description}
-                            btnText="Move To Sprint"
-                            onClick={moveStoryToSprint}
-                          />
-                        </p>
+                        <UserStoryCard
+                          key={story.id}
+                          storyID={story.id}
+                          storyDescription={story.data().description}
+                          btnText="Move To Sprint"
+                          onClick={moveStoryToSprint}
+                        />
                       );
                     })}
                 </Box>
@@ -172,14 +177,13 @@ const SprintBacklog = (props) => {
                     sprintStories.length > 0 &&
                     sprintStories.map((story) => {
                       return (
-                        <p key={story.id}>
-                          <UserStoryCard
-                            storyID={story.id}
-                            storyDescription={story.data().description}
-                            btnText="Remove From Sprint"
-                            onClick={removeStoryFromSprint}
-                          />
-                        </p>
+                        <UserStoryCard
+                          key={story.id}
+                          storyID={story.id}
+                          storyDescription={story.data().description}
+                          btnText="Remove From Sprint"
+                          onClick={removeStoryFromSprint}
+                        />
                       );
                     })}
                 </Box>

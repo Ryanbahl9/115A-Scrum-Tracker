@@ -75,11 +75,9 @@ function ProductSelection(props) {
               {products &&
                 products.map((doc) => (
                   <MenuItem value={doc} key={doc.id}>
-                    {' '}
                     {doc.productName}
                   </MenuItem>
                 ))}
-              {/* <MenuItem>{myForm()}</MenuItem> */}
             </Select>
           </FormControl>
           {myForm()}
