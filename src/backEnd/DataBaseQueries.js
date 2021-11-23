@@ -8,6 +8,9 @@ import {
 } from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/compat/app';
 import { doc, updateDoc } from '@firebase/firestore';
+import {
+  arrayRemove,
+} from 'firebase/firestore';
 
 //Return Array of Docs
 export function useProductsByUID(uid) {
