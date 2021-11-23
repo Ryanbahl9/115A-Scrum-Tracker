@@ -41,7 +41,7 @@ const SprintSelector = (props) => {
       })
       setSprintIdsArr(tempSprintIdsArr)
     })
-  });
+  }, []);
 
   const handleChange = (event) => {
     if (event.target.value === null) {
