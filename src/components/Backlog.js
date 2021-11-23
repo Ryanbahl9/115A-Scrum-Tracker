@@ -89,6 +89,7 @@ const Backlog = () => {
                     <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '5vh' }}>Incomplete</h1>
                     {incomplete.map(userStory => (
                         <Box
+                            key={userStory.data().description}
                             sx={{
                                 display: 'flex',
                                 flexWrap: 'wrap',
@@ -115,6 +116,7 @@ const Backlog = () => {
                     <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '5vh' }}>Complete</h1>
                     {complete.map(userStory => (
                         <Box
+                            key={userStory.data().description}
                             sx={{
                                 display: 'flex',
                                 flexWrap: 'wrap',
@@ -146,6 +148,7 @@ const Backlog = () => {
                     <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '5vh' }}>Complete</h1>
                     {complete.map(userStory => (
                         <Box
+                            key={userStory.data().description}
                             sx={{
                                 display: 'flex',
                                 flexWrap: 'wrap',
@@ -177,6 +180,7 @@ const Backlog = () => {
                     <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '5vh' }}>Incomplete</h1>
                     {incomplete.map(userStory => (
                         <Box
+                            key={userStory.data().description}
                             sx={{
                                 display: 'flex',
                                 flexWrap: 'wrap',
@@ -211,14 +215,14 @@ const Backlog = () => {
         <div> {product ?
             <section>
                 {!inputOpen ?
-                    <Stack direction="row" container justifyContent="flex-end" sx={{ paddingTop: 3 }}>
+                    <Stack direction="row" justifyContent="flex-end" sx={{ paddingTop: 3 }}>
                         <Button variant="contained" endIcon={<AddBoxSharpIcon />} onClick={toggleUserInput} >
                             Add User Story
                         </Button>
                     </Stack>
                     :
                     <Paper sx={itemsStyle}>
-                        <Stack direction="row" container justifyContent="center">
+                        <Stack direction="row" justifyContent="center">
                             <UserStoryInput
                                 inputOpen={inputOpen}
                                 passDownStyle={{ width: '90%' }} />
