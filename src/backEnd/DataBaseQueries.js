@@ -228,7 +228,7 @@ export async function getCurrentSprintId(productId) {
 export function deleteUserStoryFromSprints(userStoryId) {
   if (userStoryId === null) return '';
   const sprintRef = firestore.collection('sprints');
-  sprintRef.where('userStoryId', 'array-contains', userStoryId).get().then((col) => {
+  sprintRef.where('userStories', 'array-contains', userStoryId).get().then((col) => {
     col.docs.forEach((sprintDoc) => {
       firestore
       .collection('sprints')
