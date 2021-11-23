@@ -124,7 +124,7 @@ const TaskInput = (props) => {
               <>
               {
                 tasks.map(task => (
-                  <TileTask task={task}/>
+                  <TileTask key={task.id} task={task}/>
                 ))
               }
               </>
