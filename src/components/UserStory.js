@@ -24,8 +24,7 @@ const UserStoryInput = (props) => {
 
     const handleChange = (event) => {
       setValue(event.target.value);
-      // currentInputString = event.target.value;
-      currentInputString = value;
+      currentInputString = event.target.value;
     };
 
     if (inputOpen) {
