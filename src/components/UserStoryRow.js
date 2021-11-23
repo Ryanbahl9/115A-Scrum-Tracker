@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
 import { Box, List } from '@mui/material';
-import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { firestore } from './fire';
 import { doc, updateDoc } from "firebase/firestore";
 import { useCollectionData} from 'react-firebase-hooks/firestore';

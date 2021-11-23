@@ -96,10 +96,10 @@ const Board = () => {
     } else {
       sprintQuery = sprintRef.where('productId', '==', '0');
     }
-    const [sprints,
-      loadingSprints] = useDocumentData(firestore
-        .collection('sprints')
-        .doc(pid), { idField: 'id' });
+    // const [sprints,
+      // loadingSprints] = useDocumentData(firestore
+        // .collection('sprints')
+        // .doc(pid), { idField: 'id' });
 
     //this is for adding a new stage to the database,
     //this function will force the use effect function to be called since
