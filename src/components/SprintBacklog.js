@@ -57,9 +57,6 @@ const SprintBacklog = (props) => {
     sprintObserver = sprintRef.onSnapshot((snapShot) => {
       setSprint(snapShot);
     });
-    return () => {
-      if (sprintObserver != null) { sprintObserver() }
-    }
   }, [sprintId]);
 
   // Set up hook for sprint stories inside useEffect watching sprint state
@@ -94,9 +91,6 @@ const SprintBacklog = (props) => {
     backlogStoriesObserver = backlogStoriesQuery.onSnapshot((collection) => {
       setBacklogStories(collection.docs)
     })
-    return () => {
-      if (backlogStoriesObserver != null) backlogStoriesObserver();
-    }
   }, [])
 
 
