@@ -10,6 +10,7 @@ import UserStoryInput, { getUserStoryDes, getPriority } from './UserStory';
 import TaskInput from './TaskInput';
 import UserContext from './UserContext';
 import { firestore } from './fire';
+import { deleteDoc, getDocs, doc } from '@firebase/firestore';
 
 
 const Backlog = () => {
@@ -36,6 +37,15 @@ const Backlog = () => {
         }
     }
 
+    /*const deleteUserStory = async (userStory) => {
+        let userStoryTasks = firestore.collection('task').where('userStoryId', '==', userStory.id)
+        let taskArray = await getDocs(userStoryTasks)
+        taskArray.forEach((task) => {
+            deleteDoc(doc(firestore, 'task', task.id))
+        });
+        deleteDoc(doc(firestore, 'userStory', userStory.id))
+    }*/
+
     const [inputOpen, setinputOpen] = React.useState(false);
     const toggleUserInput = () => {
         inputOpen === false ? setinputOpen(true) : setinputOpen(false)
@@ -51,6 +61,14 @@ const Backlog = () => {
         } else {
             return <div />
         }
+    }
+
+    const DeleteButton = (props) => {
+        return (
+            <Button color="error" /*onClick={() => deleteUserStory(props.userStory)}*/>
+                Delete User Story
+            </Button>
+        )
     }
 
     const UserStoryTiles = () => {
@@ -91,7 +109,7 @@ const Backlog = () => {
                                     Priority: {userStory.data().priority}
                                 </h3>
                                 <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state} />
-
+                                <DeleteButton userStory={userStory}/>
                             </Paper>
                         </Box>
                     ))}
@@ -118,7 +136,7 @@ const Backlog = () => {
                                     Priority: {userStory.data().priority}
                                 </h3>
                                 <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state} />
-
+                                <DeleteButton userStory={userStory}/>
                             </Paper>
                         </Box>
                     ))}
@@ -150,7 +168,7 @@ const Backlog = () => {
                                     Priority: {userStory.data().priority}
                                 </h3>
                                 <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state} />
-
+                                <DeleteButton userStory={userStory}/>
                             </Paper>
                         </Box>
                     ))}
@@ -182,7 +200,7 @@ const Backlog = () => {
                                     Priority: {userStory.data().priority}
                                 </h3>
                                 <TaskInput userStoryId={userStory.id} userStoryState={userStory.data().state} />
-
+                                <DeleteButton userStory={userStory}/>
                             </Paper>
                         </Box>
                     ))}
@@ -209,6 +227,7 @@ const Backlog = () => {
                                 inputOpen={inputOpen}
                                 passDownStyle={{ width: '90%' }} />
                             <CreateButton />
+
                         </Stack>
                     </Paper>
                 }

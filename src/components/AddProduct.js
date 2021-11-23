@@ -19,7 +19,7 @@ const AddProduct = () => {
       <Input
         value={formValue}
         onChange={(e) => setFormValue(e.target.value)}
-        placeholder="Entry New Product Name"
+        placeholder="Enter New Product Name"
         sx={style}
       />
 
