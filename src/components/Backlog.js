@@ -37,14 +37,14 @@ const Backlog = () => {
         }
     }
 
-    const deleteUserStory = async (userStory) => {
+    /*const deleteUserStory = async (userStory) => {
         let userStoryTasks = firestore.collection('task').where('userStoryId', '==', userStory.id)
         let taskArray = await getDocs(userStoryTasks)
         taskArray.forEach((task) => {
             deleteDoc(doc(firestore, 'task', task.id))
         });
         deleteDoc(doc(firestore, 'userStory', userStory.id))
-    }
+    }*/
 
     const [inputOpen, setinputOpen] = React.useState(false);
     const toggleUserInput = () => {
@@ -65,7 +65,7 @@ const Backlog = () => {
 
     const DeleteButton = (props) => {
         return (
-            <Button color="error" onClick={() => deleteUserStory(props.userStory)}>
+            <Button color="error" /*onClick={() => deleteUserStory(props.userStory)}*/>
                 Delete User Story
             </Button>
         )
