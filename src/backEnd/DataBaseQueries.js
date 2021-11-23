@@ -221,3 +221,18 @@ export async function getCurrentSprintId(productId) {
   })
   return id
 }
+
+export function deleteUserStoryFromSprints(userStoryId) {
+  if (userStoryId === null) return '';
+  const sprintRef = firestore.collection('sprints');
+  sprintRef.where('userStoryId', 'array-contains', userStoryId).get().then((col) => {
+    col.docs.forEach((sprintDoc) => {
+      firestore
+      .collection('sprints')
+      .doc(sprintDoc.id)
+      .update({
+        userStories: arrayRemove(userStoryId),
+      });
+    })
+  })
+}
