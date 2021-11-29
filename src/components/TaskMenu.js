@@ -98,7 +98,7 @@ export default function BasicMenu(props) {
                   {props.data.userId ?
                     `Assigned to ${props.data.displayName}`
                   :
-                    <div>Assigne yourself to task</div>
+                    <div>Assign yourself to task</div>
                   }
                 </MenuItem>
                 <Divider />
