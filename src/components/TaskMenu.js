@@ -94,7 +94,7 @@ export default function BasicMenu(props) {
             >
                 <MenuItem disabled={props.data.stage === 'Complete'} onClick={handleMoveNext}>Move task to next stage</MenuItem>
                 <MenuItem disabled={props.data.stage === 'Queue'} onClick={handleMovePrev}>Move task to prev stage</MenuItem>
-                <MenuItem disabled={props.data.userId !== ''} onClick={handleAssignOwner}>
+                <MenuItem disabled={props.data.userId !== '' && typeof props.data.userId === 'string'} onClick={handleAssignOwner}>
                   {props.data.userId ?
                     `Assigned to ${props.data.displayName}`
                   :
