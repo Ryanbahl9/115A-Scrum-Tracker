@@ -163,7 +163,7 @@ const Board = () => {
 
     return (<>{
       product ?
-        (<Container sx={{marginTop: "10px", overflowX: 'scroll', overflowY: 'hidden', maxHeight: '90vh'}}>
+        (<Container sx={{marginTop: "10px", overflowX: 'auto', overflowY: 'hidden', maxHeight: '90vh'}}>
 
           <SprintSelector sx={{ position: 'absolute', marginTop: "10px" }} sprintId={sprintId} setSprintId={setSprintId} />
 
