@@ -136,6 +136,9 @@ export function deleteProduct(productId) {
 }
 
 export function deleteSprint(sprintId) {
+  if (sprintId == null || sprintId == "") {
+    return
+  }
   let sprintRef = firestore.collection('sprints').doc(sprintId);
   sprintRef.get().then((snapShot) => {
     for (const storyId of snapShot.data().userStories) {
