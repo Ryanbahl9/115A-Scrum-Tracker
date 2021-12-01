@@ -51,7 +51,7 @@ function App() {
                 <Route path="/Settings" component={Settings} />
               </Switch>
             ) : (
-              <div>404:ADD ROUTE FOR /*</div>
+              <div>Please Sign In</div>
             )}
           </Box>
         </Router>
