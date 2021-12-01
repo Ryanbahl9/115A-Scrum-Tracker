@@ -155,7 +155,7 @@ const SprintBacklog = (props) => {
                         <UserStoryCard
                           key={story.id}
                           storyID={story.id}
-                          storyDescription={story.data().description}
+                          storyName={story.data().description}
                           btnText="Move To Sprint"
                           onClick={moveStoryToSprint}
                         />
@@ -174,7 +174,7 @@ const SprintBacklog = (props) => {
                         <UserStoryCard
                           key={story.id}
                           storyID={story.id}
-                          storyDescription={story.data().description}
+                          storyName={story.data().description}
                           btnText="Remove From Sprint"
                           onClick={removeStoryFromSprint}
                         />
