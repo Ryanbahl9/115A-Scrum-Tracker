@@ -57,6 +57,7 @@ const TaskInput = (props) => {
       }
 
       const TaskEditor = (props) => {
+        taskEditVal = props.task.description;
         return (
           <Stack direction="row">
             <Box
