@@ -1,5 +1,7 @@
 # Agile Scrum Tracker - CSE 115A Fall 2021
 
+## A web based tool to track Agile Scrum projects
+
 Product Owner: 
 - Ryan Bahl
 Team members: 
